@@ -1,12 +1,12 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.2
+Version:	6.2.1
 Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	cc495e263f4384e1d6b38e851bf6eca0
+# Source0-md5:	fa9f90fd6b8852679c5fc16509e94d7a
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-ac.patch
 Patch2:		%{name}-debian.patch
