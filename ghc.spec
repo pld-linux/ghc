@@ -2,7 +2,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.2.2
-Release:	2
+Release:	3
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -148,9 +148,41 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/ghc-%{version}/hslibs-imports
 %dir %{_libdir}/ghc-%{version}/hslibs-imports/*
 %dir %{_libdir}/ghc-%{version}/imports
-%dir %{_libdir}/ghc-%{version}/imports/*
+%dir %{_libdir}/ghc-%{version}/imports/Control
+%dir %{_libdir}/ghc-%{version}/imports/Control/Concurrent
+%dir %{_libdir}/ghc-%{version}/imports/Control/Monad
+%dir %{_libdir}/ghc-%{version}/imports/Control/Monad/ST
+%dir %{_libdir}/ghc-%{version}/imports/Data
+%dir %{_libdir}/ghc-%{version}/imports/Data/Array
+%dir %{_libdir}/ghc-%{version}/imports/Data/Array/IO
+%dir %{_libdir}/ghc-%{version}/imports/Data/Generics
+%dir %{_libdir}/ghc-%{version}/imports/Data/STRef
+%dir %{_libdir}/ghc-%{version}/imports/Debug
+%dir %{_libdir}/ghc-%{version}/imports/Debug/QuickCheck
+%dir %{_libdir}/ghc-%{version}/imports/Foreign
+%dir %{_libdir}/ghc-%{version}/imports/Foreign/C
+%dir %{_libdir}/ghc-%{version}/imports/Foreign/Marshal
+%dir %{_libdir}/ghc-%{version}/imports/GHC
+%dir %{_libdir}/ghc-%{version}/imports/Language
+%dir %{_libdir}/ghc-%{version}/imports/Language/Haskell
+%dir %{_libdir}/ghc-%{version}/imports/Network
+%dir %{_libdir}/ghc-%{version}/imports/System
+%dir %{_libdir}/ghc-%{version}/imports/System/Console
+%dir %{_libdir}/ghc-%{version}/imports/System/IO
+%dir %{_libdir}/ghc-%{version}/imports/System/Mem
+%dir %{_libdir}/ghc-%{version}/imports/System/Posix
+%dir %{_libdir}/ghc-%{version}/imports/System/Posix/DynamicLinker
+%dir %{_libdir}/ghc-%{version}/imports/Text
+%dir %{_libdir}/ghc-%{version}/imports/Text/Html
+%dir %{_libdir}/ghc-%{version}/imports/Text/ParserCombinators
+%dir %{_libdir}/ghc-%{version}/imports/Text/ParserCombinators/Parsec
+%dir %{_libdir}/ghc-%{version}/imports/Text/PrettyPrint
+%dir %{_libdir}/ghc-%{version}/imports/Text/Read
+%dir %{_libdir}/ghc-%{version}/imports/Text/Regex
+%dir %{_libdir}/ghc-%{version}/imports/Text/Show
 %dir %{_libdir}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/include/*
+%{_libdir}/ghc-%{version}/imports/*.hi
 %{_libdir}/ghc-%{version}/imports/*/*.hi
 %{_libdir}/ghc-%{version}/imports/*/*/*.hi
 %{_libdir}/ghc-%{version}/imports/*/*/*/*.hi
@@ -171,6 +203,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files prof
 %defattr(644,root,root,755)
+%{_libdir}/ghc-%{version}/imports/*.p_hi
 %{_libdir}/ghc-%{version}/imports/*/*.p_hi
 %{_libdir}/ghc-%{version}/imports/*/*/*.p_hi
 %{_libdir}/ghc-%{version}/imports/*/*/*/*.p_hi
