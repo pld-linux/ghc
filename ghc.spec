@@ -26,6 +26,7 @@ BuildRequires:	sgml-common
 BuildRequires:	tetex-dvips
 BuildRequires:	tetex-format-latex
 BuildRequires:	tetex-latex-bibtex
+BuildRequires:	tetex-metafont
 Provides:	haskell
 # there is no more ports ghc in pld
 # alpha is still missing - need bootstraper
