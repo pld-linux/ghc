@@ -1,12 +1,12 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.2.1
-Release:	1
+Version:	6.2.2
+Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	fa9f90fd6b8852679c5fc16509e94d7a
+# Source0-md5:	42088bff4de30e7c3a277cfa55d5589e
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-ac.patch
 Patch2:		%{name}-debian.patch
@@ -22,6 +22,8 @@ BuildRequires:	ncurses-devel
 BuildRequires:	openjade
 BuildRequires:	readline-devel
 BuildRequires:	sgml-common
+BuildRequires:	tetex-latex-bibtex
+BuildRequires:	docbook-style-dsssl
 Provides:	haskell
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -74,7 +76,7 @@ potrzebujemy systemu profiluj±cego z GHC.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
+#%patch3 -p1
 
 # generate our own `build.mk'
 #
@@ -87,6 +89,7 @@ SRC_HAPPY_OPTS += -c
 END
 
 %build
+cp -f /usr/share/automake/config.sub .
 %{__autoconf}
 %configure \
 	--with-gcc=%{__cc}
@@ -146,6 +149,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ghc-%{version}/HS*.o
 %{_libdir}/ghc-%{version}/package.conf
 %{_libdir}/ghc-%{version}/*.h
+%{_libdir}/ghc-%{version}/ghc*-usage.txt
 
 %files prof
 %defattr(644,root,root,755)
