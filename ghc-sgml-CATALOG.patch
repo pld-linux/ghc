@@ -5,7 +5,7 @@
  AC_PATH_PROGS(JadeCmd,openjade jade,jade)
  FPTOOLS_DOCBOOK_CATALOG(Catalog, $JadeCmd, docs/fptools-both.dsl, 
 -                        /usr/share/sgml/CATALOG.docbkdsl $hardtop/glafp-utils/docbook/CATALOG*)
-+                        /usr/share/sgml/CATALOG $hardtop/glafp-utils/docbook/CATALOG*)
++                        /etc/sgml/catalog $hardtop/glafp-utils/docbook/CATALOG*)
  if test -z "$Catalog"; then
    AC_MSG_RESULT([Warning: You will not be able to build the documentation.])
  fi
