@@ -3,7 +3,7 @@ Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	5.02.1
 Release:	1
-License:	BSD style w/o adv. clause
+License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-1.tar.bz2
 Patch0:		%{name}-sgml-CATALOG.patch
