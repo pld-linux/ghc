@@ -2,18 +2,17 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.2
-Release:	0.1
+Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	cc495e263f4384e1d6b38e851bf6eca0
-Patch0:		%{name}-sgml-CATALOG.patch
-Patch1:		%{name}-DESTDIR.patch
+Patch0:		%{name}-DESTDIR.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	autoconf
 BuildRequires:	ghc >= 4.0.8
 BuildRequires:	gmp-devel
-BuildRequires:	happy >= 1.13
+BuildRequires:	happy >= 1.10
 BuildRequires:	alex >= 2.0
 BuildRequires:	jadetex
 BuildRequires:	ncurses-devel
@@ -69,8 +68,7 @@ potrzebujemy systemu profiluj±cego z GHC.
 
 %prep
 %setup -q
-#%patch0 -p1
-#%patch1 -p1
+%patch0 -p1
 
 # generate our own `build.mk'
 #
@@ -83,10 +81,6 @@ SRC_HAPPY_OPTS += -c
 END
 
 %build
-%{__autoconf}
-cd ghc
-%{__autoconf}
-cd ..
 %configure \
 	--with-gcc=%{__cc}
 
@@ -97,7 +91,7 @@ cd ..
 %{__make} -C ghc/docs ps html
 %{__make} -C ghc/docs/users_guide ps html
 %{__make} -C hslibs/doc ps html
-#%%{__make} -C hslibs/graphics/doc ps
+%{__make} -C hslibs/graphics/doc ps
 (cd ghc/docs/rts; latex rts.tex; dvips -o rts.dvi)
 
 %install
@@ -114,19 +108,24 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc ghc/{ANNOUNCE,README}
-%doc ghc/docs/set/{*.ps,set} ghc/docs/rts/*.ps
+%doc ghc/docs/rts/*.ps
 %doc ghc/docs/users_guide/{*.ps,users_guide}
 %doc hslibs/doc/{*.ps,hslibs}
-#%doc hslibs/graphics/doc/*.ps
+%doc hslibs/graphics/doc/*.ps
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/ghc-%{version}
 %dir %{_libdir}/ghc-%{version}/icons
+%dir %{_libdir}/ghc-%{version}/hslibs-imports
+%dir %{_libdir}/ghc-%{version}/hslibs-imports/*
 %dir %{_libdir}/ghc-%{version}/imports
 %dir %{_libdir}/ghc-%{version}/imports/*
 %dir %{_libdir}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/icons/*
 %{_libdir}/ghc-%{version}/include/*
 %{_libdir}/ghc-%{version}/imports/*/*.hi
+%{_libdir}/ghc-%{version}/imports/*/*/*.hi
+%{_libdir}/ghc-%{version}/imports/*/*/*/*.hi
+%{_libdir}/ghc-%{version}/hslibs-imports/*/*.hi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/cgprof
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-%{version}
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-asm
@@ -143,4 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 %files prof
 %defattr(644,root,root,755)
 %{_libdir}/ghc-%{version}/imports/*/*.p_hi
+%{_libdir}/ghc-%{version}/imports/*/*/*.p_hi
+%{_libdir}/ghc-%{version}/imports/*/*/*/*.p_hi
+%{_libdir}/ghc-%{version}/hslibs-imports/*/*.p_hi
 %{_libdir}/ghc-%{version}/libHS*_p.a
