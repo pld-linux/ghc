@@ -8,6 +8,7 @@ Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	cc495e263f4384e1d6b38e851bf6eca0
 Patch0:		%{name}-DESTDIR.patch
+Patch1:		%{name}-ac.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	autoconf
 BuildRequires:	ghc >= 4.0.8
@@ -69,6 +70,7 @@ potrzebujemy systemu profiluj±cego z GHC.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 # generate our own `build.mk'
 #
@@ -81,6 +83,8 @@ SRC_HAPPY_OPTS += -c
 END
 
 %build
+%{__aclocal}
+%{__autoconf}
 %configure \
 	--with-gcc=%{__cc}
 
