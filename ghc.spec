@@ -87,6 +87,12 @@ GhcLibWays = p
 SRC_HAPPY_OPTS += -agc # useful from Happy 1.7 onwards
 SRC_HAPPY_OPTS += -c
 END
+%ifarch amd64
+cat >>mk/build.mk <<END 
+GhcUnregisterised=YES
+SplitObjs=NO
+END
+%endif
 
 %build
 cp -f /usr/share/automake/config.sub .
