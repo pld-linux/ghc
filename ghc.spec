@@ -95,7 +95,7 @@ cd ..
 %{__make} -C ghc/docs ps html
 %{__make} -C ghc/docs/users_guide ps html
 %{__make} -C hslibs/doc ps html
-#%{__make} -C hslibs/graphics/doc ps
+#%%{__make} -C hslibs/graphics/doc ps
 (cd ghc/docs/rts; latex rts.tex; dvips -o rts.dvi)
 
 %install
