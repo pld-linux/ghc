@@ -2,7 +2,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.2.2
-Release:	0.1
+Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -27,6 +27,9 @@ BuildRequires:	tetex-dvips
 BuildRequires:	tetex-format-latex
 BuildRequires:	tetex-latex-bibtex
 Provides:	haskell
+# there is no more ports ghc in pld
+# alpha is still missing - need bootstraper
+ExclusiveArch:	%{ix86} amd64 ppc sparc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
