@@ -10,6 +10,7 @@ Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-ac.patch
 Patch2:		%{name}-debian.patch
+Patch3:		%{name}-ar.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	autoconf
 BuildRequires:	ghc >= 4.0.8
@@ -73,6 +74,7 @@ potrzebujemy systemu profiluj±cego z GHC.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 # generate our own `build.mk'
 #
