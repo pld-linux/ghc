@@ -88,7 +88,7 @@ GhcLibWays = p
 SRC_HAPPY_OPTS += -agc # useful from Happy 1.7 onwards
 SRC_HAPPY_OPTS += -c
 END
-%ifarch amd64
+%ifarch amd64 sparc
 cat >>mk/build.mk <<END 
 GhcUnregisterised=YES
 SplitObjs=NO
