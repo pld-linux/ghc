@@ -120,14 +120,15 @@ rm -rf $RPM_BUILD_ROOT
 %doc hslibs/doc/{*.ps,hslibs}
 %doc hslibs/graphics/doc/*.ps
 %attr(755,root,root) %{_bindir}/*
+%dir %{_datadir}ghc-%{version}
+%dir %{_datadir}ghc-%{version}/icons
+%{_datadir}ghc-%{version}/icons/*
 %dir %{_libdir}/ghc-%{version}
-%dir %{_libdir}/ghc-%{version}/icons
 %dir %{_libdir}/ghc-%{version}/hslibs-imports
 %dir %{_libdir}/ghc-%{version}/hslibs-imports/*
 %dir %{_libdir}/ghc-%{version}/imports
 %dir %{_libdir}/ghc-%{version}/imports/*
 %dir %{_libdir}/ghc-%{version}/include
-%{_libdir}/ghc-%{version}/icons/*
 %{_libdir}/ghc-%{version}/include/*
 %{_libdir}/ghc-%{version}/imports/*/*.hi
 %{_libdir}/ghc-%{version}/imports/*/*/*.hi
