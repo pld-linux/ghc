@@ -9,6 +9,7 @@ Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	cc495e263f4384e1d6b38e851bf6eca0
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-ac.patch
+Patch2:		%{name}-debian.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	autoconf
 BuildRequires:	ghc >= 4.0.8
@@ -71,6 +72,7 @@ potrzebujemy systemu profiluj±cego z GHC.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # generate our own `build.mk'
 #
