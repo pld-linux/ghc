@@ -9,15 +9,16 @@ Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-1.tar.bz2
 Patch0:		%{name}-sgml-CATALOG.patch
 Patch1:		%{name}-DESTDIR.patch
 URL:		http://haskell.org/ghc/
-Provides:	haskell
-BuildRequires:	gmp-devel
-BuildRequires:	readline-devel
-BuildRequires:	ncurses-devel
-BuildRequires:	happy >= 1.9
+BuildRequires:	autoconf
 BuildRequires:	ghc >= 4.0.8
-BuildRequires:	sgml-common
-BuildRequires:	openjade
+BuildRequires:	gmp-devel
+BuildRequires:	happy >= 1.9
 BuildRequires:	jadetex
+BuildRequires:	ncurses-devel
+BuildRequires:	openjade
+BuildRequires:	readline-devel
+BuildRequires:	sgml-common
+Provides:	haskell
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -81,7 +82,9 @@ END
 
 %build
 %{__autoconf}
-(cd ghc; autoconf)
+cd ghc
+%{__autoconf}
+cd ..
 %configure \
 	--with-gcc=%{__cc}
 
@@ -103,20 +106,16 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-gzip -9nf ghc/ANNOUNCE ghc/README hslibs/doc/*.ps \
-	ghc/docs/set/*.ps ghc/docs/rts/rts.ps ghc/docs/users_guide/*.ps \
-	hslibs/graphics/doc/*.ps
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ghc/{ANNOUNCE,README}.gz
-%doc ghc/docs/set/{*.ps.gz,set} ghc/docs/rts/*.ps.gz
-%doc ghc/docs/users_guide/{*.ps.gz,users_guide}
-%doc hslibs/doc/{*.ps.gz,hslibs}
-#%doc hslibs/graphics/doc/*.ps.gz
+%doc ghc/{ANNOUNCE,README}
+%doc ghc/docs/set/{*.ps,set} ghc/docs/rts/*.ps
+%doc ghc/docs/users_guide/{*.ps,users_guide}
+%doc hslibs/doc/{*.ps,hslibs}
+#%doc hslibs/graphics/doc/*.ps
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/ghc-%{version}
 %dir %{_libdir}/ghc-%{version}/icons
