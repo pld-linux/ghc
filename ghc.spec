@@ -6,6 +6,7 @@ Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-1.tar.bz2
+# Source0-md5:	836a694411a2ec702eadb01df8d26936
 Patch0:		%{name}-sgml-CATALOG.patch
 Patch1:		%{name}-DESTDIR.patch
 URL:		http://haskell.org/ghc/
