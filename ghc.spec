@@ -43,7 +43,7 @@ S³awny Glasgow Haskell Compilation System (GHC) to mocny, w pe³ni
 funkcjonalny, optymalizuj±cy kompilator funkcyjnego jêzyka
 programowania Haskell 98. GHC kompiluje Haskella do kodu natywnego lub
 do C. Ma zaimplementowanych wiele eksperymentalnych rozszerzeñ jêzyka,
-w tym konkurencjê, interfejs do innych jêzyków, rozszerzenia systemu
+w tym wspó³bie¿no¶æ, interfejs do innych jêzyków, rozszerzenia systemu
 typów, wyj±tki itd. GHS zawiera garbage collector, profiler, obszerny
 zestaw bibliotek. Ten pakiet zawiera wersje HTML i PostScriptow±
 dokumentacji bazowanej na SGML-u. S± one dostêpne tak¿e online pod
