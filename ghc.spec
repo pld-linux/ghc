@@ -63,9 +63,8 @@ SRC_HAPPY_OPTS += -c
 END
 
 %build
-autoconf
-%configure \
-	--libdir=%{_libdir}/ghc-%{version}
+#autoconf
+%configure2_13 --libdir=%{_libdir}/
 
 %{__make} boot
 %{__make} -C glafp-utils sgmlverb
@@ -83,16 +82,15 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-gzip -9nf ghc/ANNOUNCE ghc/README docs/*.ps hslibs/doc/*.ps \
-	ghc/docs/set/*.ps ghc/docs/rts/* ghc/docs/users_guide/*.ps
+gzip -9nf ghc/ANNOUNCE ghc/README hslibs/doc/*.ps \
+	ghc/docs/set/*.ps ghc/docs/rts/*.ps ghc/docs/users_guide/*.ps
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc docs/*.ps.gz docs/building docs/ffi-art 
-%doc hslibs/doc/*.ps.gz hslibs/doc/hslibs
+%doc  
 %doc ghc/{ANNOUNCE,README}.gz
 %doc ghc/docs/set/*.ps.gz ghc/docs/set/set ghc/docs/rts
 %doc ghc/docs/users_guide/*.ps.gz ghc/docs/users_guide/users_guide
@@ -106,9 +104,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ghc-%{version}/includes/*
 %{_libdir}/ghc-%{version}/imports/*/*.hi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/cgprof
-%attr(755,root,root) %{_libdir}/ghc-%{version}/hsc
-%attr(755,root,root) %{_libdir}/ghc-%{version}/hscpp
-%attr(755,root,root) %{_libdir}/ghc-%{version}/mkdependHS
+%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-%{version}
+%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-asm
+%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-pkg.bin
+%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-split
+%attr(755,root,root) %{_libdir}/ghc-%{version}/hsc2hs-bin
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/*.prl
 %{_libdir}/ghc-%{version}/libHS*[a-o].a
