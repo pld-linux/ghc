@@ -1,0 +1,12 @@
+diff -urN ghc-6.2.1.org/aclocal.m4 ghc-6.2.1/aclocal.m4
+--- ghc-6.2.1.org/aclocal.m4	2004-06-10 11:22:06.173807016 +0200
++++ ghc-6.2.1/aclocal.m4	2004-06-10 16:48:04.160541096 +0200
+@@ -461,7 +461,7 @@
+ test -n "$ArCmd" && test -n "$verbose" && echo "        setting ArCmd to $ArCmd"
+ AC_SUBST(ArCmd)
+ if $ArCmd conftest.a -input /dev/null >/dev/null 2>/dev/null; then
+-    ArSupportsInput='-input'
++    ArSupportsInput=''
+ else
+     ArSupportsInput=''
+ fi
