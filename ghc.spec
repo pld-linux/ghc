@@ -109,7 +109,10 @@ cp -f /usr/share/automake/config.sub .
 %{__make} -C ghc/docs/users_guide ps html
 %{__make} -C hslibs/doc ps html
 %{__make} -C hslibs/graphics/doc ps
-(cd ghc/docs/rts; latex rts.tex; dvips -o rts.dvi)
+cd ghc/docs/rts 
+latex rts.tex
+dvips -o rts.ps rts.dvi
+cd -
 
 %install
 rm -rf $RPM_BUILD_ROOT
