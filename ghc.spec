@@ -92,6 +92,10 @@ END
 %ifarch amd64 sparc
 cat >>mk/build.mk <<END 
 GhcUnregisterised=YES
+END
+%endif
+%ifarch amd64 sparc ppc
+cat >>mk/build.mk <<END 
 SplitObjs=NO
 END
 %endif
