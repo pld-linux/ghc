@@ -1,12 +1,12 @@
 Summary:	Glasgow Haskell Compilation system
 Name:		ghc
-Version:	4.08.1
+Version:	5.00.1
 Release:	1
 License:	BSD style w/o adv. clause
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.gz
+Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 Patch0:		%{name}-sgml-CATALOG.patch
 Patch1:		%{name}-DESTDIR.patch
 URL:		http://haskell.org/ghc/
@@ -48,8 +48,8 @@ Profiling libraries for Glorious Glasgow Haskell Compilation System
 needed.
 
 %prep
-%setup -q -n fptools
-%patch0 -p1
+%setup -q 
+#%patch0 -p1
 %patch1 -p1
 
 # generate our own `build.mk'
