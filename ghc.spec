@@ -12,19 +12,20 @@ Patch1:		%{name}-ac.patch
 Patch2:		%{name}-debian.patch
 Patch3:		%{name}-ar.patch
 URL:		http://haskell.org/ghc/
+BuildRequires:	alex >= 2.0
 BuildRequires:	autoconf
+BuildRequires:	docbook-style-dsssl
 BuildRequires:	ghc >= 4.0.8
 BuildRequires:	gmp-devel
 BuildRequires:	happy >= 1.10
-BuildRequires:	alex >= 2.0
 BuildRequires:	jadetex
 BuildRequires:	ncurses-devel
 BuildRequires:	openjade
 BuildRequires:	readline-devel
 BuildRequires:	sgml-common
+BuildRequires:	tetex-dvips
 BuildRequires:	tetex-format-latex
 BuildRequires:	tetex-latex-bibtex
-BuildRequires:	docbook-style-dsssl
 Provides:	haskell
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -61,7 +62,7 @@ informacji oraz definicja jêzyka pod http://www.haskell.org/ .
 Summary:	Profiling libraries for GHC
 Summary(pl):	Biblioteki profiluj±ce dla GHC
 Group:		Development/Libraries
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description prof
 Profiling libraries for Glorious Glasgow Haskell Compilation System
@@ -99,7 +100,7 @@ END
 cp -f /usr/share/automake/config.sub .
 %{__autoconf}
 %configure \
-	--with-gcc=%{__cc}
+	--with-gcc="%{__cc}"
 
 %{__make} boot
 %{__make} -C glafp-utils sgmlverb
