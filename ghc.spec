@@ -12,7 +12,7 @@ Patch1:		%{name}-DESTDIR.patch
 URL:		http://haskell.org/ghc/
 Provides:	haskell
 BuildRequires:	gmp-devel
-BuildRequires:	happy >= 1.7
+BuildRequires:	happy >= 1.9
 BuildRequires:	ghc
 BuildRequires:	sgml-common
 BuildRequires:	openjade
