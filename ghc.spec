@@ -28,7 +28,7 @@ BuildRequires:	tetex-format-latex
 BuildRequires:	tetex-latex-bibtex
 BuildRequires:	tetex-metafont
 Provides:	haskell
-# there is no more ports ghc in pld
+# there is no more ghc ports in PLD
 # alpha is still missing - need bootstraper
 ExclusiveArch:	%{ix86} amd64 ppc sparc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -93,12 +93,12 @@ GhcLibWays = p
 SRC_HAPPY_OPTS += -agc # useful from Happy 1.7 onwards
 SRC_HAPPY_OPTS += -c
 END
-%ifarch amd64 sparc
+%ifarch alpha amd64 sparc
 cat >>mk/build.mk <<END 
 GhcUnregisterised=YES
 END
 %endif
-%ifarch amd64 sparc ppc
+%ifarch alpha amd64 ppc sparc
 cat >>mk/build.mk <<END 
 SplitObjs=NO
 END
