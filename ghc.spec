@@ -1,19 +1,20 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	5.02.1
-Release:	1
+Version:	6.2
+Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
-Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-1.tar.bz2
-# Source0-md5:	836a694411a2ec702eadb01df8d26936
+Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
+# Source0-md5:	cc495e263f4384e1d6b38e851bf6eca0
 Patch0:		%{name}-sgml-CATALOG.patch
 Patch1:		%{name}-DESTDIR.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	autoconf
 BuildRequires:	ghc >= 4.0.8
 BuildRequires:	gmp-devel
-BuildRequires:	happy >= 1.9
+BuildRequires:	happy >= 1.13
+BuildRequires:	alex >= 2.0
 BuildRequires:	jadetex
 BuildRequires:	ncurses-devel
 BuildRequires:	openjade
@@ -69,7 +70,7 @@ potrzebujemy systemu profiluj±cego z GHC.
 %prep
 %setup -q
 #%patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 
 # generate our own `build.mk'
 #
