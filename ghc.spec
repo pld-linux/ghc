@@ -45,8 +45,8 @@ programowania Haskell 98. GHC kompiluje Haskella do kodu natywnego lub
 do C. Ma zaimplementowanych wiele eksperymentalnych rozszerzeñ jêzyka,
 w tym konkurencjê, interfejs do innych jêzyków, rozszerzenia systemu
 typów, wyj±tki itd. GHS zawiera garbage collector, profiler, obszerny
-zestaw bibliotek. Ten pakiet zawiera wersje HTML i PS dokumentacji
-bazowanej na SGML. S± one dostêpne tak¿e online pod
+zestaw bibliotek. Ten pakiet zawiera wersje HTML i PostScriptow±
+dokumentacji bazowanej na SGML-u. S± one dostêpne tak¿e online pod
 http://www.haskell.org/ghc/ .
 
 Haskell 98 to standardowy leniwy funkcyjny jêzyk programowania. Wiêcej
