@@ -111,8 +111,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/ghc-%{version}/hsc2hs-bin
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/*.prl
-%{_libdir}/ghc-%{version}/libHS*[a-o].a
-%{_libdir}/ghc-%{version}/libHS*[r-z].a
+%{_libdir}/ghc-%{version}/libHS*[^p].a
+%{_libdir}/ghc-%{version}/HS*.o
+%{_libdir}/ghc-%{version}/package.conf
+%{_libdir}/ghc-%{version}/*.h
+%{_libdir}/ghc-%{version}/libgmp.a
+
 
 %files prof
 %defattr(644,root,root,755)
