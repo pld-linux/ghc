@@ -80,7 +80,7 @@ SRC_HAPPY_OPTS += -c
 END
 
 %build
-autoconf
+%{__autoconf}
 (cd ghc; autoconf)
 %configure \
 	--with-gcc=%{__cc}
