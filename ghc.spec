@@ -83,7 +83,6 @@ SRC_HAPPY_OPTS += -c
 END
 
 %build
-%{__aclocal}
 %{__autoconf}
 %configure \
 	--with-gcc=%{__cc}
