@@ -22,6 +22,7 @@ BuildRequires:	ncurses-devel
 BuildRequires:	openjade
 BuildRequires:	readline-devel
 BuildRequires:	sgml-common
+BuildRequires:	tetex-format-latex
 BuildRequires:	tetex-latex-bibtex
 BuildRequires:	docbook-style-dsssl
 Provides:	haskell
