@@ -65,7 +65,7 @@ Biblioteki profiluj±ce dla GHC. Powinny byæ zainstalowane kiedy
 potrzebujemy systemu profiluj±cego z GHC.
 
 %prep
-%setup -q 
+%setup -q
 #%patch0 -p1
 %patch1 -p1
 
@@ -115,7 +115,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc ghc/{ANNOUNCE,README}.gz
 %doc ghc/docs/set/{*.ps.gz,set} ghc/docs/rts/*.ps.gz
 %doc ghc/docs/users_guide/{*.ps.gz,users_guide}
-%doc hslibs/doc/{*.ps.gz,hslibs} 
+%doc hslibs/doc/{*.ps.gz,hslibs}
 #%doc hslibs/graphics/doc/*.ps.gz
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/ghc-%{version}
