@@ -1,20 +1,22 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	5.00.2
-Release:	2
+Version:	5.02.1
+Release:	1
 License:	BSD style w/o adv. clause
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
+Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-1.tar.bz2
 Patch0:		%{name}-sgml-CATALOG.patch
 Patch1:		%{name}-DESTDIR.patch
 URL:		http://haskell.org/ghc/
 Provides:	haskell
 BuildRequires:	gmp-devel
+BuildRequires:	readline-devel
+BuildRequires:	ncurses-devel
 BuildRequires:	happy >= 1.9
-BuildRequires:	ghc
+BuildRequires:	ghc >= 4.0.8
 BuildRequires:	sgml-common
 BuildRequires:	openjade
 BuildRequires:	jadetex
@@ -87,8 +89,10 @@ SRC_HAPPY_OPTS += -c
 END
 
 %build
-#autoconf
-%configure2_13 --libdir=%{_libdir}/
+autoconf
+(cd ghc; autoconf)
+%configure \
+	--with-gcc=%{__cc}
 
 %{__make} boot
 %{__make} -C glafp-utils sgmlverb
@@ -97,6 +101,8 @@ END
 %{__make} -C ghc/docs ps html
 %{__make} -C ghc/docs/users_guide ps html
 %{__make} -C hslibs/doc ps html
+#%{__make} -C hslibs/graphics/doc ps
+(cd ghc/docs/rts; latex rts.tex; dvips -o rts.dvi)
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -107,7 +113,8 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 gzip -9nf ghc/ANNOUNCE ghc/README hslibs/doc/*.ps \
-	ghc/docs/set/*.ps ghc/docs/rts/*.ps ghc/docs/users_guide/*.ps
+	ghc/docs/set/*.ps ghc/docs/rts/rts.ps ghc/docs/users_guide/*.ps \
+	hslibs/graphics/doc/*.ps
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -115,16 +122,18 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc ghc/{ANNOUNCE,README}.gz
-%doc ghc/docs/set/*.ps.gz ghc/docs/set/set ghc/docs/rts
-%doc ghc/docs/users_guide/*.ps.gz ghc/docs/users_guide/users_guide
+%doc ghc/docs/set/{*.ps.gz,set} ghc/docs/rts/*.ps.gz
+%doc ghc/docs/users_guide/{*.ps.gz,users_guide}
+%doc hslibs/doc/{*.ps.gz,hslibs} 
+#%doc hslibs/graphics/doc/*.ps.gz
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/ghc-%{version}
 %dir %{_libdir}/ghc-%{version}/icons
 %dir %{_libdir}/ghc-%{version}/imports
 %dir %{_libdir}/ghc-%{version}/imports/*
-%dir %{_libdir}/ghc-%{version}/includes
+%dir %{_libdir}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/icons/*
-%{_libdir}/ghc-%{version}/includes/*
+%{_libdir}/ghc-%{version}/include/*
 %{_libdir}/ghc-%{version}/imports/*/*.hi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/cgprof
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-%{version}
@@ -138,7 +147,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ghc-%{version}/HS*.o
 %{_libdir}/ghc-%{version}/package.conf
 %{_libdir}/ghc-%{version}/*.h
-%{_libdir}/ghc-%{version}/libgmp.a
 
 %files prof
 %defattr(644,root,root,755)
