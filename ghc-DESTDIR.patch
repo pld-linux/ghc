@@ -20,14 +20,16 @@
  	   exit 1; \
  	 fi;
  
-@@ -701,13 +701,13 @@
+@@ -701,14 +701,14 @@
  # install links to script drivers.
  #
  install ::
+-	@$(INSTALL_DIR) $(bindir)
 -	@if ( $(PERL) -e '$$fn="$(bindir)/$(LINK)"; exit ((! -f $$fn || -l $$fn) ? 0 : 1);' ); then \
 -	   echo "Creating a symbol link from $(LINK_TARGET) to $(LINK) in $(bindir)"; \
 -	   $(RM) $(bindir)/$(LINK); \
 -	   $(LN_S) $(LINK_TARGET) $(bindir)/$(LINK); \
++	@$(INSTALL_DIR) $(DESTDIR)$(bindir)
 +	@if ( $(PERL) -e '$$fn="$(DESTDIR)$(bindir)/$(LINK)"; exit ((! -f $$fn || -l $$fn) ? 0 : 1);' ); then \
 +	   echo "Creating a symbol link from $(LINK_TARGET) to $(LINK) in $(DESTDIR)$(bindir)"; \
 +	   $(RM) $(DESTDIR)$(bindir)/$(LINK); \
