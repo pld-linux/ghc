@@ -1,7 +1,8 @@
 Summary:	Glasgow Haskell Compilation system
+Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	5.00.2
-Release:	1
+Release:	2
 License:	BSD style w/o adv. clause
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -34,18 +35,41 @@ available online at http://www.haskell.org/ghc/.
 Haskell 98 is "the" standard lazy functional programming language.
 More info plus the language definition is at http://www.haskell.org/.
 
+%description -l pl
+S≥awny Glasgow Haskell Compilation System (GHC) to mocny, w pe≥ni
+funkcjonalny, optymalizuj±cy kompilator funkcyjnego jÍzyka
+programowania Haskell 98. GHC kompiluje Haskella do kodu natywnego lub
+do C. Ma zaimplementowanych wiele eksperymentalnych rozszerzeÒ jÍzyka,
+w tym konkurencjÍ, interfejs do innych jÍzykÛw, rozszerzenia systemu
+typÛw, wyj±tki itd. GHS zawiera garbage collector, profiler, obszerny
+zestaw bibliotek. Ten pakiet zawiera wersje HTML i PS dokumentacji
+bazowanej na SGML. S± one dostÍpne takøe online pod
+http://www.haskell.org/ghc/ .
+
+Haskell 98 to standardowy leniwy funkcyjny jÍzyk programowania. WiÍcej
+informacji oraz definicja jÍzyka pod http://www.haskell.org/ .
+
 %package prof
 Summary:	Profiling libraries for GHC
+Summary(pl):	Biblioteki profiluj±ce dla GHC
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(ru):	Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(uk):	Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 Requires:	%{name} = %{version}
 
 %description prof
 Profiling libraries for Glorious Glasgow Haskell Compilation System
 (GHC). They should be installed when GHC's profiling subsystem is
 needed.
+
+%description prof -l pl
+Biblioteki profiluj±ce dla GHC. Powinny byÊ zainstalowane kiedy
+potrzebujemy systemu profiluj±cego z GHC.
 
 %prep
 %setup -q 
@@ -90,7 +114,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc  
 %doc ghc/{ANNOUNCE,README}.gz
 %doc ghc/docs/set/*.ps.gz ghc/docs/set/set ghc/docs/rts
 %doc ghc/docs/users_guide/*.ps.gz ghc/docs/users_guide/users_guide
@@ -116,7 +139,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ghc-%{version}/package.conf
 %{_libdir}/ghc-%{version}/*.h
 %{_libdir}/ghc-%{version}/libgmp.a
-
 
 %files prof
 %defattr(644,root,root,755)
