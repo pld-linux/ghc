@@ -1,6 +1,6 @@
 Summary:	Glasgow Haskell Compilation system
 Name:		ghc
-Version:	5.00.1
+Version:	5.00.2
 Release:	1
 License:	BSD style w/o adv. clause
 Group:		Development/Languages
