@@ -5,8 +5,6 @@ Version:	5.02.1
 Release:	1
 License:	BSD style w/o adv. clause
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/JЙzyki
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-1.tar.bz2
 Patch0:		%{name}-sgml-CATALOG.patch
 Patch1:		%{name}-DESTDIR.patch
@@ -55,13 +53,6 @@ informacji oraz definicja jЙzyka pod http://www.haskell.org/ .
 Summary:	Profiling libraries for GHC
 Summary(pl):	Biblioteki profiluj╠ce dla GHC
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(es):	Desarrollo/Bibliotecas
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
-Group(pt_BR):	Desenvolvimento/Bibliotecas
-Group(ru):	Разработка/Библиотеки
-Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name} = %{version}
 
 %description prof
