@@ -57,10 +57,10 @@ w tym wspó³bie¿no¶æ, interfejs do innych jêzyków, rozszerzenia systemu
 typów, wyj±tki itd. GHC zawiera garbage collector, profiler, obszerny
 zestaw bibliotek. Ten pakiet zawiera wersje HTML i PostScriptow±
 dokumentacji bazowanej na SGML-u. S± one dostêpne tak¿e online pod
-http://www.haskell.org/ghc/ .
+<http://www.haskell.org/ghc/>.
 
 Haskell 98 to standardowy leniwy funkcyjny jêzyk programowania. Wiêcej
-informacji oraz definicja jêzyka pod http://www.haskell.org/ .
+informacji oraz definicja jêzyka pod <http://www.haskell.org/>.
 
 %package prof
 Summary:	Profiling libraries for GHC
