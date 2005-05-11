@@ -22,6 +22,7 @@ BuildRequires:	jadetex
 BuildRequires:	ncurses-devel
 BuildRequires:	openjade
 BuildRequires:	readline-devel
+BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sgml-common
 BuildRequires:	tetex-dvips
 BuildRequires:	tetex-format-latex
@@ -30,7 +31,7 @@ BuildRequires:	tetex-metafont
 Provides:	haskell
 # there is no more ghc ports in PLD
 # alpha is still missing - need bootstraper
-ExclusiveArch:	%{ix86} amd64 ppc sparc
+ExclusiveArch:	%{ix86} %{x8664} ppc sparc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -93,12 +94,12 @@ GhcLibWays = p
 SRC_HAPPY_OPTS += -agc # useful from Happy 1.7 onwards
 SRC_HAPPY_OPTS += -c
 END
-%ifarch alpha amd64 sparc
+%ifarch %{x8664} alpha sparc
 cat >>mk/build.mk <<END 
 GhcUnregisterised=YES
 END
 %endif
-%ifarch alpha amd64 ppc sparc
+%ifarch %{x8664} alpha ppc sparc
 cat >>mk/build.mk <<END 
 SplitObjs=NO
 END
