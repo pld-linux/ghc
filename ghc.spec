@@ -1,16 +1,13 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.2.2
-Release:	3
+Version:	6.4
+Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	42088bff4de30e7c3a277cfa55d5589e
-Patch0:		%{name}-DESTDIR.patch
-Patch1:		%{name}-ac.patch
-Patch2:		%{name}-debian.patch
-Patch3:		%{name}-ar.patch
+# Source0-md5:	45ea4e15f135698feb88d12c5000aaf8
+Patch0:		%{name}-ac.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	alex >= 2.0
 BuildRequires:	autoconf
@@ -31,7 +28,7 @@ BuildRequires:	tetex-metafont
 Provides:	haskell
 # there is no more ghc ports in PLD
 # alpha is still missing - need bootstraper
-ExclusiveArch:	%{ix86} %{x8664} ppc sparc
+ExclusiveArch:	%{ix86} %{x8664} ppc sparc amd64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -81,9 +78,6 @@ potrzebujemy systemu profiluj±cego z GHC.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-#%patch3 -p1
 
 # generate our own `build.mk'
 #
@@ -109,28 +103,23 @@ END
 cp -f /usr/share/automake/config.sub .
 %{__autoconf}
 %configure \
-	--with-gcc="%{__cc}"
+	--with-gcc="%{__cc}" \
+	--disable-openal
 
 %{__make} boot
 %{__make} -C glafp-utils sgmlverb
 %{__make} all
-%{__make} -C docs ps html
-%{__make} -C ghc/docs ps html
-%{__make} -C ghc/docs/users_guide ps html
-%{__make} -C hslibs/doc ps html
-%{__make} -C hslibs/graphics/doc ps
-cd ghc/docs/rts 
-latex rts.tex
-dvips -o rts.ps rts.dvi
-cd -
+%{__make} -C docs html
+%{__make} -C ghc/docs html
+%{__make} -C hslibs/doc html
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install-dirs \
-	DESTDIR=$RPM_BUILD_ROOT
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+%{__make} install-dirs install \
+	bindir=$RPM_BUILD_ROOT%{_bindir} \
+	prefix=$RPM_BUILD_ROOT%{_prefix} \
+	libdir=$RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -138,57 +127,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc ghc/{ANNOUNCE,README}
-%doc ghc/docs/rts/*.ps
-%doc ghc/docs/users_guide/{*.ps,users_guide}
-%doc hslibs/doc/{*.ps,hslibs}
-%doc hslibs/graphics/doc/*.ps
+%doc ghc/docs/users_guide/users_guide
+%doc hslibs/doc/hslibs
 %attr(755,root,root) %{_bindir}/*
-%dir %{_datadir}/ghc-%{version}
-%dir %{_datadir}/ghc-%{version}/icons
-%{_datadir}/ghc-%{version}/icons/*
+%{_libdir}/ghc-%{version}/icons
 %dir %{_libdir}/ghc-%{version}
-%dir %{_libdir}/ghc-%{version}/hslibs-imports
-%dir %{_libdir}/ghc-%{version}/hslibs-imports/*
-%dir %{_libdir}/ghc-%{version}/imports
-%dir %{_libdir}/ghc-%{version}/imports/Control
-%dir %{_libdir}/ghc-%{version}/imports/Control/Concurrent
-%dir %{_libdir}/ghc-%{version}/imports/Control/Monad
-%dir %{_libdir}/ghc-%{version}/imports/Control/Monad/ST
-%dir %{_libdir}/ghc-%{version}/imports/Data
-%dir %{_libdir}/ghc-%{version}/imports/Data/Array
-%dir %{_libdir}/ghc-%{version}/imports/Data/Array/IO
-%dir %{_libdir}/ghc-%{version}/imports/Data/Generics
-%dir %{_libdir}/ghc-%{version}/imports/Data/STRef
-%dir %{_libdir}/ghc-%{version}/imports/Debug
-%dir %{_libdir}/ghc-%{version}/imports/Debug/QuickCheck
-%dir %{_libdir}/ghc-%{version}/imports/Foreign
-%dir %{_libdir}/ghc-%{version}/imports/Foreign/C
-%dir %{_libdir}/ghc-%{version}/imports/Foreign/Marshal
-%dir %{_libdir}/ghc-%{version}/imports/GHC
-%dir %{_libdir}/ghc-%{version}/imports/Language
-%dir %{_libdir}/ghc-%{version}/imports/Language/Haskell
-%dir %{_libdir}/ghc-%{version}/imports/Network
-%dir %{_libdir}/ghc-%{version}/imports/System
-%dir %{_libdir}/ghc-%{version}/imports/System/Console
-%dir %{_libdir}/ghc-%{version}/imports/System/IO
-%dir %{_libdir}/ghc-%{version}/imports/System/Mem
-%dir %{_libdir}/ghc-%{version}/imports/System/Posix
-%dir %{_libdir}/ghc-%{version}/imports/System/Posix/DynamicLinker
-%dir %{_libdir}/ghc-%{version}/imports/Text
-%dir %{_libdir}/ghc-%{version}/imports/Text/Html
-%dir %{_libdir}/ghc-%{version}/imports/Text/ParserCombinators
-%dir %{_libdir}/ghc-%{version}/imports/Text/ParserCombinators/Parsec
-%dir %{_libdir}/ghc-%{version}/imports/Text/PrettyPrint
-%dir %{_libdir}/ghc-%{version}/imports/Text/Read
-%dir %{_libdir}/ghc-%{version}/imports/Text/Regex
-%dir %{_libdir}/ghc-%{version}/imports/Text/Show
-%dir %{_libdir}/ghc-%{version}/include
-%{_libdir}/ghc-%{version}/include/*
-%{_libdir}/ghc-%{version}/imports/*.hi
-%{_libdir}/ghc-%{version}/imports/*/*.hi
-%{_libdir}/ghc-%{version}/imports/*/*/*.hi
-%{_libdir}/ghc-%{version}/imports/*/*/*/*.hi
-%{_libdir}/ghc-%{version}/hslibs-imports/*/*.hi
+%{_libdir}/ghc-%{version}/include
+%{_libdir}/ghc-%{version}/imports
+%{_libdir}/ghc-%{version}/hslibs-imports
 %attr(755,root,root) %{_libdir}/ghc-%{version}/cgprof
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-%{version}
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-asm
