@@ -28,7 +28,7 @@ BuildRequires:	tetex-metafont
 Provides:	haskell
 # there is no more ghc ports in PLD
 # alpha is still missing - need bootstraper
-ExclusiveArch:	%{ix86} %{x8664} ppc sparc amd64
+ExclusiveArch:	%{ix86} %{x8664} ppc sparc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
