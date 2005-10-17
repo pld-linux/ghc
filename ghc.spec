@@ -1,3 +1,7 @@
+#
+# Conditional build:
+%bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap
+#
 Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
@@ -12,7 +16,7 @@ URL:		http://haskell.org/ghc/
 BuildRequires:	alex >= 2.0
 BuildRequires:	autoconf
 BuildRequires:	docbook-style-dsssl
-BuildRequires:	ghc >= 4.0.8
+%{!?with_boostrap:BuildRequires:	ghc >= 4.0.8}
 BuildRequires:	gmp-devel
 BuildRequires:	happy >= 1.10
 BuildRequires:	jadetex
@@ -143,7 +147,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/ghc-%{version}/hsc2hs-bin
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/*.prl
-%{_libdir}/ghc-%{version}/libHS*[^p].a
+%{_libdir}/ghc-%{version}/libHS*[!p].a
 %{_libdir}/ghc-%{version}/HS*.o
 %{_libdir}/ghc-%{version}/package.conf
 %{_libdir}/ghc-%{version}/*.h
