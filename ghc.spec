@@ -1,14 +1,13 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.4
-Release:	2
+Version:	6.4.1
+Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	45ea4e15f135698feb88d12c5000aaf8
+# Source0-md5:	fd289bc7c3afa272ff831a71a50b5b00
 Patch0:		%{name}-ac.patch
-Patch1:		http://haskell.org/ghc/dist/6.4/ghc-6.4-powerpc.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	alex >= 2.0
 BuildRequires:	autoconf
@@ -79,7 +78,6 @@ potrzebujemy systemu profiluj±cego z GHC.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 # generate our own `build.mk'
 #
