@@ -16,6 +16,7 @@ URL:		http://haskell.org/ghc/
 BuildRequires:	alex >= 2.0
 BuildRequires:	autoconf
 BuildRequires:	docbook-style-dsssl
+BuildRequires:	docbook-style-xsl
 %{!?with_bootstrap:BuildRequires:	ghc >= 4.0.8}
 BuildRequires:	gmp-devel
 BuildRequires:	happy >= 1.10
