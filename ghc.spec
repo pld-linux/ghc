@@ -16,7 +16,7 @@ URL:		http://haskell.org/ghc/
 BuildRequires:	alex >= 2.0
 BuildRequires:	autoconf
 BuildRequires:	docbook-style-dsssl
-%{!?with_boostrap:BuildRequires:	ghc >= 4.0.8}
+%{!?with_bootstrap:BuildRequires:	ghc >= 4.0.8}
 BuildRequires:	gmp-devel
 BuildRequires:	happy >= 1.10
 BuildRequires:	jadetex
@@ -32,8 +32,7 @@ BuildRequires:	tetex-latex-bibtex
 BuildRequires:	tetex-metafont
 Provides:	haskell
 # there is no more ghc ports in PLD
-# alpha is still missing - need bootstraper
-ExclusiveArch:	%{ix86} %{x8664} ppc sparc
+ExclusiveArch:	%{ix86} %{x8664} alpha ppc sparc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -139,7 +138,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/ghc-%{version}
 %{_libdir}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/imports
+%exclude %{_libdir}/ghc-%{version}/imports/*.p_hi
+%exclude %{_libdir}/ghc-%{version}/imports/*/*.p_hi
+%exclude %{_libdir}/ghc-%{version}/imports/*/*/*.p_hi
+%exclude %{_libdir}/ghc-%{version}/imports/*/*/*/*.p_hi
 %{_libdir}/ghc-%{version}/hslibs-imports
+%exclude %{_libdir}/ghc-%{version}/hslibs-imports/*/*.p_hi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/cgprof
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-%{version}
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-asm
@@ -149,7 +153,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/*.prl
 %{_libdir}/ghc-%{version}/libHS*[!p].a
+%ifarch %{ix86} %{x8664} ppc ppc64 sparc sparcv9 sparc64
 %{_libdir}/ghc-%{version}/HS*.o
+%endif
 %{_libdir}/ghc-%{version}/package.conf
 %{_libdir}/ghc-%{version}/*.h
 %{_libdir}/ghc-%{version}/ghc*-usage.txt
