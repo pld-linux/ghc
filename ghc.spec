@@ -21,6 +21,7 @@ BuildRequires:	gmp-devel
 BuildRequires:	happy >= 1.10
 BuildRequires:	jadetex
 BuildRequires:	ncurses-devel
+BuildRequires:	libxslt-progs
 BuildRequires:	openjade
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.213
