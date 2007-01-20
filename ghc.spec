@@ -12,6 +12,7 @@ Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	2427a8d7d14f86e0878df6b54938acf7
 Patch0:		%{name}-ac.patch
+Patch1:		%{name}-tinfo.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	alex >= 2.0
 BuildRequires:	autoconf
@@ -83,36 +84,20 @@ potrzebujemy systemu profiluj±cego z GHC.
 %prep
 %setup -q
 %patch0 -p1
-
-# generate our own `build.mk'
-#
-# * this is a kludge
-#
-cat >mk/build.mk <<END
-GhcLibWays = p
-SRC_HAPPY_OPTS += -agc # useful from Happy 1.7 onwards
-SRC_HAPPY_OPTS += -c
-END
-%ifarch %{x8664} alpha sparc
-cat >>mk/build.mk <<END 
-GhcUnregisterised=YES
-END
-%endif
-%ifarch %{x8664} alpha ppc sparc
-cat >>mk/build.mk <<END 
-SplitObjs=NO
-END
-%endif
+%patch1 -p1
 
 %build
+cd libraries/readline/
+%{__autoconf}
+cd ../..
+
 cp -f /usr/share/automake/config.sub .
 %{__autoconf}
 %configure \
 	--with-gcc="%{__cc}" \
 	--disable-openal
 
-%{__make} boot
-%{__make} all
+%{__make}
 %{__make} -C docs html
 %{__make} -C ghc/docs html
 %{__make} -C hslibs/doc html
