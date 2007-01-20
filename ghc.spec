@@ -5,12 +5,12 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.4.1
-Release:	2
+Version:	6.6
+Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	fd289bc7c3afa272ff831a71a50b5b00
+# Source0-md5:	2427a8d7d14f86e0878df6b54938acf7
 Patch0:		%{name}-ac.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	alex >= 2.0
@@ -112,7 +112,6 @@ cp -f /usr/share/automake/config.sub .
 	--disable-openal
 
 %{__make} boot
-%{__make} -C glafp-utils sgmlverb
 %{__make} all
 %{__make} -C docs html
 %{__make} -C ghc/docs html
