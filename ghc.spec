@@ -3,7 +3,7 @@
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap
 #
 Summary:	Glasgow Haskell Compilation system
-Summary(pl):	System kompilacji Glasgow Haskell
+Summary(pl.UTF-8):   System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.6
 Release:	0.1
@@ -52,23 +52,23 @@ available online at http://www.haskell.org/ghc/.
 Haskell 98 is "the" standard lazy functional programming language.
 More info plus the language definition is at http://www.haskell.org/.
 
-%description -l pl
-S³awny Glasgow Haskell Compilation System (GHC) to mocny, w pe³ni
-funkcjonalny, optymalizuj±cy kompilator funkcyjnego jêzyka
+%description -l pl.UTF-8
+SÅ‚awny Glasgow Haskell Compilation System (GHC) to mocny, w peÅ‚ni
+funkcjonalny, optymalizujÄ…cy kompilator funkcyjnego jÄ™zyka
 programowania Haskell 98. GHC kompiluje Haskella do kodu natywnego lub
-do C. Ma zaimplementowanych wiele eksperymentalnych rozszerzeñ jêzyka,
-w tym wspó³bie¿no¶æ, interfejs do innych jêzyków, rozszerzenia systemu
-typów, wyj±tki itd. GHC zawiera garbage collector, profiler, obszerny
-zestaw bibliotek. Ten pakiet zawiera wersje HTML i PostScriptow±
-dokumentacji bazowanej na SGML-u. S± one dostêpne tak¿e online pod
+do C. Ma zaimplementowanych wiele eksperymentalnych rozszerzeÅ„ jÄ™zyka,
+w tym wspÃ³Å‚bieÅ¼noÅ›Ä‡, interfejs do innych jÄ™zykÃ³w, rozszerzenia systemu
+typÃ³w, wyjÄ…tki itd. GHC zawiera garbage collector, profiler, obszerny
+zestaw bibliotek. Ten pakiet zawiera wersje HTML i PostScriptowÄ…
+dokumentacji bazowanej na SGML-u. SÄ… one dostÄ™pne takÅ¼e online pod
 <http://www.haskell.org/ghc/>.
 
-Haskell 98 to standardowy leniwy funkcyjny jêzyk programowania. Wiêcej
-informacji oraz definicja jêzyka pod <http://www.haskell.org/>.
+Haskell 98 to standardowy leniwy funkcyjny jÄ™zyk programowania. WiÄ™cej
+informacji oraz definicja jÄ™zyka pod <http://www.haskell.org/>.
 
 %package prof
 Summary:	Profiling libraries for GHC
-Summary(pl):	Biblioteki profiluj±ce dla GHC
+Summary(pl.UTF-8):   Biblioteki profilujÄ…ce dla GHC
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
@@ -77,9 +77,9 @@ Profiling libraries for Glorious Glasgow Haskell Compilation System
 (GHC). They should be installed when GHC's profiling subsystem is
 needed.
 
-%description prof -l pl
-Biblioteki profiluj±ce dla GHC. Powinny byæ zainstalowane kiedy
-potrzebujemy systemu profiluj±cego z GHC.
+%description prof -l pl.UTF-8
+Biblioteki profilujÄ…ce dla GHC. Powinny byÄ‡ zainstalowane kiedy
+potrzebujemy systemu profilujÄ…cego z GHC.
 
 %prep
 %setup -q
