@@ -3,7 +3,7 @@
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap
 #
 Summary:	Glasgow Haskell Compilation system
-Summary(pl.UTF-8):   System kompilacji Glasgow Haskell
+Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.6
 Release:	0.1
@@ -68,7 +68,7 @@ informacji oraz definicja języka pod <http://www.haskell.org/>.
 
 %package prof
 Summary:	Profiling libraries for GHC
-Summary(pl.UTF-8):   Biblioteki profilujące dla GHC
+Summary(pl.UTF-8):	Biblioteki profilujące dla GHC
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
