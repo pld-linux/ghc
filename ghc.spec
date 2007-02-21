@@ -140,6 +140,7 @@ potrzebujemy systemu profilującego z GHC.
 
 %build
 %{?with_bootstrap:PATH=$PATH:/usr/local/bin}
+cp -f /usr/share/automake/config.sub .
 %{__autoconf}
 %configure \
 	--prefix=%{_prefix} \
