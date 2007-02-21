@@ -18,6 +18,7 @@ URL:		http://haskell.org/ghc/
 BuildRequires:	OpenGL-GLU-devel
 %{!?with_bootstrap:BuildRequires:	alex >= 2.0}
 BuildRequires:	autoconf
+BuildRequires:	automake
 %{!?with_doc:BuildRequires:	docbook-dtd42-xml}
 %{!?with_doc:BuildRequires:	docbook-style-xsl}
 %{!?with_bootstrap:BuildRequires:	ghc}
