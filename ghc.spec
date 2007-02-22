@@ -7,7 +7,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.6
-Release:	1
+Release:	2
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -19,18 +19,18 @@ BuildRequires:	OpenGL-GLU-devel
 %{!?with_bootstrap:BuildRequires:	alex >= 2.0}
 BuildRequires:	autoconf
 BuildRequires:	automake
-%{!?with_doc:BuildRequires:	docbook-dtd42-xml}
-%{!?with_doc:BuildRequires:	docbook-style-xsl}
+%{?with_doc:BuildRequires:	docbook-dtd42-xml}
+%{?with_doc:BuildRequires:	docbook-style-xsl}
 %{!?with_bootstrap:BuildRequires:	ghc}
 BuildRequires:	gmp-devel
-%{!?with_doc:BuildRequires:	haddock}
+%{?with_doc:BuildRequires:	haddock}
 %{!?with_bootstrap:BuildRequires:	happy >= 1.15}
-%{!?with_doc:BuildRequires:	libxslt-progs}
+%{?with_doc:BuildRequires:	libxslt-progs}
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.213
-%{!?with_doc:BuildRequires:	tetex}
-%{!?with_doc:BuildRequires:	tetex-dvips}
+%{?with_doc:BuildRequires:	tetex}
+%{?with_doc:BuildRequires:	tetex-dvips}
 #For generating documentation in PDF: fop or xmltex
 Provides:	haskell
 # there is no more ghc ports in PLD
@@ -161,8 +161,10 @@ rm -rf $RPM_BUILD_ROOT
 	datadir=$RPM_BUILD_ROOT%{_datadir}/%{name}-%{version} \
 	libdir=$RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}
 
+%if %{with doc}
 rm -rf html
 %{__make} install-docs datadir=`pwd`
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
