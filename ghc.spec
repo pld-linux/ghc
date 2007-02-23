@@ -7,20 +7,26 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.6
-Release:	2
+Release:	3
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	2427a8d7d14f86e0878df6b54938acf7
+Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs.tar.bz2
+# Source1-md5:	14b22fce36caffa509046361724bc119
 Patch0:		%{name}-ac.patch
 Patch1:		%{name}-tinfo.patch
 URL:		http://haskell.org/ghc/
+BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
+BuildRequires:	OpenGL-devel
+BuildRequires:	OpenGL-glut-devel
 %{!?with_bootstrap:BuildRequires:	alex >= 2.0}
 BuildRequires:	autoconf
 BuildRequires:	automake
 %{?with_doc:BuildRequires:	docbook-dtd42-xml}
 %{?with_doc:BuildRequires:	docbook-style-xsl}
+BuildRequires:	freealut-devel
 %{!?with_bootstrap:BuildRequires:	ghc}
 BuildRequires:	gmp-devel
 %{?with_doc:BuildRequires:	haddock}
@@ -135,14 +141,19 @@ Biblioteki profilujące dla GHC. Powinny być zainstalowane kiedy
 potrzebujemy systemu profilującego z GHC.
 
 %prep
-%setup -q
+%setup -q -b1
 %patch0 -p1
 %patch1 -p1
 
 %build
 %{?with_bootstrap:PATH=$PATH:/usr/local/bin}
 cp -f /usr/share/automake/config.sub .
+
 %{__autoconf}
+cd libraries/readline
+%{__autoconf}
+cd ../..
+
 %configure \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}"
@@ -176,7 +187,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/users_guide/users_guide docs/comm
 %doc docs/ext-core/core.ps docs/storage-mgt/*.ps
 %doc libraries/html-docs
-%doc html libraries/Cabal/doc/Cabal
+%doc html/* libraries/Cabal/doc/Cabal
 %endif
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/ghc-%{version}
