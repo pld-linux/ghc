@@ -103,7 +103,7 @@ informacje kontaktowe, odsyłacze do grup naukowo-badawczych)
 są dostępne ze strony domowej Haskella pod http://haskell.org/.
 
 Autorzy:
----------
+--------
     Krasimir Angelov <ka2_mail@yahoo.com>
     Manuel Chakravarty <chak@cse.unsw.edu.au>
     Koen Claessen <koen@cs.chalmers.se>
