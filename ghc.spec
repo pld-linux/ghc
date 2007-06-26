@@ -1,19 +1,21 @@
 #
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap
+# due to http://hackage.haskell.org/trac/ghc/ticket/1427
+%bcond_without	unregistered
 %bcond_without	doc		# don't build documentation (requires haddock)
 #
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.6
-Release:	3
+Version:	6.6.1
+Release:	2
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	2427a8d7d14f86e0878df6b54938acf7
+# Source0-md5:	ba9f4aec2fde5ff1e1548ae69b78aeb0
 Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs.tar.bz2
-# Source1-md5:	14b22fce36caffa509046361724bc119
+# Source1-md5:	43a26b81608b206c056adc3032f7da2a
 Patch0:		%{name}-ac.patch
 Patch1:		%{name}-tinfo.patch
 URL:		http://haskell.org/ghc/
@@ -24,20 +26,23 @@ BuildRequires:	OpenGL-glut-devel
 %{!?with_bootstrap:BuildRequires:	alex >= 2.0}
 BuildRequires:	autoconf
 BuildRequires:	automake
-%{?with_doc:BuildRequires:	docbook-dtd42-xml}
-%{?with_doc:BuildRequires:	docbook-style-xsl}
 BuildRequires:	freealut-devel
 %{!?with_bootstrap:BuildRequires:	ghc}
 BuildRequires:	gmp-devel
-%{?with_doc:BuildRequires:	haddock}
 %{!?with_bootstrap:BuildRequires:	happy >= 1.15}
-%{?with_doc:BuildRequires:	libxslt-progs}
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.213
-%{?with_doc:BuildRequires:	tetex}
-%{?with_doc:BuildRequires:	tetex-dvips}
+%if %{with doc}
+BuildRequires:	docbook-dtd42-xml
+BuildRequires:	docbook-style-xsl
+BuildRequires:	haddock
+BuildRequires:	libxslt-progs
+BuildRequires:	tetex
+BuildRequires:	tetex-dvips
+BuildRequires:	tetex-latex-bibtex
 #For generating documentation in PDF: fop or xmltex
+%endif
 Provides:	haskell
 # there is no more ghc ports in PLD
 ExclusiveArch:	%{ix86} %{x8664} alpha ppc sparc
@@ -145,6 +150,15 @@ potrzebujemy systemu profilującego z GHC.
 %patch0 -p1
 %patch1 -p1
 
+%if %{with unregistered}
+cat << 'EOF' >> mk/build.mk
+GhcUnregisterised=YES                                                     
+GhcWithNativeCodeGen=NO                                                   
+GhcWithInterpreter=NO                                                     
+SplitObjs=NO
+EOF
+%endif
+
 %build
 %{?with_bootstrap:PATH=$PATH:/usr/local/bin}
 cp -f /usr/share/automake/config.sub .
@@ -167,6 +181,7 @@ cd ../..
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %{__make} install \
 	bindir=$RPM_BUILD_ROOT%{_bindir} \
 	datadir=$RPM_BUILD_ROOT%{_datadir}/%{name}-%{version} \
@@ -174,7 +189,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with doc}
 rm -rf html
-%{__make} install-docs datadir=`pwd`
+%{__make} install-docs \
+	datadir=`pwd` \
+	mandir=RPM_BUILD_ROOT%{_mandir}
 %endif
 
 %clean
@@ -208,8 +225,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/libHS*.a
 %exclude %{_libdir}/ghc-%{version}/libHS*_p.a
+%if ! %{with unregistered}
 %ifarch %{ix86} %{x8664} ppc ppc64 sparc sparcv9 sparc64
 %{_libdir}/ghc-%{version}/HS*.o
+%endif
 %endif
 %{_libdir}/ghc-%{version}/package.conf
 %{_libdir}/ghc-%{version}/*.h
