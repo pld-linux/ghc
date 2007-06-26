@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap
 # due to http://hackage.haskell.org/trac/ghc/ticket/1427
-%bcond_without	unregistered
+%bcond_without	unregistered	# non-registerised interpreter
 %bcond_without	doc		# don't build documentation (requires haddock)
 #
 Summary:	Glasgow Haskell Compilation system
@@ -152,8 +152,8 @@ potrzebujemy systemu profilującego z GHC.
 
 %if %{with unregistered}
 cat << 'EOF' >> mk/build.mk
-GhcUnregisterised=YES                                                     
-GhcWithNativeCodeGen=NO                                                   
+GhcUnregisterised=YES
+GhcWithNativeCodeGen=NO
 SplitObjs=NO
 EOF
 %endif
