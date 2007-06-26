@@ -9,7 +9,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.6.1
-Release:	2
+Release:	3
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -154,7 +154,6 @@ potrzebujemy systemu profilującego z GHC.
 cat << 'EOF' >> mk/build.mk
 GhcUnregisterised=YES                                                     
 GhcWithNativeCodeGen=NO                                                   
-GhcWithInterpreter=NO                                                     
 SplitObjs=NO
 EOF
 %endif
@@ -175,7 +174,8 @@ cd ../..
 %{__make}
 %if %{with doc}
 %{__make} html
-%{__make} -C docs/ext-core ps
+# broken
+#%{__make} -C docs/ext-core ps
 %{__make} -C docs/storage-mgt ps
 %endif
 
@@ -202,7 +202,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc ANNOUNCE README
 %if %{with doc}
 %doc docs/users_guide/users_guide docs/comm
-%doc docs/ext-core/core.ps docs/storage-mgt/*.ps
+%doc docs/*-*/*.ps
 %doc libraries/html-docs
 %doc html/* libraries/Cabal/doc/Cabal
 %endif
@@ -225,10 +225,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/libHS*.a
 %exclude %{_libdir}/ghc-%{version}/libHS*_p.a
-%if ! %{with unregistered}
 %ifarch %{ix86} %{x8664} ppc ppc64 sparc sparcv9 sparc64
 %{_libdir}/ghc-%{version}/HS*.o
-%endif
 %endif
 %{_libdir}/ghc-%{version}/package.conf
 %{_libdir}/ghc-%{version}/*.h
