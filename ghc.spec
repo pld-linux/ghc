@@ -9,7 +9,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.6.1
-Release:	5
+Release:	6
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -214,6 +214,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ghc-%{version}/icons
 %{_libdir}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/imports
+%{_libdir}/ghc-%{version}/extra-gcc-opts
 %exclude %{_libdir}/ghc-%{version}/imports/*.p_hi
 %exclude %{_libdir}/ghc-%{version}/imports/*/*.p_hi
 %exclude %{_libdir}/ghc-%{version}/imports/*/*/*.p_hi
