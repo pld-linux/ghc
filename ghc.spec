@@ -1,15 +1,15 @@
 #
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap
-# due to http://hackage.haskell.org/trac/ghc/ticket/1427
-%bcond_without	unregistered	# non-registerised interpreter
+# due to http://hackage.haskell.org/trac/ghc/ticket/1427 (fixed by gcc42 patch)
+%bcond_with	unregistered	# non-registerised interpreter
 %bcond_without	doc		# don't build documentation (requires haddock)
 #
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.6.1
-Release:	4
+Release:	5
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -18,6 +18,7 @@ Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs
 # Source1-md5:	43a26b81608b206c056adc3032f7da2a
 Patch0:		%{name}-ac.patch
 Patch1:		%{name}-tinfo.patch
+Patch2:		%{name}-gcc42.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -149,6 +150,7 @@ potrzebujemy systemu profilującego z GHC.
 %setup -q -b1
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %if %{with unregistered}
 cat << 'EOF' >> mk/build.mk
