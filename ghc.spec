@@ -1,3 +1,12 @@
+# TODO
+# - fails (gcc-4.2.3-1.x86_64)
+#../../compat/libghccompat.a(InstalledPackageInfo.o): In function `s7A4_6_alt':
+#ghc29245_0.hc:(.text+0x1b84d): undefined reference to `__DISCARD__'
+#ghc29245_0.hc:(.text+0x1b85f): undefined reference to `__DISCARD__'
+#ghc29245_0.hc:(.text+0x1b885): undefined reference to `__DISCARD__'
+#ghc29245_0.hc:(.text+0x1b896): undefined reference to `__DISCARD__'
+#../../compat/libghccompat.a(InstalledPackageInfo.o):ghc29245_0.hc:(.text+0x1b8c5): more undefined references to `__DISCARD__' follow
+#collect2: ld returned 1 exit status
 #
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap
