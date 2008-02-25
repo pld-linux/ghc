@@ -9,7 +9,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.6.1
-Release:	6
+Release:	7
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -19,6 +19,7 @@ Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs
 Patch0:		%{name}-ac.patch
 Patch1:		%{name}-tinfo.patch
 Patch2:		%{name}-gcc42.patch
+Patch3:		%{name}-perl10.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -151,6 +152,7 @@ potrzebujemy systemu profilującego z GHC.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %if %{with unregistered}
 cat << 'EOF' >> mk/build.mk
@@ -192,7 +194,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with doc}
 rm -rf html
 %{__make} install-docs \
-	datadir=`pwd` \
+	datadir=$(pwd) \
 	mandir=RPM_BUILD_ROOT%{_mandir}
 %endif
 
