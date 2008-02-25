@@ -1,0 +1,2 @@
+- rel 2; do unregistered build due to ghc own problems with gcc 4.2
+  [updated to 6.6.1]
