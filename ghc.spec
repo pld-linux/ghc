@@ -47,7 +47,10 @@ BuildRequires:	tetex-latex-bibtex
 %endif
 Provides:	haskell
 # there is no more ghc ports in PLD
-ExclusiveArch:	%{ix86} %{x8664} alpha ppc sparc
+# th-ppc removed:
+#error: ghc: no such package
+#error: haddock: no such package
+ExclusiveArch:	%{ix86} %{x8664} alpha sparc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
