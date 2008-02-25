@@ -1,0 +1,7 @@
+- updated to 5.02.1
+- added buildrequires
+- updated DESTDIR patch
+- use autoconf now
+- changes/fixes in docs and files
+- pass %{__cc} as gcc for confiugre script
+- cleanup
