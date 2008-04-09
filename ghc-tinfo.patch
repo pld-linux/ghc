@@ -1,16 +1,16 @@
 --- ghc-6.6/libraries/readline/configure.ac.org	2007-01-20 22:38:47.918113250 +0100
 +++ ghc-6.6/libraries/readline/configure.ac	2007-01-20 22:39:18.404018500 +0100
 @@ -31,10 +31,11 @@
- dnl ** check for readline, for Hugs and hslibs' Readline
- dnl ncurses supersedes termcap and curses, but for compatibility,
- dnl we have to check for all...
--AC_CHECK_LIB(ncurses, tputs, HaveLibTermcap=YES; LibTermcap=ncurses,
-+AC_CHECK_LIB(tinfo, tputs, HaveLibTermcap=YES; LibTermcap=tinfo,
-+ AC_CHECK_LIB(ncurses, tputs, HaveLibTermcap=YES; LibTermcap=ncurses,
-   AC_CHECK_LIB(termcap, tputs, HaveLibTermcap=YES; LibTermcap=termcap,
-     AC_CHECK_LIB(curses, tputs, HaveLibTermcap=YES; LibTermcap=curses,
--      HaveLibTermcap=NO; LibTermcap=not-installed)))
-+      HaveLibTermcap=NO; LibTermcap=not-installed))))
+   dnl ** check for readline, for Hugs and hslibs' Readline
+   dnl ncurses supersedes termcap and curses, but for compatibility,
+   dnl we have to check for all...
+-  AC_CHECK_LIB(ncurses, tputs, HaveLibTermcap=YES; LibTermcap=ncurses,
++    AC_CHECK_LIB(tinfo, tputs, HaveLibTermcap=YES; LibTermcap=tinfo,
++      AC_CHECK_LIB(ncurses, tputs, HaveLibTermcap=YES; LibTermcap=ncurses,
+     AC_CHECK_LIB(termcap, tputs, HaveLibTermcap=YES; LibTermcap=termcap,
+       AC_CHECK_LIB(curses, tputs, HaveLibTermcap=YES; LibTermcap=curses,
+-        HaveLibTermcap=NO; LibTermcap=not-installed)))
++        HaveLibTermcap=NO; LibTermcap=not-installed))))
  
- if test $HaveLibTermcap = YES ; then
-   LIBS="-l$LibTermcap $LIBS"
+   if test $HaveLibTermcap = YES ; then
+     LIBS="-l$LibTermcap $LIBS"
