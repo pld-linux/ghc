@@ -27,8 +27,6 @@ Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs
 # Source1-md5:	d199c50814188fb77355d41058b8613c
 Patch0:		%{name}-ac.patch
 Patch1:		%{name}-tinfo.patch
-Patch2:		%{name}-gcc42.patch
-Patch3:		%{name}-perl10.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -163,8 +161,6 @@ potrzebujemy systemu profilującego z GHC.
 %setup -q -b1
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 %if %{with unregistered}
 cat << 'EOF' >> mk/build.mk
