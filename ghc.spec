@@ -17,16 +17,15 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.8.2
+Version:	6.10.1
 Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	43108417594be7eba0918c459e871e40
+# Source0-md5:	54c676a632b3d73cf526b06347522c32
 Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs.tar.bz2
-# Source1-md5:	d199c50814188fb77355d41058b8613c
+# Source1-md5:	4ff4590f1002ae1ff608874da8643c67
 Patch0:		%{name}-ac.patch
-Patch1:		%{name}-tinfo.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -160,7 +159,6 @@ potrzebujemy systemu profilującego z GHC.
 %prep
 %setup -q -b1
 %patch0 -p1
-%patch1 -p1
 
 %if %{with unregistered}
 cat << 'EOF' >> mk/build.mk
@@ -175,10 +173,6 @@ EOF
 cp -f /usr/share/automake/config.sub .
 
 %{__autoconf}
-cd libraries/readline
-%{__autoconf}
-cd ../..
-
 %configure \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}"
