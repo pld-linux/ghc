@@ -56,7 +56,7 @@ Provides:	haskell
 # th-ppc removed:
 #error: ghc: no such package
 #error: haddock: no such package
-ExclusiveArch:	%{ix86} %{x8664} alpha sparc
+ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
