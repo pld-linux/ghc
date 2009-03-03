@@ -25,15 +25,12 @@ Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	54c676a632b3d73cf526b06347522c32
 Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs.tar.bz2
 # Source1-md5:	4ff4590f1002ae1ff608874da8643c67
-Patch0:		%{name}-ac.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
 %{!?with_bootstrap:BuildRequires:	alex >= 2.0}
-BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRequires:	freealut-devel
 %{!?with_bootstrap:BuildRequires:	ghc}
 BuildRequires:	gmp-devel
@@ -158,7 +155,6 @@ potrzebujemy systemu profilującego z GHC.
 
 %prep
 %setup -q -b1
-%patch0 -p1
 
 %if %{with unregistered}
 cat << 'EOF' >> mk/build.mk
@@ -170,9 +166,7 @@ EOF
 
 %build
 %{?with_bootstrap:PATH=$PATH:/usr/local/bin}
-cp -f /usr/share/automake/config.sub .
 
-%{__autoconf}
 %configure \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}"
