@@ -1,3 +1,6 @@
+# NOTE
+# - happy, alex needed only when using darcs checkout or regenerating parsers
+#   http://hackage.haskell.org/trac/ghc/wiki/Building/Prerequisites
 # TODO
 # - system gmp/gmp-4.2.1.tar.gz
 # - system libffi/libffi-3.0.4.tar.gz
@@ -27,6 +30,7 @@
 #template-haskell -any,
 #unix -any
 #make[2]: *** [boot.stage.2] Error 1
+# - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
@@ -53,6 +57,8 @@ Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknow
 # NoSource4-md5:	efe7ce579a482b6bd87ed80ddf6e1f5c
 NoSource:	4
 %endif
+Patch0:	%{name}-system-libffi.patch
+Patch1:	%{name}-system-haddock.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -60,7 +66,7 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
 %{!?with_bootstrap:BuildRequires:	alex >= 2.0}
 BuildRequires:	freealut-devel
-%{!?with_bootstrap:BuildRequires:	ghc}
+%{!?with_bootstrap:BuildRequires:	ghc >= 6.6}
 BuildRequires:	gmp-devel
 %{!?with_bootstrap:BuildRequires:	happy >= 1.15}
 BuildRequires:	ncurses-devel
@@ -151,6 +157,8 @@ potrzebujemy systemu profilującego z GHC.
 %endif
 mv %{name}-%{version} binsrc
 %endif
+%patch0 -p1
+%patch1 -p1
 
 # 0.10.1 ghc-pkg -l is not supported
 sed -i -e 's,fp_ghc_pkg_guess" -l,fp_ghc_pkg_guess" list,' configure
@@ -172,6 +180,7 @@ EOF
 
 %if %{with unregistered}
 cat << 'EOF' >> mk/build.mk
+# An unregisterised build is one that compiles via vanilla C only
 # http://hackage.haskell.org/trac/ghc/wiki/Building/Unregisterised
 GhcUnregisterised=YES
 GhcWithNativeCodeGen=NO
