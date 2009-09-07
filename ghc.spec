@@ -19,17 +19,8 @@
 #ghc29245_0.hc:(.text+0x1b896): undefined reference to `__DISCARD__'
 #../../compat/libghccompat.a(InstalledPackageInfo.o):ghc29245_0.hc:(.text+0x1b8c5): more undefined references to `__DISCARD__' follow
 #collect2: ld returned 1 exit status
-# - after using official binary tarballs, some dep errors occour:
-#Configuring ghc-6.10.1...
-#cabal-bin: At least the following dependencies are missing:
-#Cabal -any,
-#base <3,
-#filepath >=1 && <1.2,
-#haskell98 -any,
-#hpc -any,
-#template-haskell -any,
-#unix -any
-#make[2]: *** [boot.stage.2] Error 1
+# - reorganize %files for new version
+# - patch libraries/terminfo/configure.ac to link against tinfo not ncurses (-Wl,--as-needed) and run autotools only there?
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
 # Conditional build:
@@ -41,24 +32,23 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.10.1
+Version:	6.10.4
 Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	54c676a632b3d73cf526b06347522c32
+# Source0-md5:	167687fa582ef6702aaac24e139ec982
 Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs.tar.bz2
-# Source1-md5:	4ff4590f1002ae1ff608874da8643c67
+# Source1-md5:	37ce285617d7cebabc3cf6805bdbca25
 %if %{with bootstrap}
 Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
-# NoSource3-md5:	1895a81c7788604579b5bbd01a566303
+# NoSource3-md5:	ba9eefecf9753a391d84ffe9f8515e1c
 NoSource:	3
 Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux.tar.bz2
-# NoSource4-md5:	efe7ce579a482b6bd87ed80ddf6e1f5c
+# NoSource4-md5:	3521c5a12808811d32f9950fe7a3815c
 NoSource:	4
 %endif
-Patch0:	%{name}-system-libffi.patch
-Patch1:	%{name}-system-haddock.patch
+Patch0:	%{name}-cabal-flags.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -157,8 +147,7 @@ potrzebujemy systemu profilującego z GHC.
 %endif
 mv %{name}-%{version} binsrc
 %endif
-%patch0 -p1
-%patch1 -p1
+%patch0
 
 # 0.10.1 ghc-pkg -l is not supported
 sed -i -e 's,fp_ghc_pkg_guess" -l,fp_ghc_pkg_guess" list,' configure
@@ -212,6 +201,7 @@ fi
 %configure \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}" \
+	--with-curses-includes=/usr/include/ncursesw \
 %if %{with bootstrap}
 	GhcPkgCmd=$top/bindist/bin/ghc-pkg \
 %endif
@@ -239,13 +229,15 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	bindir=$RPM_BUILD_ROOT%{_bindir} \
 	datadir=$RPM_BUILD_ROOT%{_datadir}/%{name}-%{version} \
-	libdir=$RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}
+	libdir=$RPM_BUILD_ROOT%{_libdir}/%{name}-%{version} \
+	docdir=$(pwd)/docs-root
 
 %if %{with doc}
 rm -rf html
 %{__make} install-docs \
 	datadir=$(pwd) \
-	mandir=RPM_BUILD_ROOT%{_mandir}
+	mandir=RPM_BUILD_ROOT%{_mandir} \
+	docdir=$(pwd)/docs-root
 %endif
 
 %clean
