@@ -2,24 +2,10 @@
 # - happy, alex needed only when using darcs checkout or regenerating parsers
 #   http://hackage.haskell.org/trac/ghc/wiki/Building/Prerequisites
 # TODO
+# - FIX files (it's a rough mess now)
 # - system gmp/gmp-4.2.1.tar.gz
 # - system libffi/libffi-3.0.4.tar.gz
 # - ghc-pkg is called with invalid args for 6.10 (-l, --show-package), and the .m4 are not distributed (present only in aclocal.m4 (mv to acinclude.m4?)
-# - related old gcc bug for __DISCARD__: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=20359
-# - http://www.archivum.info/glasgow-haskell-users@haskell.org/2008-07/msg00060.html
-# - http://bugs.gentoo.org/212307
-# - http://bugs.gentoo.org/show_bug.cgi?id=145466
-# - $* is no longer supported at /usr/lib64/ghc-6.6.1/ghc-asm line 515., that's why with pld ghc building fails (the __DISCARD__ filtering)
-#   - Use of $* is deprecated in modern Perl, supplanted by the "/s" and "/m" modifiers on pattern matching.
-# - fails (gcc-4.2.3-1.x86_64)
-#../../compat/libghccompat.a(InstalledPackageInfo.o): In function `s7A4_6_alt':
-#ghc29245_0.hc:(.text+0x1b84d): undefined reference to `__DISCARD__'
-#ghc29245_0.hc:(.text+0x1b85f): undefined reference to `__DISCARD__'
-#ghc29245_0.hc:(.text+0x1b885): undefined reference to `__DISCARD__'
-#ghc29245_0.hc:(.text+0x1b896): undefined reference to `__DISCARD__'
-#../../compat/libghccompat.a(InstalledPackageInfo.o):ghc29245_0.hc:(.text+0x1b8c5): more undefined references to `__DISCARD__' follow
-#collect2: ld returned 1 exit status
-# - reorganize %files for new version
 # - patch libraries/terminfo/configure.ac to link against tinfo not ncurses (-Wl,--as-needed) and run autotools only there?
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
@@ -27,13 +13,13 @@
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
 %bcond_with	unregistered	# non-registerised interpreter (use for build problems/new arches)
 %bcond_without	doc		# don't build documentation (requires haddock)
-%bcond_without	extralibs		# don't build extra libs
+%bcond_without	extralibs	# don't build extra libs
 #
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.10.4
-Release:	0.1
+Release:	0.2
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -65,7 +51,6 @@ BuildRequires:	rpmbuild(macros) >= 1.213
 %if %{with doc}
 BuildRequires:	docbook-dtd42-xml
 BuildRequires:	docbook-style-xsl
-BuildRequires:	haddock
 BuildRequires:	libxml2-progs
 BuildRequires:	libxslt-progs
 BuildRequires:	tetex
@@ -73,6 +58,7 @@ BuildRequires:	tetex-dvips
 BuildRequires:	tetex-latex-bibtex
 #For generating documentation in PDF: fop or xmltex
 %endif
+Provides:	haddock
 # there is no more ghc ports in PLD
 Provides:	haskell
 # th-ppc removed:
@@ -228,7 +214,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	bindir=$RPM_BUILD_ROOT%{_bindir} \
-	datadir=$RPM_BUILD_ROOT%{_datadir}/%{name}-%{version} \
+	datadir=$RPM_BUILD_ROOT%{_libdir}/%{name}-%{version} \
 	libdir=$RPM_BUILD_ROOT%{_libdir}/%{name}-%{version} \
 	docdir=$(pwd)/docs-root
 
@@ -249,40 +235,74 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with doc}
 %doc docs/users_guide/users_guide docs/comm
 %doc docs/*-*/*.ps
-%doc libraries/html-docs
-%doc html/* libraries/Cabal/doc/Cabal
+%doc docs-root/libraries
 %endif
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/ghc-%{version}
-%{_libdir}/ghc-%{version}/hslibs-imports
-%{_libdir}/ghc-%{version}/icons
 %{_libdir}/ghc-%{version}/include
-%{_libdir}/ghc-%{version}/imports
 %{_libdir}/ghc-%{version}/extra-gcc-opts
-%exclude %{_libdir}/ghc-%{version}/imports/*.p_hi
-%exclude %{_libdir}/ghc-%{version}/imports/*/*.p_hi
-%exclude %{_libdir}/ghc-%{version}/imports/*/*/*.p_hi
-%exclude %{_libdir}/ghc-%{version}/imports/*/*/*/*.p_hi
-%attr(755,root,root) %{_libdir}/ghc-%{version}/cgprof
-%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-%{version}
+%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-asm
-%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-pkg.bin
+%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-pkg
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-split
-%attr(755,root,root) %{_libdir}/ghc-%{version}/hsc2hs-bin
+%attr(755,root,root) %{_libdir}/ghc-%{version}/haddock
+%attr(755,root,root) %{_libdir}/ghc-%{version}/hsc2hs
+%attr(755,root,root) %{_libdir}/ghc-%{version}/runghc
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/libHS*.a
+%{_libdir}/ghc-%{version}/libffi.a
 %exclude %{_libdir}/ghc-%{version}/libHS*_p.a
 %ifarch %{ix86} %{x8664} ppc ppc64 sparc sparcv9 sparc64
 %{_libdir}/ghc-%{version}/HS*.o
 %endif
-%{_libdir}/ghc-%{version}/package.conf
-%{_libdir}/ghc-%{version}/*.h
 %{_libdir}/ghc-%{version}/ghc*-usage.txt
+%{_libdir}/ghc-%{version}/hsc2hs-*
+%{_libdir}/ghc-%{version}/html
+%{_libdir}/ghc-%{version}/package.conf
+%{_libdir}/ghc-%{version}/array-*
+%{_libdir}/ghc-%{version}/base-*
+%{_libdir}/ghc-%{version}/bytestring-*
+%{_libdir}/ghc-%{version}/Cabal-*
+%{_libdir}/ghc-%{version}/containers-*
+%{_libdir}/ghc-%{version}/directory-*
+%{_libdir}/ghc-%{version}/dph-base-*
+%{_libdir}/ghc-%{version}/dph-par-*
+%{_libdir}/ghc-%{version}/dph-prim-interface-*
+%{_libdir}/ghc-%{version}/dph-prim-par-*
+%{_libdir}/ghc-%{version}/dph-prim-seq-*
+%{_libdir}/ghc-%{version}/dph-seq-*
+%{_libdir}/ghc-%{version}/extensible-exceptions-*
+%{_libdir}/ghc-%{version}/filepath-*
+%{_libdir}/ghc-%{version}/ghc-%{version}
+%{_libdir}/ghc-%{version}/ghc-prim-*
+%{_libdir}/ghc-%{version}/haddock-*
+%{_libdir}/ghc-%{version}/haskell98-*
+%{_libdir}/ghc-%{version}/haskell-src-*
+%{_libdir}/ghc-%{version}/hpc-*
+%{_libdir}/ghc-%{version}/html-*
+%{_libdir}/ghc-%{version}/HUnit-*
+%{_libdir}/ghc-%{version}/integer-*
+%{_libdir}/ghc-%{version}/mtl-*
+%{_libdir}/ghc-%{version}/network-*
+%{_libdir}/ghc-%{version}/old-locale-*
+%{_libdir}/ghc-%{version}/old-time-*
+%{_libdir}/ghc-%{version}/packedstring-*
+%{_libdir}/ghc-%{version}/parallel-*
+%{_libdir}/ghc-%{version}/parsec-*
+%{_libdir}/ghc-%{version}/pretty-*
+%{_libdir}/ghc-%{version}/process-*
+%{_libdir}/ghc-%{version}/QuickCheck-*
+%{_libdir}/ghc-%{version}/random-*
+%{_libdir}/ghc-%{version}/regex-base-*
+%{_libdir}/ghc-%{version}/regex-compat-*
+%{_libdir}/ghc-%{version}/regex-posix-*
+%{_libdir}/ghc-%{version}/stm-*
+%{_libdir}/ghc-%{version}/syb-*
+%{_libdir}/ghc-%{version}/template-haskell-*
+%{_libdir}/ghc-%{version}/time-*
+%{_libdir}/ghc-%{version}/unix-*
+%{_libdir}/ghc-%{version}/xhtml-*
 
 %files prof
 %defattr(644,root,root,755)
-%{_libdir}/ghc-%{version}/imports/*.p_hi
-%{_libdir}/ghc-%{version}/imports/*/*.p_hi
-%{_libdir}/ghc-%{version}/imports/*/*/*.p_hi
-%{_libdir}/ghc-%{version}/imports/*/*/*/*.p_hi
 %{_libdir}/ghc-%{version}/libHS*_p.a
