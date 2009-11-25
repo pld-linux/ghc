@@ -223,7 +223,7 @@ cp -a $RPM_BUILD_ROOT%{_datadir}/doc/%{name} docs-root
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}
 
 # fix paths to docs in package list
-sed -i -e "s|%{_datadir}/doc/%{name}|%{_defaultdocdir}/%{name}-%{version}|g" $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf
+sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
