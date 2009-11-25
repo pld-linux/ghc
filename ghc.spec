@@ -61,10 +61,6 @@ Provides:	haddock
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%if %{with bootstrap}
-#%%define		specflags	-O2 -pipe
-%endif
-
 %description
 Haskell is the standard lazy purely functional programming language.
 The current language version is Haskell 98, agreed in December 1998,
