@@ -51,17 +51,13 @@ BuildRequires:	docbook-dtd42-xml
 BuildRequires:	docbook-style-xsl
 BuildRequires:	libxml2-progs
 BuildRequires:	libxslt-progs
-BuildRequires:	tetex
-BuildRequires:	tetex-dvips
-BuildRequires:	tetex-latex-bibtex
+BuildRequires:	texlive
+BuildRequires:	texlive-dvips
+BuildRequires:	texlive-latex-bibtex
 #For generating documentation in PDF: fop or xmltex
 %endif
+Obsoletes:	haddock
 Provides:	haddock
-# there is no more ghc ports in PLD
-Provides:	haskell
-# th-ppc removed:
-#error: ghc: no such package
-#error: haddock: no such package
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
