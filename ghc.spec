@@ -18,7 +18,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.10.4
-Release:	0.3
+Release:	0.4
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -47,6 +47,7 @@ BuildRequires:	gmp-devel
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	sed >= 4.0
 %if %{with doc}
 BuildRequires:	docbook-dtd42-xml
 BuildRequires:	docbook-style-xsl
@@ -210,20 +211,21 @@ fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
+rm -rf docs-root
 
 %{__make} install \
-	bindir=$RPM_BUILD_ROOT%{_bindir} \
-	datadir=$RPM_BUILD_ROOT%{_libdir}/%{name}-%{version} \
-	libdir=$RPM_BUILD_ROOT%{_libdir}/%{name}-%{version} \
-	docdir=$(pwd)/docs-root
+	DESTDIR=$RPM_BUILD_ROOT
 
 %if %{with doc}
-rm -rf html
 %{__make} install-docs \
-	datadir=$(pwd) \
-	mandir=RPM_BUILD_ROOT%{_mandir} \
-	docdir=$(pwd)/docs-root
+	DESTDIR=$RPM_BUILD_ROOT
 %endif
+
+cp -a $RPM_BUILD_ROOT%{_datadir}/doc/%{name} docs-root
+rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}
+
+# fix paths to docs in package list
+sed -i -e "s|%{_datadir}/doc/%{name}|%{_defaultdocdir}/%{name}-%{version}|g" $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -259,6 +261,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ghc-%{version}/hsc2hs-*
 %{_libdir}/ghc-%{version}/html
 %{_libdir}/ghc-%{version}/package.conf
+%{_mandir}/man1/ghc.1*
 
 %dir %{_libdir}/ghc-%{version}/array-*
 %dir %{_libdir}/ghc-%{version}/array-*/Data
