@@ -27,11 +27,9 @@ Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs
 # Source1-md5:	37ce285617d7cebabc3cf6805bdbca25
 %if %{with bootstrap}
 Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
-# NoSource3-md5:	ba9eefecf9753a391d84ffe9f8515e1c
-NoSource:	3
+# Source3-md5:	ba9eefecf9753a391d84ffe9f8515e1c
 Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux.tar.bz2
-# NoSource4-md5:	3521c5a12808811d32f9950fe7a3815c
-NoSource:	4
+# Source4-md5:	3521c5a12808811d32f9950fe7a3815c
 %endif
 Patch0:		%{name}-cabal-flags.patch
 URL:		http://haskell.org/ghc/
