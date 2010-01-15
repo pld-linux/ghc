@@ -140,7 +140,7 @@ cat <<'EOF' > mk/build.mk
 #SplitObjs	   = YES
 #SplitObjs	   = No
 #GhcBootLibs	 = %{!?with_extralibs:NO}%{?with_extralibs:YES}
-#%{?without_doc:HADDOCK_DOCS = NO}
+#%{!?with_doc:HADDOCK_DOCS = NO}
 EOF
 
 %if %{with unregistered}
