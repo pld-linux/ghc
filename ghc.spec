@@ -12,23 +12,26 @@
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
 %bcond_with	unregistered	# non-registerised interpreter (use for build problems/new arches)
 %bcond_without	doc		# don't build documentation (requires haddock)
+%bcond_without	extralibs	# don't build extra libs
 #
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.12.1
-Release:	0.1
+Version:	6.10.4
+Release:	5
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	3a2b23f29013605f721ebdfc29de9c92
+# Source0-md5:	167687fa582ef6702aaac24e139ec982
+Source1:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src-extralibs.tar.bz2
+# Source1-md5:	37ce285617d7cebabc3cf6805bdbca25
 %if %{with bootstrap}
-Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux-n.tar.bz2
-# Source3-md5:	4beedf446bcd18e1a61177378f2f6b0c
-Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux-n.tar.bz2
-# Source4-md5:	d86705cd8abd62b02ee768202713f642
+Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
+# Source3-md5:	ba9eefecf9753a391d84ffe9f8515e1c
+Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux.tar.bz2
+# Source4-md5:	3521c5a12808811d32f9950fe7a3815c
 %endif
-Patch0:		%{name}-pld.patch
+Patch0:		%{name}-cabal-flags.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -110,7 +113,7 @@ Biblioteki profilujące dla GHC. Powinny być zainstalowane kiedy
 potrzebujemy systemu profilującego z GHC.
 
 %prep
-%setup -q
+%setup -q %{?with_extralibs:-b1}
 %if %{with bootstrap}
 %ifarch %{ix86}
 %{__tar} -xjf %{SOURCE3}
@@ -120,14 +123,12 @@ potrzebujemy systemu profilującego z GHC.
 %endif
 mv %{name}-%{version} binsrc
 %endif
-%patch0 -p1
+%patch0
+
+# 0.10.1 ghc-pkg -l is not supported
+sed -i -e 's,fp_ghc_pkg_guess" -l,fp_ghc_pkg_guess" list,' configure
 
 %build
-%{__autoconf}
-cd libraries/terminfo
-%{__autoconf}
-cd -
-
 cat <<'EOF' > mk/build.mk
 #GhcStage1HcOpts += -O0 -Wall
 #GhcStage2HcOpts += -O0 -Wall
@@ -135,6 +136,7 @@ cat <<'EOF' > mk/build.mk
 #GhcHcOpts        += -Rghc-timing
 #GhcLibHcOpts     += -O -dcore-lint -keep-hc-files
 #SplitObjs        += NO
+#GhcBootLibs	  += %{!?with_extralibs:NO}%{?with_extralibs:YES}
 HADDOCK_DOCS     += %{!?with_doc:NO}%{?with_doc:YES}
 XSLTPROC_OPTS    += --nonet
 EOF
@@ -142,11 +144,7 @@ EOF
 %if %{with unregistered}
 # An unregisterised build is one that compiles via vanilla C only
 # http://hackage.haskell.org/trac/ghc/wiki/Building/Unregisterised
-cat <<'EOF' >> mk/build.mk
-GhcUnregisterised=YES                                                     
-GhcWithNativeCodeGen=NO                                                   
-SplitObjs=NO
-EOF
+echo GhcUnregisterised=YES >>mk/build.mk
 %endif
 
 top=$(pwd)
@@ -165,14 +163,14 @@ if [ ! -f .bindist.install.mark ]; then
 
 	touch .bindist.install.mark
 fi
-
-PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 %endif
 
+%{?with_bootstrap:PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin}
+
 %configure \
-	--target=%{_target_platform} \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}" \
+	--with-curses-includes=/usr/include/ncursesw \
 %if %{with bootstrap}
 	GhcPkgCmd=$top/bindist/bin/ghc-pkg \
 %endif
@@ -185,7 +183,7 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 	--with-hc=$PWD/bindist/ghc/dist-stage2/build/ghc/ghc \
 %endif
 
-%{__make} -j1
+%{__make}
 
 %if %{with doc}
 %{__make} html
