@@ -8,6 +8,17 @@
 # - patch libraries/terminfo/configure.ac to link against tinfo not ncurses (-Wl,--as-needed) and run autotools only there?
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
+# /tmp/ghc27519_0/ghc27519_0.hc:18:0:
+#     warning: implicit declaration of function 'JMP_'
+#Prologue junk?: .globl __stginit_ghczmprim_GHCziGenerics
+#	.type	__stginit_ghczmprim_GHCziGenerics, @function
+#__stginit_ghczmprim_GHCziGenerics:
+#	pushl	%ebp
+#	movl	%esp, %ebp
+## 301 "/tmp/ghc27519_0/ghc27519_0.hc" 1
+#
+#make[1]: *** [libraries/ghc-prim/dist-install/build/GHC/Generics.o] Error 255
+#
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
 %bcond_with	unregistered	# non-registerised interpreter (use for build problems/new arches)
