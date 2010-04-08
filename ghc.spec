@@ -130,28 +130,21 @@ sed -i -e 's,fp_ghc_pkg_guess" -l,fp_ghc_pkg_guess" list,' configure
 
 %build
 cat <<'EOF' > mk/build.mk
-# http://darcs.haskell.org/ghc/mk/build.mk.sample
-#SRC_HC_OPTS	 = -O2 -H64m -fasm
-#GhcStage1HcOpts = -O0 -fasm -Wall
-#GhcStage2HcOpts = -O0 -fasm -Wall
-#GhcHcOpts	   = -Rghc-timing
-#GhcLibHcOpts	= -O2 -XGenerics
-#GhcLibWays	  = p
-#SplitObjs	   = YES
-#SplitObjs	   = No
-#GhcBootLibs	 = %{!?with_extralibs:NO}%{?with_extralibs:YES}
-#%{!?with_doc:HADDOCK_DOCS = NO}
+#GhcStage1HcOpts += -O0 -Wall
+#GhcStage2HcOpts += -O0 -Wall
+SRC_HC_OPTS      += -lffi -O0 -H64m
+GhcHcOpts        += -Rghc-timing
+#GhcLibHcOpts     += -O -dcore-lint -keep-hc-files
+SplitObjs        += NO
+#GhcBootLibs	  += %{!?with_extralibs:NO}%{?with_extralibs:YES}
+HADDOCK_DOCS     += %{!?with_doc:NO}%{?with_doc:YES}
+XSLTPROC_OPTS    += --nonet
 EOF
 
 %if %{with unregistered}
-cat << 'EOF' >> mk/build.mk
 # An unregisterised build is one that compiles via vanilla C only
 # http://hackage.haskell.org/trac/ghc/wiki/Building/Unregisterised
-GhcUnregisterised=YES
-GhcWithNativeCodeGen=NO
-GhcWithInterpreter=NO
-SplitObjs=NO
-EOF
+echo GhcUnregisterised=YES >>mk/build.mk
 %endif
 
 top=$(pwd)
