@@ -1,0 +1,35 @@
+--- ghc-6.12.1/configure.ac~	2009-12-10 19:11:33.000000000 +0100
++++ ghc-6.12.1/configure.ac	2010-04-08 15:50:31.639124660 +0200
+@@ -285,7 +285,7 @@
+ 
+ checkVendor() {
+     case $1 in
+-    dec|unknown|hp|apple|next|sun|sgi|ibm)
++    pld|dec|unknown|hp|apple|next|sun|sgi|ibm)
+         ;;
+     *)
+         echo "Unknown vendor $1"
+--- ghc-6.12.1/aclocal.m4~	2009-12-10 19:11:33.000000000 +0100
++++ ghc-6.12.1/aclocal.m4	2010-04-08 15:55:14.053145486 +0200
+@@ -1199,20 +1199,7 @@
+ AC_DEFUN([FP_FIND_ROOT],[
+ AC_MSG_CHECKING(for path to top of build tree)
+ 
+-dnl This would be
+-dnl     make -C utils/ghc-pwd clean && make -C utils/ghc-pwd
+-dnl except we don't want to have to know what make is called. Sigh.
+-if test ! -f utils/ghc-pwd/ghc-pwd && test ! -f utils/ghc-pwd/ghc-pwd.exe; then
+-  cd utils/ghc-pwd
+-  rm -f *.o
+-  rm -f *.hi
+-  rm -f ghc-pwd
+-  rm -f ghc-pwd.exe
+-  "$WithGhc" -v0 --make ghc-pwd -o ghc-pwd
+-  cd ../..
+-fi
+-
+-hardtop=`utils/ghc-pwd/ghc-pwd`
++hardtop=`pwd`
+ 
+ if ! test -d "$hardtop"; then
+   AC_MSG_ERROR([cannot determine current directory])
