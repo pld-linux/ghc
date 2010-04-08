@@ -124,6 +124,9 @@ mv %{name}-%{version} binsrc
 
 %build
 %{__autoconf}
+cd libraries/terminfo
+%{__autoconf}
+cd -
 
 cat <<'EOF' > mk/build.mk
 #GhcStage1HcOpts += -O0 -Wall
@@ -170,7 +173,6 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 	--target=%{_target_platform} \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}" \
-	--with-curses-includes=/usr/include/ncursesw \
 %if %{with bootstrap}
 	GhcPkgCmd=$top/bindist/bin/ghc-pkg \
 %endif
@@ -183,7 +185,7 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 	--with-hc=$PWD/bindist/ghc/dist-stage2/build/ghc/ghc \
 %endif
 
-%{__make}
+%{__make} -j1
 
 %if %{with doc}
 %{__make} html
