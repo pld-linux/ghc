@@ -30,3 +30,77 @@
  TERMINFO_LIB_DIRS=
  if test "x$curses_libraries" != "xNONE"; then
    LDFLAGS="-L$curses_libraries $LDFLAGS"
+--- ghc-6.12.1/driver/mangler/ghc-asm.lprl.orig	2009-12-10 19:11:33.000000000 +0100
++++ ghc-6.12.1/driver/mangler/ghc-asm.lprl	2010-04-08 17:18:20.029978739 +0200
+@@ -65,7 +65,7 @@
+ $ifile = $ARGV[0];
+ $ofile = $ARGV[1];
+ 
+-if ( $TargetPlatform =~ /^i386-/m ) {
++if ( $TargetPlatform =~ /^i[3456]86-/m ) {
+     if ($ARGV[2] eq '') {
+ 	$StolenX86Regs = 4;
+     } else {
+@@ -134,7 +134,7 @@
+     $T_HDR_vector   = "\t.SPACE \$TEXT\$\n\t.SUBSPA \$CODE\$\n\t\.align 4\n";
+ 
+     #--------------------------------------------------------#
+-    } elsif ( $TargetPlatform =~ /^i386-.*-(linuxaout|freebsd2|nextstep3|cygwin32|mingw32)$/m ) {
++    } elsif ( $TargetPlatform =~ /^i[3456]86-.*-(linuxaout|freebsd2|nextstep3|cygwin32|mingw32)$/m ) {
+ 				# NeXT added but not tested. CaS
+ 
+     $T_STABBY	    = 1; # 1 iff .stab things (usually if a.out format)
+@@ -160,7 +160,7 @@
+     $T_HDR_vector   = "\.text\n\t\.align 4\n"; # NB: requires padding
+ 
+     #--------------------------------------------------------#
+-    } elsif ( $TargetPlatform =~ /^i386-.*-(solaris2|linux|gnu|freebsd|dragonfly|netbsd|openbsd|kfreebsdgnu)$/m ) {
++    } elsif ( $TargetPlatform =~ /^i[3456]86-.*-(solaris2|linux|gnu|freebsd|dragonfly|netbsd|openbsd|kfreebsdgnu)$/m ) {
+ 
+     $T_STABBY	    = 0; # 1 iff .stab things (usually if a.out format)
+     $T_US	    = ''; # _ if symbols have an underscore on the front
+@@ -512,7 +512,7 @@
+ print STDERR "T_PRE_APP: $T_PRE_APP\n";
+ print STDERR "T_CONST_LBL: $T_CONST_LBL\n";
+ print STDERR "T_POST_LBL: $T_POST_LBL\n";
+-if ( $TargetPlatform =~ /^i386-/m ) {
++if ( $TargetPlatform =~ /^i[3456]86-/m ) {
+     print STDERR "T_X86_PRE_LLBL_PAT: $T_X86_PRE_LLBL_PAT\n";
+     print STDERR "T_X86_PRE_LLBL: $T_X86_PRE_LLBL\n";
+     print STDERR "T_X86_BADJMP: $T_X86_BADJMP\n";
+@@ -871,7 +871,7 @@
+ 		$p =~ s/\t+$//m;
+ 		$r =~ s/^\s*\n//m;
+ 
+-		if ($TargetPlatform =~ /^i386-/m) {
++		if ($TargetPlatform =~ /^i[3456]86-/m) {
+ 		    if ($p =~ /^\tsubl\s+\$(\d+),\s*\%esp\n/m) {
+ 			if ($1 >= 8192) {
+ 			    die "Error: reserved stack space exceeded!\n  Possible workarounds: compile with -fasm, or try another version of gcc.\n"
+@@ -1101,7 +1101,7 @@
+                 # etail holds code that is after the epilogue in the assembly-code
+                 # layout and should not be filtered as part of the epilogue.
+                 $etail = "";
+-		if ($TargetPlatform =~ /^i386-/m) {
++		if ($TargetPlatform =~ /^i[3456]86-/m) {
+ 		    $e =~ s/^\tret\n//m;
+ 		    $e =~ s/^\tpopl\s+\%edi\n//m;
+ 		    $e =~ s/^\tpopl\s+\%esi\n//m;
+@@ -1253,7 +1253,7 @@
+ 	    #    blah_closure:
+ 	    #		...
+             #
+-	    if ( $TargetPlatform =~ /^(i386|sparc|powerpc)/m && $to_move =~ /${T_COPY_DIRVS}/m ) {
++	    if ( $TargetPlatform =~ /^(i[3456]86|sparc|powerpc)/m && $to_move =~ /${T_COPY_DIRVS}/m ) {
+ 		$j = $i + 1;
+ 		while ( $j < $numchks  && $chk[$j] =~ /$T_CONST_LBL/m) {
+ 			$j++;
+@@ -1714,7 +1714,7 @@
+ 	    s/^\tmovl\s+\$${T_US}(.*),\s*(\%e(ax|cx|si|di))\n\tjmp\s+\*\%r\3/\tjmp\t$T_US$1/gm;
+     }
+ 
+-    if ( $TargetPlatform !~ /^i386-/m 
++    if ( $TargetPlatform !~ /^i[3456]86-/m 
+       || ! /^\t[a-z]/m  # no instructions in here, apparently
+       || /^${T_US}__stginit_[A-Za-z0-9_]+${T_POST_LBL}/m) {
+ 	print OUTASM $_;
