@@ -26,7 +26,7 @@
  
 -TERMINFO_INCLUDE_DIRS=
 +TERMINFO_INCLUDE_DIRS=/usr/include/ncursesw
-+CPPFLAGS="-I/usr/include/ncursesw $CPPFLAGS
++CPPFLAGS="-I/usr/include/ncursesw $CPPFLAGS"
  TERMINFO_LIB_DIRS=
  if test "x$curses_libraries" != "xNONE"; then
    LDFLAGS="-L$curses_libraries $LDFLAGS"
