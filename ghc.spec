@@ -24,11 +24,11 @@ Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	3a2b23f29013605f721ebdfc29de9c92
 %if %{with bootstrap}
 Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux-n.tar.bz2
-# Source3-md5:	ba9eefecf9753a391d84ffe9f8515e1c
+# Source3-md5:	4beedf446bcd18e1a61177378f2f6b0c
 Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux-n.tar.bz2
-# Source4-md5:	3521c5a12808811d32f9950fe7a3815c
+# Source4-md5:	d86705cd8abd62b02ee768202713f642
 %endif
-Patch0:		%{name}-cabal-flags.patch
+Patch0:		%{name}-pld.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -120,19 +120,18 @@ potrzebujemy systemu profilującego z GHC.
 %endif
 mv %{name}-%{version} binsrc
 %endif
-%patch0
-
-# 0.10.1 ghc-pkg -l is not supported
-sed -i -e 's,fp_ghc_pkg_guess" -l,fp_ghc_pkg_guess" list,' configure
+%patch0 -p1
 
 %build
+%{__autoconf}
+
 cat <<'EOF' > mk/build.mk
 #GhcStage1HcOpts += -O0 -Wall
 #GhcStage2HcOpts += -O0 -Wall
 #SRC_HC_OPTS      += -lffi -O0 -H64m
 #GhcHcOpts        += -Rghc-timing
 #GhcLibHcOpts     += -O -dcore-lint -keep-hc-files
-SplitObjs        += NO
+#SplitObjs        += NO
 HADDOCK_DOCS     += %{!?with_doc:NO}%{?with_doc:YES}
 XSLTPROC_OPTS    += --nonet
 EOF
@@ -140,7 +139,11 @@ EOF
 %if %{with unregistered}
 # An unregisterised build is one that compiles via vanilla C only
 # http://hackage.haskell.org/trac/ghc/wiki/Building/Unregisterised
-echo GhcUnregisterised=YES >>mk/build.mk
+cat <<'EOF' >> mk/build.mk
+GhcUnregisterised=YES                                                     
+GhcWithNativeCodeGen=NO                                                   
+SplitObjs=NO
+EOF
 %endif
 
 top=$(pwd)
@@ -164,6 +167,7 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 %endif
 
 %configure \
+	--target=%{_target_platform} \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}" \
 	--with-curses-includes=/usr/include/ncursesw \
