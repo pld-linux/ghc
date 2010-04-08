@@ -4,7 +4,6 @@
 # TODO
 # - system gmp/gmp-4.2.1.tar.gz
 # - system libffi/libffi-3.0.4.tar.gz
-# - ghc-pkg is called with invalid args for 6.10 (-l, --show-package), and the .m4 are not distributed (present only in aclocal.m4 (mv to acinclude.m4?)
 # - patch libraries/terminfo/configure.ac to link against tinfo not ncurses (-Wl,--as-needed) and run autotools only there?
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
@@ -124,9 +123,6 @@ potrzebujemy systemu profilującego z GHC.
 mv %{name}-%{version} binsrc
 %endif
 %patch0
-
-# 0.10.1 ghc-pkg -l is not supported
-sed -i -e 's,fp_ghc_pkg_guess" -l,fp_ghc_pkg_guess" list,' configure
 
 %build
 cat <<'EOF' > mk/build.mk
