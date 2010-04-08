@@ -1,0 +1,11 @@
+--- mk/cabal-flags.mk.orig	2009-09-06 20:21:09.000000000 +0200
++++ mk/cabal-flags.mk	2009-09-06 20:21:44.000000000 +0200
+@@ -21,7 +21,7 @@
+ # being no 's inside the values.
+ FLAGGED_CONFIGURE_ARGS = $(subst $(space)',\
+                                  $(space)--configure-option=',\
+-                                 $(space)$(CONFIGURE_ARGS))
++                                 $(space)$(subst $(space)'$(space)','$(space)',$(CONFIGURE_ARGS)))
+ 
+ COMMON_CONFIGURE_FLAGS =          \
+     --libsubdir='$$pkgid'         \
