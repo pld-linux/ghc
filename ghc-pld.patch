@@ -18,3 +18,14 @@
          ;;
      *)
          echo "Unknown vendor $1"
+--- ghc-6.12.1/libraries/terminfo/configure.ac~	2009-09-15 08:09:05.000000000 +0200
++++ ghc-6.12.1/libraries/terminfo/configure.ac	2010-04-08 16:43:45.040705349 +0200
+@@ -13,7 +13,7 @@
+     [curses_libraries=NONE])
+ 
+ 
+-TERMINFO_INCLUDE_DIRS=
++TERMINFO_INCLUDE_DIRS=/usr/include/ncursesw
+ TERMINFO_LIB_DIRS=
+ if test "x$curses_libraries" != "xNONE"; then
+   LDFLAGS="-L$curses_libraries $LDFLAGS"
