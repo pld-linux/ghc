@@ -32,16 +32,14 @@ Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknow
 %endif
 Patch0:		%{name}-cabal-flags.patch
 URL:		http://haskell.org/ghc/
-BuildRequires:	OpenAL-devel
-BuildRequires:	OpenGL-GLU-devel
-BuildRequires:	OpenGL-devel
-BuildRequires:	OpenGL-glut-devel
 %{!?with_bootstrap:BuildRequires:	alex >= 2.0}
-BuildRequires:	freealut-devel
+BuildRequires:	binutils-devel
+BuildRequires:	elfutils-devel
 %{!?with_bootstrap:BuildRequires:	ghc >= 6.6}
 BuildRequires:	gmp-devel
 %{!?with_bootstrap:BuildRequires:	happy >= 1.15}
 BuildRequires:	ncurses-devel
+BuildRequires:	pkgconfig
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sed >= 4.0
