@@ -104,3 +104,14 @@
        || ! /^\t[a-z]/m  # no instructions in here, apparently
        || /^${T_US}__stginit_[A-Za-z0-9_]+${T_POST_LBL}/m) {
  	print OUTASM $_;
+--- ghc-6.12.3/aclocal.m4~	2010-06-09 20:10:08.000000000 +0200
++++ ghc-6.12.3/aclocal.m4	2010-08-20 21:23:11.218919505 +0200
+@@ -1279,7 +1279,7 @@
+   hppa*)
+     $2="hppa"
+     ;;
+-  i386)
++  i386|i486|i586|i686)
+     $2="i386"
+     ;;
+   ia64)

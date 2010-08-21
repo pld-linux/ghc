@@ -4,20 +4,8 @@
 # TODO
 # - system gmp/gmp-4.2.1.tar.gz
 # - system libffi/libffi-3.0.4.tar.gz
-# - ghc-pkg is called with invalid args for 6.10 (-l, --show-package), and the .m4 are not distributed (present only in aclocal.m4 (mv to acinclude.m4?)
 # - patch libraries/terminfo/configure.ac to link against tinfo not ncurses (-Wl,--as-needed) and run autotools only there?
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
-#
-# /tmp/ghc27519_0/ghc27519_0.hc:18:0:
-#     warning: implicit declaration of function 'JMP_'
-#Prologue junk?: .globl __stginit_ghczmprim_GHCziGenerics
-#	.type	__stginit_ghczmprim_GHCziGenerics, @function
-#__stginit_ghczmprim_GHCziGenerics:
-#	pushl	%ebp
-#	movl	%esp, %ebp
-## 301 "/tmp/ghc27519_0/ghc27519_0.hc" 1
-#
-#make[1]: *** [libraries/ghc-prim/dist-install/build/GHC/Generics.o] Error 255
 #
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
@@ -27,17 +15,17 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.12.1
+Version:	6.12.3
 Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
-Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	3a2b23f29013605f721ebdfc29de9c92
+Source0:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-src.tar.bz2
+# Source0-md5:	4c2663c2eff833d7b9f39ef770eefbd6
 %if %{with bootstrap}
-Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux-n.tar.bz2
-# Source3-md5:	4beedf446bcd18e1a61177378f2f6b0c
-Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux-n.tar.bz2
-# Source4-md5:	d86705cd8abd62b02ee768202713f642
+Source3:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-i386-unknown-linux-n.tar.bz2
+# Source3-md5:	8ed8540571f7b10d8caf782755e35818
+Source4:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux-n.tar.bz2
+# Source4-md5:	d58e5a50d8b120ac933afbd10a773aef
 %endif
 Patch0:		%{name}-pld.patch
 URL:		http://haskell.org/ghc/
@@ -47,9 +35,9 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
 %{!?with_bootstrap:BuildRequires:	alex >= 2.0}
 BuildRequires:	freealut-devel
-%{!?with_bootstrap:BuildRequires:	ghc >= 6.6}
+%{!?with_bootstrap:BuildRequires:	ghc >= 6.8}
 BuildRequires:	gmp-devel
-%{!?with_bootstrap:BuildRequires:	happy >= 1.15}
+%{!?with_bootstrap:BuildRequires:	happy >= 1.16}
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.213
@@ -146,8 +134,12 @@ cat <<'EOF' > mk/build.mk
 #GhcHcOpts        += -Rghc-timing
 #GhcLibHcOpts     += -O -dcore-lint -keep-hc-files
 #SplitObjs        += NO
-HADDOCK_DOCS     += %{!?with_doc:NO}%{?with_doc:YES}
-XSLTPROC_OPTS    += --nonet
+PlatformSupportsSharedLibs = YES
+HADDOCK_DOCS        = %{!?with_doc:NO}%{?with_doc:YES}
+LATEX_DOCS          = %{!?with_doc:NO}%{?with_doc:YES}
+BUILD_DOCBOOK_HTMLS = %{!?with_doc:NO}%{?with_doc:YES}
+BUILD_DOCBOOK_PDFS  = %{!?with_doc:NO}%{?with_doc:YES}
+XSLTPROC_OPTS       += --nonet
 EOF
 
 %if %{with unregistered}
@@ -196,14 +188,7 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 	--with-hc=$PWD/bindist/ghc/dist-stage2/build/ghc/ghc \
 %endif
 
-%{__make} -j1
-
-%if %{with doc}
-%{__make} html
-# broken
-#%{__make} -C docs/ext-core ps
-%{__make} -C docs/storage-mgt ps
-%endif
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -212,16 +197,11 @@ rm -rf docs-root
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%if %{with doc}
-%{__make} install-docs \
-	DESTDIR=$RPM_BUILD_ROOT
-%endif
-
 cp -a $RPM_BUILD_ROOT%{_datadir}/doc/%{name} docs-root
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}
 
 # fix paths to docs in package list
-sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf
+sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf.d/*.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
