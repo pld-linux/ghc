@@ -1,0 +1,20 @@
+--- ghc-6.12.3/libraries/Cabal/Distribution/Simple/InstallDirs.hs~	2010-06-09 20:10:19.000000000 +0200
++++ ghc-6.12.3/libraries/Cabal/Distribution/Simple/InstallDirs.hs	2010-08-26 21:28:52.969002660 +0200
+@@ -205,7 +205,7 @@
+ -- users to be able to configure @--libdir=\/usr\/lib64@ for example but
+ -- because by default we want to support installing multiple versions of
+ -- packages and building the same package for multiple compilers we append the
+--- libsubdir to get: @\/usr\/lib64\/$pkgid\/$compiler@.
++-- libsubdir to get: @\/usr\/lib64\/$compiler\/$pkgid@.
+ --
+ -- An additional complication is the need to support relocatable packages on
+ -- systems which support such things, like Windows.
+@@ -236,7 +236,7 @@
+            Hugs   -> "hugs" </> "packages" </> "$pkg"
+            JHC    -> "$compiler"
+            LHC    -> "$compiler"
+-           _other -> "$pkgid" </> "$compiler",
++           _other -> "$compiler" </> "$pkgid",
+       dynlibdir    = "$libdir",
+       libexecdir   = case buildOS of
+         Windows   -> "$prefix" </> "$pkgid"
