@@ -2,8 +2,6 @@
 # - happy, alex needed only when using darcs checkout or regenerating parsers
 #   http://hackage.haskell.org/trac/ghc/wiki/Building/Prerequisites
 # TODO (is it still valid?)
-# - system gmp/gmp-4.2.1.tar.gz
-# - system libffi/libffi-3.0.4.tar.gz
 # - patch libraries/terminfo/configure.ac to link against tinfo not ncurses (-Wl,--as-needed) and run autotools only there?
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
