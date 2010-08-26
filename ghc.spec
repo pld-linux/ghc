@@ -44,12 +44,14 @@ BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sed >= 4.0
 %if %{with doc}
+BuildRequires:	dblatex
 BuildRequires:	docbook-dtd42-xml
 BuildRequires:	docbook-style-xsl
 BuildRequires:	libxml2-progs
 BuildRequires:	libxslt-progs
 BuildRequires:	texlive
 BuildRequires:	texlive-dvips
+BuildRequires:	texlive-fonts-rsfs
 BuildRequires:	texlive-latex-bibtex
 #For generating documentation in PDF: fop or xmltex
 %endif
