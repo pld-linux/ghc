@@ -214,7 +214,10 @@ sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD
 rm -rf $RPM_BUILD_ROOT
 
 %post
-ghc-pkg recache
+%{_bindir}/ghc-pkg recache
+
+%postun
+%{_bindir}/ghc-pkg recache
 
 %files
 %defattr(644,root,root,755)
@@ -245,7 +248,7 @@ ghc-pkg recache
 %{_libdir}/ghc-%{version}/html
 %dir %{_libdir}/ghc-%{version}/package.conf.d
 %{_libdir}/ghc-%{version}/package.conf.d/*.conf
-%config(noreplace) %verify(not md5 mtime size) %{_libdir}/ghc-%{version}/package.conf.d/package.cache
+%config %verify(not md5 mtime size) %{_libdir}/ghc-%{version}/package.conf.d/package.cache
 %{_libdir}/ghc-%{version}/template-hsc.h
 %{_mandir}/man1/ghc.1*
 
