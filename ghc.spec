@@ -198,13 +198,13 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 	--with-hc=$PWD/bindist/ghc/dist-stage2/build/ghc/ghc \
 %endif
 
-%{__make}
+%{__make} -j1
 
 %install
 rm -rf $RPM_BUILD_ROOT
 rm -rf docs-root
 
-%{__make} install \
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -a $RPM_BUILD_ROOT%{_datadir}/doc/%{name} docs-root
