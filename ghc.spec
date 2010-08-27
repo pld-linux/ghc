@@ -16,7 +16,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.12.3
-Release:	1
+Release:	2
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -55,9 +55,7 @@ BuildRequires:	texlive-fonts-rsfs
 BuildRequires:	texlive-latex-bibtex
 #For generating documentation in PDF: fop or xmltex
 %endif
-Obsoletes:	ghc-binary
 Obsoletes:	haddock
-Provides:	ghc-binary
 Provides:	haddock
 Suggests:	ghc-haskell-platform
 ExclusiveArch:	%{ix86} %{x8664}
