@@ -218,7 +218,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/ghc-pkg recache
 
 %postun
-%{_bindir}/ghc-pkg recache
+if [ "$1" != 0 ]; then
+	%{_bindir}/ghc-pkg recache
+fi
 
 %files
 %defattr(644,root,root,755)
