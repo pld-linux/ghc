@@ -11,12 +11,12 @@
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
 %bcond_with	unregistered	# non-registerised interpreter (use for build problems/new arches)
 %bcond_without	doc		# don't build documentation (requires haddock)
-#
+
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.12.3
-Release:	3
+Release:	4
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -41,7 +41,7 @@ BuildRequires:	gmp-devel
 %{!?with_bootstrap:BuildRequires:	happy >= 1.16}
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
-BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	rpmbuild(macros) >= 1.607
 BuildRequires:	sed >= 4.0
 %if %{with doc}
 BuildRequires:	dblatex
@@ -55,9 +55,9 @@ BuildRequires:	texlive-fonts-rsfs
 BuildRequires:	texlive-latex-bibtex
 #For generating documentation in PDF: fop or xmltex
 %endif
-Obsoletes:	haddock
-Provides:	haddock
 Suggests:	ghc-haskell-platform
+Provides:	haddock
+Obsoletes:	haddock
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -154,8 +154,8 @@ EOF
 # An unregisterised build is one that compiles via vanilla C only
 # http://hackage.haskell.org/trac/ghc/wiki/Building/Unregisterised
 cat <<'EOF' >> mk/build.mk
-GhcUnregisterised=YES                                                     
-GhcWithNativeCodeGen=NO                                                   
+GhcUnregisterised=YES
+GhcWithNativeCodeGen=NO
 SplitObjs=NO
 EOF
 %endif
@@ -215,11 +215,11 @@ sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%{_bindir}/ghc-pkg recache
+%ghc_pkg_recache
 
 %postun
 if [ "$1" != 0 ]; then
-	%{_bindir}/ghc-pkg recache
+	%ghc_pkg_recache
 fi
 
 %files
