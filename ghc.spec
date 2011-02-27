@@ -16,7 +16,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	6.12.3
-Release:	4
+Release:	5
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -29,6 +29,7 @@ Source4:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-x8
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
+Patch2:		%{name}-build.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -128,6 +129,7 @@ mv %{name}-%{version} binsrc
 %endif
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__autoconf}
