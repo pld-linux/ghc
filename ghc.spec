@@ -132,6 +132,12 @@ mv %{name}-%{version} binsrc
 %patch2 -p1
 
 %build
+# use ld.bfd
+install our-ld
+ln -s %{_bindir}/ld.bfd our-ld/ld
+export PATH=$(pwd)/our-ld:$PATH
+
+
 %{__autoconf}
 cd libraries/terminfo
 %{__autoconf}
