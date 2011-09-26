@@ -5,6 +5,9 @@
 #
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
+# TODO:
+#	- teach ghc toolchain to always use ld.bfd
+#
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
 %bcond_with	unregistered	# non-registerised interpreter (use for build problems/new arches)
@@ -201,7 +204,7 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 	--with-hc=$PWD/bindist/ghc/dist-stage2/build/ghc/ghc \
 %endif
 
-%{__make} -j1
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -238,9 +241,8 @@ fi
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/ghc-%{version}
 %{_libdir}/ghc-%{version}/include
-%{_libdir}/ghc-%{version}/extra-gcc-opts
+%{_libdir}/ghc-%{version}/settings
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc
-%attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-asm
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-pkg
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-split
 %attr(755,root,root) %{_libdir}/ghc-%{version}/haddock
@@ -258,6 +260,7 @@ fi
 %{_libdir}/ghc-%{version}/package.conf.d/*.conf
 %config %verify(not md5 mtime size) %{_libdir}/ghc-%{version}/package.conf.d/package.cache
 %{_libdir}/ghc-%{version}/template-hsc.h
+%{_libdir}/ghc-%{version}/latex/haddock.sty
 %{_mandir}/man1/ghc.1*
 
 %dir %{_libdir}/ghc-%{version}/array-*
@@ -282,26 +285,38 @@ fi
 %{_libdir}/ghc-%{version}/base-*/Control/Monad/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/Control/Monad/ST
 %{_libdir}/ghc-%{version}/base-*/Control/Monad/ST/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/Control/Monad/ST/Lazy
+%{_libdir}/ghc-%{version}/base-*/Control/Monad/ST/Lazy/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/Data
-%dir %{_libdir}/ghc-%{version}/base-*/Data/Generics
-%{_libdir}/ghc-%{version}/base-*/Data/Generics/*.hi
 %{_libdir}/ghc-%{version}/base-*/Data/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/Data/STRef
 %{_libdir}/ghc-%{version}/base-*/Data/STRef/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/Data/Typeable
+%{_libdir}/ghc-%{version}/base-*/Data/Typeable/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/Debug
 %{_libdir}/ghc-%{version}/base-*/Debug/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/Foreign
+%{_libdir}/ghc-%{version}/base-*/Foreign/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/Foreign/C
 %{_libdir}/ghc-%{version}/base-*/Foreign/C/*.hi
-%{_libdir}/ghc-%{version}/base-*/Foreign/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/Foreign/ForeignPtr
+%{_libdir}/ghc-%{version}/base-*/Foreign/ForeignPtr/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/Foreign/Marshal
 %{_libdir}/ghc-%{version}/base-*/Foreign/Marshal/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC
 %{_libdir}/ghc-%{version}/base-*/GHC/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/GHC/Conc
+%{_libdir}/ghc-%{version}/base-*/GHC/Conc/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC/IO
 %{_libdir}/ghc-%{version}/base-*/GHC/IO/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC/IO/Encoding
 %{_libdir}/ghc-%{version}/base-*/GHC/IO/Encoding/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/GHC/Event
+%{_libdir}/ghc-%{version}/base-*/GHC/Event/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/GHC/Fingerprint
+%{_libdir}/ghc-%{version}/base-*/GHC/Fingerprint/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/GHC/Float
+%{_libdir}/ghc-%{version}/base-*/GHC/Float/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle
 %{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle/*.hi
 %{_libdir}/ghc-%{version}/base-*/*.hi
@@ -351,10 +366,11 @@ fi
 %exclude %{_libdir}/ghc-%{version}/bytestring-*/libHSbytestring-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/Cabal-*
+%{_libdir}/ghc-%{version}/Cabal-*/*.hi
 %dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/*.hi
 %dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat/*.hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/*.hi
 %dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription/*.hi
 %dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple
@@ -374,6 +390,17 @@ fi
 %{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*.a
 %exclude %{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*_p.a
 
+%dir %{_libdir}/ghc-%{version}/binary-*
+%dir %{_libdir}/ghc-%{version}/binary-*/Data
+%{_libdir}/ghc-%{version}/binary-*/Data/*.hi
+%dir %{_libdir}/ghc-%{version}/binary-*/Data/Binary
+%{_libdir}/ghc-%{version}/binary-*/Data/Binary/*.hi
+%dir %{_libdir}/ghc-%{version}/binary-*/Data/Binary/Builder
+%{_libdir}/ghc-%{version}/binary-*/Data/Binary/Builder/*.hi
+%{_libdir}/ghc-%{version}/binary-*/HSbinary-*.o
+%{_libdir}/ghc-%{version}/binary-*/libHSbinary-*.a
+%exclude %{_libdir}/ghc-%{version}/binary-*/libHSbinary-*_p.a
+
 %dir %{_libdir}/ghc-%{version}/containers-*
 %dir %{_libdir}/ghc-%{version}/containers-*/Data
 %{_libdir}/ghc-%{version}/containers-*/Data/*.hi
@@ -388,98 +415,6 @@ fi
 %exclude %{_libdir}/ghc-%{version}/directory-*/libHSdirectory-*_p.a
 %dir %{_libdir}/ghc-%{version}/directory-*/System
 %{_libdir}/ghc-%{version}/directory-*/System/*.hi
-
-%dir %{_libdir}/ghc-%{version}/dph-base-*
-%dir %{_libdir}/ghc-%{version}/dph-base-*/Data
-%dir %{_libdir}/ghc-%{version}/dph-base-*/Data/Array
-%dir %{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel
-%dir %{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Arr
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Arr/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Base
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Base/*.hi
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Stream
-%dir %{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Stream/Flat
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Stream/Flat/*.hi
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Stream/*.hi
-%{_libdir}/ghc-%{version}/dph-base-*/HSdph-base-*.o
-%{_libdir}/ghc-%{version}/dph-base-*/include
-%{_libdir}/ghc-%{version}/dph-base-*/libHSdph-base-*.a
-%exclude %{_libdir}/ghc-%{version}/dph-base-*/libHSdph-base-*_p.a
-
-%dir %{_libdir}/ghc-%{version}/dph-par-*
-%dir %{_libdir}/ghc-%{version}/dph-par-*/Data
-%dir %{_libdir}/ghc-%{version}/dph-par-*/Data/Array
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Lifted
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Lifted/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Prelude
-%dir %{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Prelude/Base
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Prelude/Base/*.hi
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Prelude/*.hi
-%{_libdir}/ghc-%{version}/dph-par-*/HSdph-par-*.o
-%{_libdir}/ghc-%{version}/dph-par-*/libHSdph-par-*.a
-%exclude %{_libdir}/ghc-%{version}/dph-par-*/libHSdph-par-*_p.a
-
-%dir %{_libdir}/ghc-%{version}/dph-prim-interface-*
-%dir %{_libdir}/ghc-%{version}/dph-prim-interface-*/Data
-%dir %{_libdir}/ghc-%{version}/dph-prim-interface-*/Data/Array
-%dir %{_libdir}/ghc-%{version}/dph-prim-interface-*/Data/Array/Parallel
-%{_libdir}/ghc-%{version}/dph-prim-interface-*/Data/Array/Parallel/*.hi
-%{_libdir}/ghc-%{version}/dph-prim-interface-*/HSdph-prim-interface-*.o
-%{_libdir}/ghc-%{version}/dph-prim-interface-*/include
-%{_libdir}/ghc-%{version}/dph-prim-interface-*/libHSdph-prim-interface-*.a
-%exclude %{_libdir}/ghc-%{version}/dph-prim-interface-*/libHSdph-prim-interface-*_p.a
-
-%dir %{_libdir}/ghc-%{version}/dph-prim-par-*
-%dir %{_libdir}/ghc-%{version}/dph-prim-par-*/Data
-%dir %{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array
-%dir %{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel
-%{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted
-%dir %{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted/Distributed
-%{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted/Distributed/*.hi
-%{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted/Parallel
-%{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted/Parallel/*.hi
-%{_libdir}/ghc-%{version}/dph-prim-par-*/HSdph-prim-par-*.o
-%{_libdir}/ghc-%{version}/dph-prim-par-*/libHSdph-prim-par-*.a
-%exclude %{_libdir}/ghc-%{version}/dph-prim-par-*/libHSdph-prim-par-*_p.a
-
-%dir %{_libdir}/ghc-%{version}/dph-prim-seq-*
-%dir %{_libdir}/ghc-%{version}/dph-prim-seq-*/Data
-%dir %{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array
-%dir %{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential
-%dir %{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential/Flat
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential/Flat/*.hi
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential/Segmented
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential/Segmented/*.hi
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/HSdph-prim-seq-*.o
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/libHSdph-prim-seq-*.a
-%exclude %{_libdir}/ghc-%{version}/dph-prim-seq-*/libHSdph-prim-seq-*_p.a
-
-%dir %{_libdir}/ghc-%{version}/dph-seq-*
-%dir %{_libdir}/ghc-%{version}/dph-seq-*/Data
-%dir %{_libdir}/ghc-%{version}/dph-seq-*/Data/Array
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Lifted
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Lifted/*.hi
-%dir %{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Prelude
-%dir %{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Prelude/Base
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Prelude/Base/*.hi
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Prelude/*.hi
-%{_libdir}/ghc-%{version}/dph-seq-*/HSdph-seq-*.o
-%{_libdir}/ghc-%{version}/dph-seq-*/libHSdph-seq-*.a
-%exclude %{_libdir}/ghc-%{version}/dph-seq-*/libHSdph-seq-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/extensible-exceptions-*
 %dir %{_libdir}/ghc-%{version}/extensible-exceptions-*/Control
@@ -507,11 +442,12 @@ fi
 
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}
 %{_libdir}/ghc-%{version}/ghc-%{version}/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/HSghc-%{version}.o
 %{_libdir}/ghc-%{version}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/ghc-%{version}/libHSghc-%{version}.a
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Alpha
-%{_libdir}/ghc-%{version}/ghc-%{version}/Alpha/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Llvm
+%{_libdir}/ghc-%{version}/ghc-%{version}/Llvm/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen
+%{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/PPC
 %{_libdir}/ghc-%{version}/ghc-%{version}/PPC/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/SPARC
@@ -532,21 +468,53 @@ fi
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/SPARC/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Builtins
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Builtins/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Monad
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Monad/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Type
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Type/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Utils
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Utils/*.hi
 
-%dir %{_libdir}/ghc-%{version}/ghc-binary-*
-%{_libdir}/ghc-%{version}/ghc-binary-*/HSghc-binary-*.o
-%{_libdir}/ghc-%{version}/ghc-binary-*/libHSghc-binary-*.a
-%exclude %{_libdir}/ghc-%{version}/ghc-binary-*/libHSghc-binary-*_p.a
-%dir %{_libdir}/ghc-%{version}/ghc-binary-*/Data
-%{_libdir}/ghc-%{version}/ghc-binary-*/Data/*.hi
-%dir %{_libdir}/ghc-%{version}/ghc-binary-*/Data/Binary
-%{_libdir}/ghc-%{version}/ghc-binary-*/Data/Binary/*.hi
+%dir %{_libdir}/ghc-%{version}/haskell2010-*
+%{_libdir}/ghc-%{version}/haskell2010-*/*.hi
+%dir %{_libdir}/ghc-%{version}/haskell2010-*/Control
+%{_libdir}/ghc-%{version}/haskell2010-*/Control/*.hi
+%dir %{_libdir}/ghc-%{version}/haskell2010-*/Data
+%{_libdir}/ghc-%{version}/haskell2010-*/Data/*.hi
+%dir %{_libdir}/ghc-%{version}/haskell2010-*/Foreign
+%{_libdir}/ghc-%{version}/haskell2010-*/Foreign/*.hi
+%dir %{_libdir}/ghc-%{version}/haskell2010-*/Foreign/C
+%{_libdir}/ghc-%{version}/haskell2010-*/Foreign/C/*.hi
+%dir %{_libdir}/ghc-%{version}/haskell2010-*/Foreign/Marshal
+%{_libdir}/ghc-%{version}/haskell2010-*/Foreign/Marshal/*.hi
+%dir %{_libdir}/ghc-%{version}/haskell2010-*/System
+%{_libdir}/ghc-%{version}/haskell2010-*/System/*.hi
+%dir %{_libdir}/ghc-%{version}/haskell2010-*/System/IO
+%{_libdir}/ghc-%{version}/haskell2010-*/System/IO/*.hi
+%{_libdir}/ghc-%{version}/haskell2010-*/HShaskell2010-*.o
+%{_libdir}/ghc-%{version}/haskell2010-*/libHShaskell2010-*.a
+%exclude %{_libdir}/ghc-%{version}/haskell2010-*/libHShaskell2010-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/haskell98-*
 %{_libdir}/ghc-%{version}/haskell98-*/*.hi
 %{_libdir}/ghc-%{version}/haskell98-*/HShaskell98-*.o
 %{_libdir}/ghc-%{version}/haskell98-*/libHShaskell98-*.a
 %exclude %{_libdir}/ghc-%{version}/haskell98-*/libHShaskell98-*_p.a
+
+%dir %{_libdir}/ghc-%{version}/hoopl-*
+%dir %{_libdir}/ghc-%{version}/hoopl-*/Compiler
+%{_libdir}/ghc-%{version}/hoopl-*/Compiler/*.hi
+%dir %{_libdir}/ghc-%{version}/hoopl-*/Compiler/Hoopl
+%{_libdir}/ghc-%{version}/hoopl-*/Compiler/Hoopl/*.hi
+%dir %{_libdir}/ghc-%{version}/hoopl-*/Compiler/Hoopl/Passes
+%{_libdir}/ghc-%{version}/hoopl-*/Compiler/Hoopl/Passes/*.hi
+%{_libdir}/ghc-%{version}/hoopl-*/HShoopl-*.o
+%{_libdir}/ghc-%{version}/hoopl-*/libHShoopl-*.a
+%exclude %{_libdir}/ghc-%{version}/hoopl-*/libHShoopl-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/hpc-*
 %{_libdir}/ghc-%{version}/hpc-*/HShpc-*.o
@@ -563,6 +531,8 @@ fi
 %{_libdir}/ghc-%{version}/integer-*/GHC/Integer/*.hi
 %dir %{_libdir}/ghc-%{version}/integer-*/GHC/Integer/GMP
 %{_libdir}/ghc-%{version}/integer-*/GHC/Integer/GMP/*.hi
+%dir %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms
+%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms/*.hi
 %{_libdir}/ghc-%{version}/integer-*/HSinteger-*.o
 %{_libdir}/ghc-%{version}/integer-*/libHSinteger-*.a
 %exclude %{_libdir}/ghc-%{version}/integer-*/libHSinteger-*_p.a
@@ -601,21 +571,21 @@ fi
 %dir %{_libdir}/ghc-%{version}/process-*/System/Process
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.hi
 
-%dir %{_libdir}/ghc-%{version}/random-*
-%{_libdir}/ghc-%{version}/random-*/HSrandom-*.o
-%{_libdir}/ghc-%{version}/random-*/libHSrandom-*.a
-%exclude %{_libdir}/ghc-%{version}/random-*/libHSrandom-*_p.a
-%dir %{_libdir}/ghc-%{version}/random-*/System
-%{_libdir}/ghc-%{version}/random-*/System/*.hi
+#%dir %{_libdir}/ghc-%{version}/random-*
+#%{_libdir}/ghc-%{version}/random-*/HSrandom-*.o
+#%{_libdir}/ghc-%{version}/random-*/libHSrandom-*.a
+#%exclude %{_libdir}/ghc-%{version}/random-*/libHSrandom-*_p.a
+#%dir %{_libdir}/ghc-%{version}/random-*/System
+#%{_libdir}/ghc-%{version}/random-*/System/*.hi
 
-%dir %{_libdir}/ghc-%{version}/syb-*
-%dir %{_libdir}/ghc-%{version}/syb-*/Data
-%dir %{_libdir}/ghc-%{version}/syb-*/Data/Generics
-%{_libdir}/ghc-%{version}/syb-*/Data/Generics/*.hi
-%{_libdir}/ghc-%{version}/syb-*/Data/*.hi
-%{_libdir}/ghc-%{version}/syb-*/HSsyb-*.o
-%{_libdir}/ghc-%{version}/syb-*/libHSsyb-*.a
-%exclude %{_libdir}/ghc-%{version}/syb-*/libHSsyb-*_p.a
+#%dir %{_libdir}/ghc-%{version}/syb-*
+#%dir %{_libdir}/ghc-%{version}/syb-*/Data
+##%dir %{_libdir}/ghc-%{version}/syb-*/Data/Generics
+#%{_libdir}/ghc-%{version}/syb-*/Data/Generics/*.hi
+#%{_libdir}/ghc-%{version}/syb-*/Data/*.hi
+#%{_libdir}/ghc-%{version}/syb-*/HSsyb-*.o
+#%{_libdir}/ghc-%{version}/syb-*/libHSsyb-*.a
+#%exclude %{_libdir}/ghc-%{version}/syb-*/libHSsyb-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/template-haskell-*
 %{_libdir}/ghc-%{version}/template-haskell-*/HStemplate-haskell-*.o
@@ -674,18 +644,24 @@ fi
 %{_libdir}/ghc-%{version}/base-*/Control/Exception/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Control/Monad/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Control/Monad/ST/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/Control/Monad/ST/Lazy/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Control/*.p_hi
-%{_libdir}/ghc-%{version}/base-*/Data/Generics/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Data/STRef/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/Data/Typeable/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Debug/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/Foreign/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Foreign/C/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Foreign/Marshal/*.p_hi
-%{_libdir}/ghc-%{version}/base-*/Foreign/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/Foreign/ForeignPtr/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/*.p_hi
-%{_libdir}/ghc-%{version}/base-*/GHC/IO/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/Conc/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/Event/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/Fingerprint/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/Float/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/IO/Encoding/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/IO/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/libHSbase-*_p.a
 %{_libdir}/ghc-%{version}/base-*/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/System/Console/*.p_hi
@@ -698,12 +674,17 @@ fi
 %{_libdir}/ghc-%{version}/base-*/Text/Read/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Text/Show/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Unsafe/*.p_hi
+%{_libdir}/ghc-%{version}/binary-*/Data/*.p_hi
+%{_libdir}/ghc-%{version}/binary-*/Data/Binary/*.p_hi
+%{_libdir}/ghc-%{version}/binary-*/Data/Binary/Builder/*.p_hi
+%{_libdir}/ghc-%{version}/binary-*/libHSbinary-*_p.a
 %{_libdir}/ghc-%{version}/bin-package-db-*/Distribution/InstalledPackageInfo/*.p_hi
 %{_libdir}/ghc-%{version}/bin-package-db-*/libHSbin-package-db-0.0.0.0_p.a
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/libHSbytestring-*_p.a
+%{_libdir}/ghc-%{version}/Cabal-*/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/*.p_hi
@@ -718,37 +699,6 @@ fi
 %{_libdir}/ghc-%{version}/containers-*/libHScontainers-*_p.a
 %{_libdir}/ghc-%{version}/directory-*/libHSdirectory-*_p.a
 %{_libdir}/ghc-%{version}/directory-*/System/*.p_hi
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Arr/*.p_hi
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Base/*.p_hi
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/*.p_hi
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Stream/Flat/*.p_hi
-%{_libdir}/ghc-%{version}/dph-base-*/Data/Array/Parallel/Stream/*.p_hi
-%{_libdir}/ghc-%{version}/dph-base-*/libHSdph-base-*_p.a
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Lifted/*.p_hi
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/*.p_hi
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Prelude/Base/*.p_hi
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/Parallel/Prelude/*.p_hi
-%{_libdir}/ghc-%{version}/dph-par-*/Data/Array/*.p_hi
-%{_libdir}/ghc-%{version}/dph-par-*/libHSdph-par-*_p.a
-%{_libdir}/ghc-%{version}/dph-prim-interface-*/Data/Array/Parallel/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-interface-*/libHSdph-prim-interface-*_p.a
-%{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted/Distributed/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted/Parallel/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-par-*/Data/Array/Parallel/Unlifted/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-par-*/libHSdph-prim-par-*_p.a
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential/Flat/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/Data/Array/Parallel/Unlifted/Sequential/Segmented/*.p_hi
-%{_libdir}/ghc-%{version}/dph-prim-seq-*/libHSdph-prim-seq-*_p.a
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Lifted/*.p_hi
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/*.p_hi
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Prelude/Base/*.p_hi
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/Parallel/Prelude/*.p_hi
-%{_libdir}/ghc-%{version}/dph-seq-*/Data/Array/*.p_hi
-%{_libdir}/ghc-%{version}/dph-seq-*/libHSdph-seq-*_p.a
 %{_libdir}/ghc-%{version}/extensible-exceptions-*/Control/Exception/*.p_hi
 %{_libdir}/ghc-%{version}/extensible-exceptions-*/libHSextensible-exceptions-*_p.a
 %{_libdir}/ghc-%{version}/filepath-*/libHSfilepath-*_p.a
@@ -758,7 +708,8 @@ fi
 %{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-*_p.a
 %{_libdir}/ghc-%{version}/ghc-%{version}/libHSghc-%{version}_p.a
 %{_libdir}/ghc-%{version}/ghc-%{version}/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/Alpha/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Llvm/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/PPC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Graph/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/*.p_hi
@@ -766,18 +717,34 @@ fi
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/SPARC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/CodeGen/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Builtins/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Monad/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Type/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Utils/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/X86/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-binary-*/libHSghc-binary-*_p.a
-%{_libdir}/ghc-%{version}/ghc-binary-*/Data/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-binary-*/Data/Binary/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/Control/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/Data/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/Foreign/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/Foreign/C/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/Foreign/Marshal/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/System/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/System/IO/*.p_hi
+%{_libdir}/ghc-%{version}/haskell2010-*/libHShaskell2010-*_p.a
 %{_libdir}/ghc-%{version}/haskell98-*/libHShaskell98-*_p.a
 %{_libdir}/ghc-%{version}/haskell98-*/*.p_hi
+%{_libdir}/ghc-%{version}/hoopl-*/Compiler/*.p_hi
+%{_libdir}/ghc-%{version}/hoopl-*/Compiler/Hoopl/*.p_hi
+%{_libdir}/ghc-%{version}/hoopl-*/Compiler/Hoopl/Passes/*.p_hi
+%{_libdir}/ghc-%{version}/hoopl-*/libHShoopl-*_p.a
 %{_libdir}/ghc-%{version}/hpc-*/libHShpc-*_p.a
 %{_libdir}/ghc-%{version}/hpc-*/Trace/Hpc/*.p_hi
 %{_libdir}/ghc-%{version}/integer-*/GHC/Integer/*.p_hi
 %{_libdir}/ghc-%{version}/integer-*/GHC/Integer/GMP/*.p_hi
+%{_libdir}/ghc-%{version}/integer-*/GHC/Integer/Logarithms/*.p_hi
 %{_libdir}/ghc-%{version}/integer-*/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/integer-*/libHSinteger-*_p.a
 %{_libdir}/ghc-%{version}/old-locale-*/libHSold-locale-*_p.a
@@ -790,11 +757,6 @@ fi
 %{_libdir}/ghc-%{version}/process-*/libHSprocess-*_p.a
 %{_libdir}/ghc-%{version}/process-*/System/*.p_hi
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.p_hi
-%{_libdir}/ghc-%{version}/random-*/libHSrandom-*_p.a
-%{_libdir}/ghc-%{version}/random-*/System/*.p_hi
-%{_libdir}/ghc-%{version}/syb-*/Data/Generics/*.p_hi
-%{_libdir}/ghc-%{version}/syb-*/Data/*.p_hi
-%{_libdir}/ghc-%{version}/syb-*/libHSsyb-*_p.a
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/*.p_hi
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/*.p_hi
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/Syntax/*.p_hi
