@@ -3,8 +3,6 @@
 # - happy, alex needed only when using darcs checkout or regenerating parsers
 #   http://hackage.haskell.org/trac/ghc/wiki/Building/Prerequisites
 #
-# TODO (is it still valid?)
-# - patch libraries/terminfo/configure.ac to link against tinfo not ncurses (-Wl,--as-needed) and run autotools only there?
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
 # Conditional build:
@@ -15,21 +13,20 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	6.12.3
-Release:	7
+Version:	7.2.1
+Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
-Source0:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	4c2663c2eff833d7b9f39ef770eefbd6
+Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
+# Source0-md5:	c2a6d1ce13b6bb95fa2d743a143835eb
 %if %{with bootstrap}
-Source3:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-i386-unknown-linux-n.tar.bz2
+Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux-n.tar.bz2
 # Source3-md5:	8ed8540571f7b10d8caf782755e35818
-Source4:	http://darcs.haskell.org/download/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux-n.tar.bz2
+Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux-n.tar.bz2
 # Source4-md5:	d58e5a50d8b120ac933afbd10a773aef
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
-Patch2:		%{name}-build.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -129,13 +126,12 @@ mv %{name}-%{version} binsrc
 %endif
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 # use ld.bfd
-install -d our-ld
-ln -s %{_bindir}/ld.bfd our-ld/ld
-export PATH=$(pwd)/our-ld:$PATH
+#install -d our-ld
+#ln -s %{_bindir}/ld.bfd our-ld/ld
+#export PATH=$(pwd)/our-ld:$PATH
 
 
 %{__autoconf}
