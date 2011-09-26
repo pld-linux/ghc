@@ -27,6 +27,7 @@ Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknow
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
+Patch2:		%{name}-winpaths.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -126,13 +127,13 @@ mv %{name}-%{version} binsrc
 %endif
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 # use ld.bfd
 install -d our-ld
 ln -s %{_bindir}/ld.bfd our-ld/ld
 export PATH=$(pwd)/our-ld:$PATH
-
 
 %{__autoconf}
 cd libraries/terminfo
