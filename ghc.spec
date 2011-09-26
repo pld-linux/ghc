@@ -20,10 +20,10 @@ Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	c2a6d1ce13b6bb95fa2d743a143835eb
 %if %{with bootstrap}
-Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux-n.tar.bz2
-# Source3-md5:	8ed8540571f7b10d8caf782755e35818
-Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux-n.tar.bz2
-# Source4-md5:	d58e5a50d8b120ac933afbd10a773aef
+Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
+# Source3-md5:	4acab40f8f14b6f338b6c60120fdc9fe
+Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux.tar.bz2
+# Source4-md5:	f44bbc320613c6e26631b6d8674a2f1c
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
