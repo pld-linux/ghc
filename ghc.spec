@@ -6,7 +6,8 @@
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
 # TODO:
-#	- teach ghc toolchain to always use ld.bfd
+#	- teach ghc toolchain to always use ld.bfd,
+#		or fix ld.gold to be usable for anything else than c/c++
 #
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
@@ -17,7 +18,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	7.2.1
-Release:	0.1
+Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
