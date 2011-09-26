@@ -129,9 +129,9 @@ mv %{name}-%{version} binsrc
 
 %build
 # use ld.bfd
-#install -d our-ld
-#ln -s %{_bindir}/ld.bfd our-ld/ld
-#export PATH=$(pwd)/our-ld:$PATH
+install -d our-ld
+ln -s %{_bindir}/ld.bfd our-ld/ld
+export PATH=$(pwd)/our-ld:$PATH
 
 
 %{__autoconf}
