@@ -18,7 +18,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	7.2.1
-Release:	1
+Release:	2
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -261,6 +261,7 @@ fi
 %{_libdir}/ghc-%{version}/package.conf.d/*.conf
 %config %verify(not md5 mtime size) %{_libdir}/ghc-%{version}/package.conf.d/package.cache
 %{_libdir}/ghc-%{version}/template-hsc.h
+%dir %{_libdir}/ghc-%{version}/latex
 %{_libdir}/ghc-%{version}/latex/haddock.sty
 %{_mandir}/man1/ghc.1*
 
