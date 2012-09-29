@@ -253,9 +253,6 @@ fi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/libHS*.a
 %exclude %{_libdir}/ghc-%{version}/libHS*_p.a
-%ifarch %{x8664} ppc ppc64 sparc sparcv9 sparc64
-%{_libdir}/ghc-%{version}/HS*.o
-%endif
 %{_libdir}/ghc-%{version}/ghc*-usage.txt
 %{_libdir}/ghc-%{version}/html
 %dir %{_libdir}/ghc-%{version}/package.conf.d
