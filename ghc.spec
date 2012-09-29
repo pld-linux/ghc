@@ -25,9 +25,9 @@ Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
 # Source0-md5:	e9d892d2970550ec5e70130b3621f6b6
 %if %{with bootstrap}
 Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
-# Source3-md5:	4acab40f8f14b6f338b6c60120fdc9fe
+# Source3-md5:	d781ca73137d15a0bbaf360831b57791
 Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux.tar.bz2
-# Source4-md5:	f44bbc320613c6e26631b6d8674a2f1c
+# Source4-md5:	23da3285c5f8fe6716e2795d149c6b96
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
