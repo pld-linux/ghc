@@ -1,5 +1,5 @@
---- ghc-6.12.3/libraries/Cabal/cabal/Distribution/Simple/InstallDirs.hs~	2010-06-09 20:10:19.000000000 +0200
-+++ ghc-6.12.3/libraries/Cabal/cabal/Distribution/Simple/InstallDirs.hs	2010-08-26 21:28:52.969002660 +0200
+--- ghc-6.12.3/libraries/Cabal/Cabal/Distribution/Simple/InstallDirs.hs~	2010-06-09 20:10:19.000000000 +0200
++++ ghc-6.12.3/libraries/Cabal/Cabal/Distribution/Simple/InstallDirs.hs	2010-08-26 21:28:52.969002660 +0200
 @@ -205,7 +205,7 @@
  -- users to be able to configure @--libdir=\/usr\/lib64@ for example but
  -- because by default we want to support installing multiple versions of

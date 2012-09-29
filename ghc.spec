@@ -17,12 +17,12 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	7.2.1
-Release:	2
+Version:	7.6.1
+Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	c2a6d1ce13b6bb95fa2d743a143835eb
+# Source0-md5:	e9d892d2970550ec5e70130b3621f6b6
 %if %{with bootstrap}
 Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
 # Source3-md5:	4acab40f8f14b6f338b6c60120fdc9fe
@@ -193,6 +193,8 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 	--target=%{_target_platform} \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}" \
+	--with-ld=ld \
+	--with-nm=nm \
 %if %{with bootstrap}
 	GhcPkgCmd=$top/bindist/bin/ghc-pkg \
 %endif
@@ -214,8 +216,7 @@ rm -rf docs-root
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-cp -a $RPM_BUILD_ROOT%{_datadir}/doc/%{name} docs-root
-rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}
+mv -f $RPM_BUILD_ROOT%{_datadir}/doc/%{name} docs-root
 
 # fix paths to docs in package list
 sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf.d/*.conf
@@ -252,7 +253,7 @@ fi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/libHS*.a
 %exclude %{_libdir}/ghc-%{version}/libHS*_p.a
-%ifarch %{ix86} %{x8664} ppc ppc64 sparc sparcv9 sparc64
+%ifarch %{x8664} ppc ppc64 sparc sparcv9 sparc64
 %{_libdir}/ghc-%{version}/HS*.o
 %endif
 %{_libdir}/ghc-%{version}/ghc*-usage.txt
@@ -271,6 +272,12 @@ fi
 %{_libdir}/ghc-%{version}/array-*/Data/Array/*.hi
 %dir %{_libdir}/ghc-%{version}/array-*/Data/Array/IO
 %{_libdir}/ghc-%{version}/array-*/Data/Array/IO/*.hi
+%dir %{_libdir}/ghc-%{version}/array-*/Data/Array/MArray
+%{_libdir}/ghc-%{version}/array-*/Data/Array/MArray/*.hi
+%dir %{_libdir}/ghc-%{version}/array-*/Data/Array/ST
+%{_libdir}/ghc-%{version}/array-*/Data/Array/ST/*.hi
+%dir %{_libdir}/ghc-%{version}/array-*/Data/Array/Storable
+%{_libdir}/ghc-%{version}/array-*/Data/Array/Storable/*.hi
 %{_libdir}/ghc-%{version}/array-*/Data/*.hi
 %{_libdir}/ghc-%{version}/array-*/HSarray-*.o
 %{_libdir}/ghc-%{version}/array-*/libHSarray-*.a
@@ -329,6 +336,8 @@ fi
 %dir %{_libdir}/ghc-%{version}/base-*/System
 %dir %{_libdir}/ghc-%{version}/base-*/System/Console
 %{_libdir}/ghc-%{version}/base-*/System/Console/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/System/Environment
+%{_libdir}/ghc-%{version}/base-*/System/Environment/*.hi
 %{_libdir}/ghc-%{version}/base-*/System/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/System/IO
 %{_libdir}/ghc-%{version}/base-*/System/IO/*.hi
@@ -361,6 +370,12 @@ fi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/*.hi
 %dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/*.hi
+%dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/*.hi
+%dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/BasicEncoding
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/BasicEncoding/*.hi
+%dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/BasicEncoding/Internal
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/BasicEncoding/Internal/*.hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/*.hi
 %{_libdir}/ghc-%{version}/bytestring-*/HSbytestring-*.o
 %{_libdir}/ghc-%{version}/bytestring-*/include
@@ -406,9 +421,24 @@ fi
 %dir %{_libdir}/ghc-%{version}/containers-*
 %dir %{_libdir}/ghc-%{version}/containers-*/Data
 %{_libdir}/ghc-%{version}/containers-*/Data/*.hi
+%dir %{_libdir}/ghc-%{version}/containers-*/Data/IntMap
+%{_libdir}/ghc-%{version}/containers-*/Data/IntMap/*.hi
+%dir %{_libdir}/ghc-%{version}/containers-*/Data/IntSet
+%{_libdir}/ghc-%{version}/containers-*/Data/IntSet/*.hi
+%dir %{_libdir}/ghc-%{version}/containers-*/Data/Map
+%{_libdir}/ghc-%{version}/containers-*/Data/Map/*.hi
+%dir %{_libdir}/ghc-%{version}/containers-*/Data/Set
+%{_libdir}/ghc-%{version}/containers-*/Data/Set/*.hi
 %{_libdir}/ghc-%{version}/containers-*/HScontainers-*.o
 %{_libdir}/ghc-%{version}/containers-*/libHScontainers-*.a
 %exclude %{_libdir}/ghc-%{version}/containers-*/libHScontainers-*_p.a
+
+%dir %{_libdir}/ghc-%{version}/deepseq-*
+%dir %{_libdir}/ghc-%{version}/deepseq-*/Control
+%{_libdir}/ghc-%{version}/deepseq-*/Control/*.hi
+%{_libdir}/ghc-%{version}/deepseq-*/HSdeepseq-*.o
+%{_libdir}/ghc-%{version}/deepseq-*/libHSdeepseq-*.a
+%exclude %{_libdir}/ghc-%{version}/deepseq-*/libHSdeepseq-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/directory-*
 %{_libdir}/ghc-%{version}/directory-*/HSdirectory-*.o
@@ -417,14 +447,6 @@ fi
 %exclude %{_libdir}/ghc-%{version}/directory-*/libHSdirectory-*_p.a
 %dir %{_libdir}/ghc-%{version}/directory-*/System
 %{_libdir}/ghc-%{version}/directory-*/System/*.hi
-
-%dir %{_libdir}/ghc-%{version}/extensible-exceptions-*
-%dir %{_libdir}/ghc-%{version}/extensible-exceptions-*/Control
-%dir %{_libdir}/ghc-%{version}/extensible-exceptions-*/Control/Exception
-%{_libdir}/ghc-%{version}/extensible-exceptions-*/Control/Exception/*.hi
-%{_libdir}/ghc-%{version}/extensible-exceptions-*/HSextensible-exceptions-*.o
-%{_libdir}/ghc-%{version}/extensible-exceptions-*/libHSextensible-exceptions-*.a
-%exclude %{_libdir}/ghc-%{version}/extensible-exceptions-*/libHSextensible-exceptions-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/filepath-*
 %{_libdir}/ghc-%{version}/filepath-*/HSfilepath-*.o
@@ -435,17 +457,12 @@ fi
 %{_libdir}/ghc-%{version}/filepath-*/System/FilePath/*.hi
 %{_libdir}/ghc-%{version}/filepath-*/System/*.hi
 
-%dir %{_libdir}/ghc-%{version}/ghc-prim-*
-%dir %{_libdir}/ghc-%{version}/ghc-prim-*/GHC
-%{_libdir}/ghc-%{version}/ghc-prim-*/GHC/*.hi
-%{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-*.o
-%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-*.a
-%exclude %{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-*_p.a
-
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}
 %{_libdir}/ghc-%{version}/ghc-%{version}/*.hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/ghc-%{version}/libHSghc-%{version}.a
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Hoopl
+%{_libdir}/ghc-%{version}/ghc-%{version}/Hoopl/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/Llvm
 %{_libdir}/ghc-%{version}/ghc-%{version}/Llvm/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen
@@ -474,12 +491,21 @@ fi
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Builtins
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Builtins/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Generic
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Generic/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Monad
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Monad/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Type
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Type/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Utils
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Utils/*.hi
+
+%dir %{_libdir}/ghc-%{version}/ghc-prim-*
+%dir %{_libdir}/ghc-%{version}/ghc-prim-*/GHC
+%{_libdir}/ghc-%{version}/ghc-prim-*/GHC/*.hi
+%{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-*.o
+%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-*.a
+%exclude %{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/haskell2010-*
 %{_libdir}/ghc-%{version}/haskell2010-*/*.hi
@@ -596,8 +622,6 @@ fi
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/*.hi
 %dir %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/*.hi
-%dir %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/Syntax
-%{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/Syntax/*.hi
 %{_libdir}/ghc-%{version}/template-haskell-*/libHStemplate-haskell-*.a
 %exclude %{_libdir}/ghc-%{version}/template-haskell-*/libHStemplate-haskell-*_p.a
 
@@ -627,18 +651,37 @@ fi
 %dir %{_libdir}/ghc-%{version}/unix-*/System
 %{_libdir}/ghc-%{version}/unix-*/System/*.hi
 %dir %{_libdir}/ghc-%{version}/unix-*/System/Posix
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/*.hi
+%dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/ByteString
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/ByteString/*.hi
+%dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/Directory
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Directory/*.hi
 %dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/DynamicLinker
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/DynamicLinker/*.hi
-%{_libdir}/ghc-%{version}/unix-*/System/Posix/*.hi
+%dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/DynamicLinker/Module
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/DynamicLinker/Module/*.hi
+%dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/Env
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Env/*.hi
+%dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/Files
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Files/*.hi
+%dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/IO
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/IO/*.hi
 %dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/Process
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Process/*.hi
 %dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/Signals
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Signals/*.hi
+%dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/Temp
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Temp/*.hi
+%dir %{_libdir}/ghc-%{version}/unix-*/System/Posix/Terminal
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Terminal/*.hi
 
 %files prof
 %defattr(644,root,root,755)
 %{_libdir}/ghc-%{version}/libHS*_p.a
 %{_libdir}/ghc-%{version}/array-*/Data/Array/IO/*.p_hi
+%{_libdir}/ghc-%{version}/array-*/Data/Array/MArray/*.p_hi
+%{_libdir}/ghc-%{version}/array-*/Data/Array/ST/*.p_hi
+%{_libdir}/ghc-%{version}/array-*/Data/Array/Storable/*.p_hi
 %{_libdir}/ghc-%{version}/array-*/Data/Array/*.p_hi
 %{_libdir}/ghc-%{version}/array-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/array-*/libHSarray-*_p.a
@@ -667,6 +710,7 @@ fi
 %{_libdir}/ghc-%{version}/base-*/libHSbase-*_p.a
 %{_libdir}/ghc-%{version}/base-*/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/System/Console/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/System/Environment/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/System/IO/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/System/Mem/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/System/*.p_hi
@@ -682,6 +726,9 @@ fi
 %{_libdir}/ghc-%{version}/binary-*/libHSbinary-*_p.a
 %{_libdir}/ghc-%{version}/bin-package-db-*/Distribution/InstalledPackageInfo/*.p_hi
 %{_libdir}/ghc-%{version}/bin-package-db-*/libHSbin-package-db-0.0.0.0_p.a
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/BasicEncoding/Internal/*.p_hi
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/BasicEncoding/*.p_hi
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/*.p_hi
@@ -698,20 +745,23 @@ fi
 %{_libdir}/ghc-%{version}/Cabal-*/Language/Haskell/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*_p.a
 %{_libdir}/ghc-%{version}/containers-*/Data/*.p_hi
+%{_libdir}/ghc-%{version}/containers-*/Data/IntMap/*.p_hi
+%{_libdir}/ghc-%{version}/containers-*/Data/IntSet/*.p_hi
+%{_libdir}/ghc-%{version}/containers-*/Data/Map/*.p_hi
+%{_libdir}/ghc-%{version}/containers-*/Data/Set/*.p_hi
 %{_libdir}/ghc-%{version}/containers-*/libHScontainers-*_p.a
+%{_libdir}/ghc-%{version}/deepseq-*/libHSdeepseq-*_p.a
+%{_libdir}/ghc-%{version}/deepseq-*/Control/*.p_hi
 %{_libdir}/ghc-%{version}/directory-*/libHSdirectory-*_p.a
 %{_libdir}/ghc-%{version}/directory-*/System/*.p_hi
-%{_libdir}/ghc-%{version}/extensible-exceptions-*/Control/Exception/*.p_hi
-%{_libdir}/ghc-%{version}/extensible-exceptions-*/libHSextensible-exceptions-*_p.a
 %{_libdir}/ghc-%{version}/filepath-*/libHSfilepath-*_p.a
 %{_libdir}/ghc-%{version}/filepath-*/System/FilePath/*.p_hi
 %{_libdir}/ghc-%{version}/filepath-*/System/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-prim-*/GHC/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-*_p.a
 %{_libdir}/ghc-%{version}/ghc-%{version}/libHSghc-%{version}_p.a
 %{_libdir}/ghc-%{version}/ghc-%{version}/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Hoopl/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/Llvm/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/PPC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Graph/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/*.p_hi
@@ -723,10 +773,13 @@ fi
 %{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Builtins/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Generic/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Monad/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Type/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/Vectorise/Utils/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/X86/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-prim-*/GHC/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-*_p.a
 %{_libdir}/ghc-%{version}/haskell2010-*/Control/*.p_hi
 %{_libdir}/ghc-%{version}/haskell2010-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/haskell2010-*/*.p_hi
@@ -761,7 +814,6 @@ fi
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.p_hi
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/*.p_hi
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/*.p_hi
-%{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/Syntax/*.p_hi
 %{_libdir}/ghc-%{version}/template-haskell-*/libHStemplate-haskell-*_p.a
 %{_libdir}/ghc-%{version}/time-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/time-*/Data/Time/Calendar/*.p_hi
@@ -772,7 +824,15 @@ fi
 %{_libdir}/ghc-%{version}/time-*/libHStime-*_p.a
 %{_libdir}/ghc-%{version}/unix-*/libHSunix-*_p.a
 %{_libdir}/ghc-%{version}/unix-*/System/*.p_hi
-%{_libdir}/ghc-%{version}/unix-*/System/Posix/DynamicLinker/*.p_hi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/ByteString/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Directory/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/DynamicLinker/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/DynamicLinker/Module/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Env/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Files/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/IO/*.p_hi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Process/*.p_hi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Signals/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Temp/*.p_hi
+%{_libdir}/ghc-%{version}/unix-*/System/Posix/Terminal/*.p_hi
