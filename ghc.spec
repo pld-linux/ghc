@@ -17,17 +17,17 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	7.6.1
+Version:	7.6.2
 Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	e9d892d2970550ec5e70130b3621f6b6
+# Source0-md5:	2585d83e7d8daece2fe0949c6bc42a2c
 %if %{with bootstrap}
 Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
-# Source3-md5:	d781ca73137d15a0bbaf360831b57791
+# Source3-md5:	287d6c934f325a34fa4fcd96d26eb0e6
 Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux.tar.bz2
-# Source4-md5:	23da3285c5f8fe6716e2795d149c6b96
+# Source4-md5:	230270a985c522af939d9c71aa76343f
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
