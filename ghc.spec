@@ -17,17 +17,17 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	7.6.2
+Version:	7.6.3
 Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	2585d83e7d8daece2fe0949c6bc42a2c
+# Source0-md5:	986d1f90ca30d60f7b2820d75c6b8ea7
 %if %{with bootstrap}
 Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
-# Source3-md5:	287d6c934f325a34fa4fcd96d26eb0e6
+# Source3-md5:	37019b712ec6e5fb0732c27fb43667ee
 Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux.tar.bz2
-# Source4-md5:	230270a985c522af939d9c71aa76343f
+# Source4-md5:	5c142b86355cfd390cd36c292e416db5
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
@@ -247,20 +247,26 @@ fi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-pkg
 %attr(755,root,root) %{_libdir}/ghc-%{version}/ghc-split
+%if %{with doc}
 %attr(755,root,root) %{_libdir}/ghc-%{version}/haddock
+%endif
 %attr(755,root,root) %{_libdir}/ghc-%{version}/hsc2hs
 %attr(755,root,root) %{_libdir}/ghc-%{version}/runghc
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
 %{_libdir}/ghc-%{version}/libHS*.a
 %exclude %{_libdir}/ghc-%{version}/libHS*_p.a
 %{_libdir}/ghc-%{version}/ghc*-usage.txt
+%if %{with doc}
 %{_libdir}/ghc-%{version}/html
+%endif
 %dir %{_libdir}/ghc-%{version}/package.conf.d
 %{_libdir}/ghc-%{version}/package.conf.d/*.conf
 %config %verify(not md5 mtime size) %{_libdir}/ghc-%{version}/package.conf.d/package.cache
 %{_libdir}/ghc-%{version}/template-hsc.h
+%if %{with doc}
 %dir %{_libdir}/ghc-%{version}/latex
 %{_libdir}/ghc-%{version}/latex/haddock.sty
+%endif
 %{_mandir}/man1/ghc.1*
 
 %dir %{_libdir}/ghc-%{version}/array-*
