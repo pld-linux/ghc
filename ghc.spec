@@ -18,7 +18,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	7.6.3
-Release:	1
+Release:	2
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -118,6 +118,16 @@ needed.
 Biblioteki profilujące dla GHC. Powinny być zainstalowane kiedy
 potrzebujemy systemu profilującego z GHC.
 
+%package doc
+Summary:	Manual for GHC
+Group:		Documentation
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
+
+%description doc
+Documentation for GHC.
+
 %prep
 %setup -q
 %if %{with bootstrap}
@@ -216,7 +226,7 @@ rm -rf docs-root
 %{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-mv -f $RPM_BUILD_ROOT%{_datadir}/doc/%{name} docs-root
+mv -f $RPM_BUILD_ROOT%{_docdir}/%{name} docs-root
 
 # fix paths to docs in package list
 sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf.d/*.conf
@@ -235,11 +245,6 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc ANNOUNCE README
-%if %{with doc}
-%doc docs/comm
-%doc docs-root/html
-%doc docs-root/*.pdf
-%endif
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/ghc-%{version}
 %{_libdir}/ghc-%{version}/include
@@ -839,3 +844,11 @@ fi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Signals/*.p_hi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Temp/*.p_hi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Terminal/*.p_hi
+
+%if %{with doc}
+%files doc
+%defattr(644,root,root,755)
+%doc docs/comm
+%doc docs-root/html
+%doc docs-root/*.pdf
+%endif
