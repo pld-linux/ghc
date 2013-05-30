@@ -18,7 +18,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	7.6.3
-Release:	2
+Release:	3
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -63,6 +63,9 @@ Provides:	haddock
 Obsoletes:	haddock
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# use ld.bfd
+%define		specflags	-fuse-ld=bfd
 
 # There is nothing that may or should be compressed
 %define		_noautocompressdoc	*
@@ -200,11 +203,14 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 %endif
 
 %configure \
+	CONF_GCC_LINKER_OPTS_STAGE0="-fuse-ld=bfd" \
+	CONF_GCC_LINKER_OPTS_STAGE1="-fuse-ld=bfd" \
+	CONF_GCC_LINKER_OPTS_STAGE2="-fuse-ld=bfd" \
 	--target=%{_target_platform} \
 	--prefix=%{_prefix} \
 	--with-gcc="%{__cc}" \
-	--with-ld=ld \
-	--with-nm=nm \
+	--with-ld=/usr/bin/ld.bfd \
+	--with-nm=/usr/bin/nm \
 %if %{with bootstrap}
 	GhcPkgCmd=$top/bindist/bin/ghc-pkg \
 %endif
