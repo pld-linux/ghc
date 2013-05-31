@@ -56,7 +56,11 @@ BuildRequires:	libxslt-progs
 BuildRequires:	texlive
 BuildRequires:	texlive-dvips
 BuildRequires:	texlive-fonts-rsfs
+BuildRequires:	texlive-latex
 BuildRequires:	texlive-latex-bibtex
+BuildRequires:	texlive-latex-other
+BuildRequires:	texlive-tex4ht
+BuildRequires:	texlive-xetex
 #For generating documentation in PDF: fop or xmltex
 %endif
 Suggests:	ghc-haskell-platform
