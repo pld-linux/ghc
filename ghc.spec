@@ -18,7 +18,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	7.6.3
-Release:	4
+Release:	5
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
@@ -56,9 +56,11 @@ BuildRequires:	libxslt-progs
 BuildRequires:	texlive
 BuildRequires:	texlive-dvips
 BuildRequires:	texlive-fonts-rsfs
+BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex
 BuildRequires:	texlive-latex-bibtex
 BuildRequires:	texlive-latex-other
+BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-tex4ht
 BuildRequires:	texlive-xetex
 #For generating documentation in PDF: fop or xmltex
