@@ -14,6 +14,31 @@
 %bcond_with	unregistered	# non-registerised interpreter (use for build problems/new arches)
 %bcond_without	doc		# don't build documentation (requires haddock)
 
+# included ghc package versions:
+%define		gpv_Cabal		1.16.0
+%define		gpv_array		0.4.0.1
+%define		gpv_base		4.6.0.1
+%define		gpv_bin_package_db	0.0.0.0
+%define		gpv_binary		0.5.1.1
+%define		gpv_bytestring		0.10.0.2
+%define		gpv_containers		0.5.0.0
+%define		gpv_deepseq		1.3.0.1
+%define		gpv_directory		1.2.0.1
+%define		gpv_filepath		1.3.0.1
+%define		gpv_ghc_prim		0.3.0.0
+%define		gpv_haskell2010		1.1.1.0
+%define		gpv_haskell98		2.0.0.2
+%define		gpv_hoopl		3.9.0.0
+%define		gpv_hpc			0.6.0.0
+%define		gpv_integer_gmp		0.5.0.0
+%define		gpv_old_locale		1.0.0.5
+%define		gpv_old_time		1.1.0.1
+%define		gpv_pretty		1.1.1.0
+%define		gpv_process		1.1.0.2
+%define		gpv_template_haskell	2.8.0.0
+%define		gpv_time		1.4.0.1
+%define		gpv_unix		2.6.0.1
+
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
@@ -66,6 +91,29 @@ BuildRequires:	texlive-xetex
 #For generating documentation in PDF: fop or xmltex
 %endif
 Suggests:	ghc-haskell-platform
+Provides:	ghc-Cabal = %{gpv_Cabal}
+Provides:	ghc-array = %{gpv_array}
+Provides:	ghc-base = %{gpv_base}
+Provides:	ghc-bin-package-db = %{gpv_bin_package_db}
+Provides:	ghc-binary = %{gpv_binary}
+Provides:	ghc-bytestring = %{gpv_bytestring}
+Provides:	ghc-containers = %{gpv_containers}
+Provides:	ghc-deepseq = %{gpv_deepseq}
+Provides:	ghc-directory = %{gpv_directory}
+Provides:	ghc-filepath = %{gpv_filepath}
+Provides:	ghc-ghc-prim = %{gpv_ghc_prim}
+Provides:	ghc-haskell2010 = %{gpv_haskell2010}
+Provides:	ghc-haskell98 = %{gpv_haskell98}
+Provides:	ghc-hoopl = %{gpv_hoopl}
+Provides:	ghc-hpc = %{gpv_hpc}
+Provides:	ghc-integer-gmp = %{gpv_integer_gmp}
+Provides:	ghc-old-locale = %{gpv_old_locale}
+Provides:	ghc-old-time = %{gpv_old_time}
+Provides:	ghc-pretty = %{gpv_pretty}
+Provides:	ghc-process = %{gpv_process}
+Provides:	ghc-template-haskell = %{gpv_template_haskell}
+Provides:	ghc-time = %{gpv_time}
+Provides:	ghc-unix = %{gpv_unix}
 Provides:	haddock
 Obsoletes:	haddock
 ExclusiveArch:	%{ix86} %{x8664}
@@ -118,6 +166,29 @@ Summary:	Profiling libraries for GHC
 Summary(pl.UTF-8):	Biblioteki profilujące dla GHC
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Provides:	ghc-Cabal-prof = %{gpv_Cabal}
+Provides:	ghc-array-prof = %{gpv_array}
+Provides:	ghc-base-prof = %{gpv_base}
+Provides:	ghc-bin-package-db-prof = %{gpv_bin_package_db}
+Provides:	ghc-binary-prof = %{gpv_binary}
+Provides:	ghc-bytestring-prof = %{gpv_bytestring}
+Provides:	ghc-containers-prof = %{gpv_containers}
+Provides:	ghc-deepseq-prof = %{gpv_deepseq}
+Provides:	ghc-directory-prof = %{gpv_directory}
+Provides:	ghc-filepath-prof = %{gpv_filepath}
+Provides:	ghc-ghc-prim-prof = %{gpv_ghc_prim}
+Provides:	ghc-haskell2010-prof = %{gpv_haskell2010}
+Provides:	ghc-haskell98-prof = %{gpv_haskell98}
+Provides:	ghc-hoopl-prof = %{gpv_hoopl}
+Provides:	ghc-hpc-prof = %{gpv_hpc}
+Provides:	ghc-integer-gmp-prof = %{gpv_integer_gmp}
+Provides:	ghc-old-locale-prof = %{gpv_old_locale}
+Provides:	ghc-old-time-prof = %{gpv_old_time}
+Provides:	ghc-pretty-prof = %{gpv_pretty}
+Provides:	ghc-process-prof = %{gpv_process}
+Provides:	ghc-template-haskell-prof = %{gpv_template_haskell}
+Provides:	ghc-time-prof = %{gpv_time}
+Provides:	ghc-unix-prof = %{gpv_unix}
 
 %description prof
 Profiling libraries for Glorious Glasgow Haskell Compilation System
@@ -129,7 +200,8 @@ Biblioteki profilujące dla GHC. Powinny być zainstalowane kiedy
 potrzebujemy systemu profilującego z GHC.
 
 %package doc
-Summary:	Manual for GHC
+Summary:	Documentation for GHC
+Summary(pl.UTF-8):	Dokumentacja do GHC
 Group:		Documentation
 %if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
@@ -137,6 +209,9 @@ BuildArch:	noarch
 
 %description doc
 Documentation for GHC.
+
+%description doc -l pl.UTF-8
+Dokumentacja do GHC.
 
 %prep
 %setup -q
@@ -259,7 +334,20 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc ANNOUNCE README
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/ghc
+%attr(755,root,root) %{_bindir}/ghc-%{version}
+%attr(755,root,root) %{_bindir}/ghc-pkg
+%attr(755,root,root) %{_bindir}/ghc-pkg-%{version}
+%attr(755,root,root) %{_bindir}/ghci
+%attr(755,root,root) %{_bindir}/ghci-%{version}
+%attr(755,root,root) %{_bindir}/haddock
+%attr(755,root,root) %{_bindir}/haddock-%{version}
+%attr(755,root,root) %{_bindir}/hp2gs
+%attr(755,root,root) %{_bindir}/hpc
+%attr(755,root,root) %{_bindir}/hsc2hs
+%attr(755,root,root) %{_bindir}/runghc
+%attr(755,root,root) %{_bindir}/runghc-%{version}
+%attr(755,root,root) %{_bindir}/runhaskell
 %dir %{_libdir}/ghc-%{version}
 %{_libdir}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/settings
@@ -272,8 +360,12 @@ fi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/hsc2hs
 %attr(755,root,root) %{_libdir}/ghc-%{version}/runghc
 %attr(755,root,root) %{_libdir}/ghc-%{version}/unlit
-%{_libdir}/ghc-%{version}/libHS*.a
-%exclude %{_libdir}/ghc-%{version}/libHS*_p.a
+%{_libdir}/ghc-%{version}/libHSrts.a
+%{_libdir}/ghc-%{version}/libHSrts_debug.a
+%{_libdir}/ghc-%{version}/libHSrts_l.a
+%{_libdir}/ghc-%{version}/libHSrts_thr.a
+%{_libdir}/ghc-%{version}/libHSrts_thr_debug.a
+%{_libdir}/ghc-%{version}/libHSrts_thr_l.a
 %{_libdir}/ghc-%{version}/ghc*-usage.txt
 %if %{with doc}
 %{_libdir}/ghc-%{version}/html
@@ -287,6 +379,31 @@ fi
 %{_libdir}/ghc-%{version}/latex/haddock.sty
 %endif
 %{_mandir}/man1/ghc.1*
+
+%dir %{_libdir}/ghc-%{version}/Cabal-*
+%{_libdir}/ghc-%{version}/Cabal-*/*.hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/*.hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat/*.hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription/*.hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/*.hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC/*.hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/*.hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/PreProcess
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/PreProcess/*.hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Program
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Program/*.hi
+%{_libdir}/ghc-%{version}/Cabal-*/HSCabal-*.o
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Language
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Language/Haskell
+%{_libdir}/ghc-%{version}/Cabal-*/Language/Haskell/*.hi
+%{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*.a
+%exclude %{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/array-*
 %dir %{_libdir}/ghc-%{version}/array-*/Data
@@ -386,6 +503,17 @@ fi
 %{_libdir}/ghc-%{version}/bin-package-db-*/libHSbin-package-db-*.a
 %exclude %{_libdir}/ghc-%{version}/bin-package-db-*/libHSbin-package-db-*_p.a
 
+%dir %{_libdir}/ghc-%{version}/binary-*
+%dir %{_libdir}/ghc-%{version}/binary-*/Data
+%{_libdir}/ghc-%{version}/binary-*/Data/*.hi
+%dir %{_libdir}/ghc-%{version}/binary-*/Data/Binary
+%{_libdir}/ghc-%{version}/binary-*/Data/Binary/*.hi
+%dir %{_libdir}/ghc-%{version}/binary-*/Data/Binary/Builder
+%{_libdir}/ghc-%{version}/binary-*/Data/Binary/Builder/*.hi
+%{_libdir}/ghc-%{version}/binary-*/HSbinary-*.o
+%{_libdir}/ghc-%{version}/binary-*/libHSbinary-*.a
+%exclude %{_libdir}/ghc-%{version}/binary-*/libHSbinary-*_p.a
+
 %dir %{_libdir}/ghc-%{version}/bytestring-*
 %dir %{_libdir}/ghc-%{version}/bytestring-*/Data
 %dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString
@@ -403,42 +531,6 @@ fi
 %{_libdir}/ghc-%{version}/bytestring-*/include
 %{_libdir}/ghc-%{version}/bytestring-*/libHSbytestring-*.a
 %exclude %{_libdir}/ghc-%{version}/bytestring-*/libHSbytestring-*_p.a
-
-%dir %{_libdir}/ghc-%{version}/Cabal-*
-%{_libdir}/ghc-%{version}/Cabal-*/*.hi
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/*.hi
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat/*.hi
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription/*.hi
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/*.hi
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC/*.hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/*.hi
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/PreProcess
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/PreProcess/*.hi
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Program
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Program/*.hi
-%{_libdir}/ghc-%{version}/Cabal-*/HSCabal-*.o
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Language
-%dir %{_libdir}/ghc-%{version}/Cabal-*/Language/Haskell
-%{_libdir}/ghc-%{version}/Cabal-*/Language/Haskell/*.hi
-%{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*.a
-%exclude %{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*_p.a
-
-%dir %{_libdir}/ghc-%{version}/binary-*
-%dir %{_libdir}/ghc-%{version}/binary-*/Data
-%{_libdir}/ghc-%{version}/binary-*/Data/*.hi
-%dir %{_libdir}/ghc-%{version}/binary-*/Data/Binary
-%{_libdir}/ghc-%{version}/binary-*/Data/Binary/*.hi
-%dir %{_libdir}/ghc-%{version}/binary-*/Data/Binary/Builder
-%{_libdir}/ghc-%{version}/binary-*/Data/Binary/Builder/*.hi
-%{_libdir}/ghc-%{version}/binary-*/HSbinary-*.o
-%{_libdir}/ghc-%{version}/binary-*/libHSbinary-*.a
-%exclude %{_libdir}/ghc-%{version}/binary-*/libHSbinary-*_p.a
 
 %dir %{_libdir}/ghc-%{version}/containers-*
 %dir %{_libdir}/ghc-%{version}/containers-*/Data
@@ -621,22 +713,6 @@ fi
 %dir %{_libdir}/ghc-%{version}/process-*/System/Process
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.hi
 
-#%dir %{_libdir}/ghc-%{version}/random-*
-#%{_libdir}/ghc-%{version}/random-*/HSrandom-*.o
-#%{_libdir}/ghc-%{version}/random-*/libHSrandom-*.a
-#%exclude %{_libdir}/ghc-%{version}/random-*/libHSrandom-*_p.a
-#%dir %{_libdir}/ghc-%{version}/random-*/System
-#%{_libdir}/ghc-%{version}/random-*/System/*.hi
-
-#%dir %{_libdir}/ghc-%{version}/syb-*
-#%dir %{_libdir}/ghc-%{version}/syb-*/Data
-##%dir %{_libdir}/ghc-%{version}/syb-*/Data/Generics
-#%{_libdir}/ghc-%{version}/syb-*/Data/Generics/*.hi
-#%{_libdir}/ghc-%{version}/syb-*/Data/*.hi
-#%{_libdir}/ghc-%{version}/syb-*/HSsyb-*.o
-#%{_libdir}/ghc-%{version}/syb-*/libHSsyb-*.a
-#%exclude %{_libdir}/ghc-%{version}/syb-*/libHSsyb-*_p.a
-
 %dir %{_libdir}/ghc-%{version}/template-haskell-*
 %{_libdir}/ghc-%{version}/template-haskell-*/HStemplate-haskell-*.o
 %dir %{_libdir}/ghc-%{version}/template-haskell-*/Language
@@ -699,7 +775,19 @@ fi
 
 %files prof
 %defattr(644,root,root,755)
-%{_libdir}/ghc-%{version}/libHS*_p.a
+%{_libdir}/ghc-%{version}/libHSrts_p.a
+%{_libdir}/ghc-%{version}/libHSrts_thr_p.a
+%{_libdir}/ghc-%{version}/Cabal-*/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/PreProcess/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Program/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Language/Haskell/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*_p.a
 %{_libdir}/ghc-%{version}/array-*/Data/Array/IO/*.p_hi
 %{_libdir}/ghc-%{version}/array-*/Data/Array/MArray/*.p_hi
 %{_libdir}/ghc-%{version}/array-*/Data/Array/ST/*.p_hi
@@ -742,12 +830,12 @@ fi
 %{_libdir}/ghc-%{version}/base-*/Text/Read/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Text/Show/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Unsafe/*.p_hi
+%{_libdir}/ghc-%{version}/bin-package-db-*/Distribution/InstalledPackageInfo/*.p_hi
+%{_libdir}/ghc-%{version}/bin-package-db-*/libHSbin-package-db-0.0.0.0_p.a
 %{_libdir}/ghc-%{version}/binary-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/binary-*/Data/Binary/*.p_hi
 %{_libdir}/ghc-%{version}/binary-*/Data/Binary/Builder/*.p_hi
 %{_libdir}/ghc-%{version}/binary-*/libHSbinary-*_p.a
-%{_libdir}/ghc-%{version}/bin-package-db-*/Distribution/InstalledPackageInfo/*.p_hi
-%{_libdir}/ghc-%{version}/bin-package-db-*/libHSbin-package-db-0.0.0.0_p.a
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/BasicEncoding/Internal/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/BasicEncoding/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/*.p_hi
@@ -755,17 +843,6 @@ fi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/libHSbytestring-*_p.a
-%{_libdir}/ghc-%{version}/Cabal-*/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Compat/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/PackageDescription/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/PreProcess/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Program/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/Language/Haskell/*.p_hi
-%{_libdir}/ghc-%{version}/Cabal-*/libHSCabal-*_p.a
 %{_libdir}/ghc-%{version}/containers-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/containers-*/Data/IntMap/*.p_hi
 %{_libdir}/ghc-%{version}/containers-*/Data/IntSet/*.p_hi
@@ -862,7 +939,5 @@ fi
 %if %{with doc}
 %files doc
 %defattr(644,root,root,755)
-%doc docs/comm
-%doc docs-root/html
-%doc docs-root/*.pdf
+%doc docs/comm docs-root/{html,*.pdf}
 %endif
