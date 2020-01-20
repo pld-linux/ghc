@@ -9,29 +9,17 @@
              test -z "[$]2" || eval "[$]2=ArchX86"
              ;;
          x86_64)
-@@ -185,7 +185,7 @@
+@@ -229,7 +229,7 @@ AC_DEFUN([FPTOOLS_SET_HASKELL_PLATFORM_V
  
      checkVendor() {
          case [$]1 in
--        dec|unknown|hp|apple|next|sun|sgi|ibm)
-+        pld|dec|unknown|hp|apple|next|sun|sgi|ibm)
+-        dec|none|unknown|hp|apple|next|sun|sgi|ibm|montavista|portbld|alpine)
++        dec|none|unknown|hp|apple|next|sun|sgi|ibm|montavista|portbld|alpine|pld)
              ;;
          *)
-             echo "Unknown vendor [$]1"
---- ghc-6.12.1/libraries/terminfo/configure.ac~	2009-09-15 08:09:05.000000000 +0200
-+++ ghc-6.12.1/libraries/terminfo/configure.ac	2010-04-08 16:43:45.040705349 +0200
-@@ -13,7 +13,8 @@
-     [curses_libraries=NONE])
- 
- 
--TERMINFO_INCLUDE_DIRS=
-+TERMINFO_INCLUDE_DIRS=/usr/include/ncursesw
-+CPPFLAGS="-I/usr/include/ncursesw $CPPFLAGS"
- TERMINFO_LIB_DIRS=
- if test "x$curses_libraries" != "xNONE"; then
-   LDFLAGS="-L$curses_libraries $LDFLAGS"
---- ghc-7.2.1/driver/split/ghc-split.lprl~	2011-08-07 19:10:05.000000000 +0200
-+++ ghc-7.2.1/driver/split/ghc-split.lprl	2011-09-26 11:13:36.907176266 +0200
+             AC_MSG_WARN([Unknown vendor [$]1])
+--- ghc-7.2.1/driver/split/ghc-split.pl~	2011-08-07 19:10:05.000000000 +0200
++++ ghc-7.2.1/driver/split/ghc-split.pl	2011-09-26 11:13:36.907176266 +0200
 @@ -225,7 +225,7 @@
                              if $TargetPlatform =~ /-apple-darwin/m;
      return(&process_asm_block_m68k($str))  if $TargetPlatform =~ /^m68k-/m;

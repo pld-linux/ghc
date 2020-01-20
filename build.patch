@@ -1,0 +1,11 @@
+--- ghc-8.8.2/configure.ac~	2020-01-12 23:14:36.000000000 +0100
++++ ghc-8.8.2/configure.ac	2020-01-19 16:08:44.055164413 +0100
+@@ -228,7 +228,7 @@ then
+     echo "This GHC (${WithGhc}) does not generate code for the build platform"
+     echo "   GHC target platform    : $bootstrap_target"
+     echo "   Desired build platform : $BuildPlatform"
+-    exit 1
++    #exit 1
+ fi
+ 
+ # Testing if we shall enable shared libs support on Solaris.

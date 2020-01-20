@@ -5,10 +5,6 @@
 #
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
-# TODO:
-#	- teach ghc toolchain to always use ld.bfd,
-#	  or fix ld.gold to be usable for anything else than c/c++
-#
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
 %bcond_with	unregistered	# non-registerised interpreter (use for build problems/new arches)
@@ -42,36 +38,47 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	7.6.3
-Release:	6
+Version:	8.8.2
+Release:	0.1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
-Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.bz2
-# Source0-md5:	986d1f90ca30d60f7b2820d75c6b8ea7
+Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
+# Source0-md5:	29f1cf9f42397f38bf6fe7de1c15a934
 %if %{with bootstrap}
-Source3:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-i386-unknown-linux.tar.bz2
-# Source3-md5:	37019b712ec6e5fb0732c27fb43667ee
-Source4:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-x86_64-unknown-linux.tar.bz2
-# Source4-md5:	5c142b86355cfd390cd36c292e416db5
+Source3:	https://downloads.haskell.org/~ghc/%{version}/%{name}-%{version}-i386-deb9-linux.tar.xz
+# Source3-md5:	fdd35ab48401842710dd4215929565f1
+Source4:	https://downloads.haskell.org/~ghc/%{version}/%{name}-%{version}-x86_64-deb9-linux.tar.xz
+# Source4-md5:	f2fa48668602663450c75235912faeb5
+Source5:	http://ftp.ports.debian.org/debian-ports//pool-x32/main/g/ghc/ghc_8.8.1+dfsg1+is+8.6.5+dfsg1-2_x32.deb
+# Source5-md5:	8434820718903331406fa0c7f53feaa8
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
 Patch2:		%{name}-winpaths.patch
-Patch3:		%{name}-use-ld.bfd.patch
+Patch3:		build.patch
+Patch4:		buildpath-abi-stability.patch
+Patch5:		x32-use-native-x86_64-insn.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
-%{!?with_bootstrap:BuildRequires:	alex >= 2.0}
+BuildRequires:	binutils >= 4:2.30
 BuildRequires:	freealut-devel
-%{!?with_bootstrap:BuildRequires:	ghc >= 6.8}
 BuildRequires:	gmp-devel
-%{!?with_bootstrap:BuildRequires:	happy >= 1.16}
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.607
 BuildRequires:	sed >= 4.0
+%if %{with bootstrap}
+%ifarch %{x8664} %{ix86}
+BuildRequires:	compat-ncurses5
+%endif
+%else
+BuildRequires:	alex >= 2.0
+BuildRequires:	ghc >= 6.8
+BuildRequires:	happy >= 1.16
+%endif
 %if %{with doc}
 BuildRequires:	dblatex
 BuildRequires:	docbook-dtd42-xml
@@ -116,11 +123,8 @@ Provides:	ghc-time = %{gpv_time}
 Provides:	ghc-unix = %{gpv_unix}
 Provides:	haddock
 Obsoletes:	haddock
-ExclusiveArch:	%{ix86} %{x8664}
+ExclusiveArch:	%{ix86} %{x8664} x32
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-# use ld.bfd
-%define		specflags	-fuse-ld=bfd
 
 # There is nothing that may or should be compressed
 %define		_noautocompressdoc	*
@@ -216,25 +220,52 @@ Dokumentacja do GHC.
 %prep
 %setup -q
 %if %{with bootstrap}
+
+# official binaries
+%ifarch %{ix86} %{x8664}
 %ifarch %{ix86}
-%{__tar} -xjf %{SOURCE3}
+%{__tar} -xf %{SOURCE3}
 %endif
 %ifarch %{x8664}
-%{__tar} -xjf %{SOURCE4}
+%{__tar} -xf %{SOURCE4}
 %endif
 mv %{name}-%{version} binsrc
 %endif
+
+# debian binaries for x32
+%ifarch x32
+install -d bindist
+cd bindist
+ar x %{SOURCE5}
+tar xf data.tar.xz
+ln -s usr/bin bin
+sed -i -e "s#/usr#$(pwd)/usr#g" bin/{ghc,ghc-pkg,haddock,runghc} var/lib/ghc/*/*.conf
+cp -a usr/lib/ghc/settings{,.org}
+sed -i -e 's#x86_64.*-ld.gold#ld.gold#g' usr/lib/ghc/settings
+sed -i -e 's#x86_64-linux-gnux32#%{_target_base_arch}-%{_target_vendor}-%{_target_os}%{?_gnu}#g' \
+	-e 's#gnux32-ar#gnux32-gcc-ar#g' \
+	-e 's#gnux32-ranlib#gnux32-gcc-ranlib#g' \
+	usr/lib/ghc/settings
+# make it relative
+ln -sf ../../../var/lib/ghc/package.conf.d usr/lib/ghc/package.conf.d
+
+# debian uses separate libtinfo, workaround
+ln -s %{_libdir}/libncurses.so.6 usr/lib/libtinfo.so.6
+LD_LIBRARY_PATH=$(pwd)/usr/lib; export LD_LIBRARY_PATH
+
+bin/ghc-pkg recache --global
+cd ..
+%endif
+%endif
+
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
+#%patch1 -p1
+#%patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 %build
-# use ld.bfd
-install -d our-ld
-ln -s %{_bindir}/ld.bfd our-ld/ld
-export PATH=$(pwd)/our-ld:$PATH
-
 %{__autoconf}
 cd libraries/terminfo
 %{__autoconf}
@@ -265,8 +296,21 @@ SplitObjs=NO
 EOF
 %endif
 
+%ifarch x32
+echo "INTEGER_LIBRARY = integer-simple" >> mk/build.mk
+
+# debian uses separate libtinfo, workaround
+LD_LIBRARY_PATH=$(pwd)/bindist/usr/lib; export LD_LIBRARY_PATH
+%endif
+
 top=$(pwd)
 %if %{with bootstrap}
+
+# don't depend on ncurses and do minimal things for bootstrap
+echo "libraries/haskeline_CONFIGURE_OPTS += --flag=-terminfo" >> mk/build.mk
+echo "utils/ghc-pkg_HC_OPTS += -DBOOTSTRAPPING" >> mk/build.mk
+
+%ifarch %{ix86} %{x8664}
 # we need to first install the tarball somewhere, as seems the programs don't
 # work out of the path otherwise
 if [ ! -f .bindist.install.mark ]; then
@@ -281,30 +325,20 @@ if [ ! -f .bindist.install.mark ]; then
 
 	touch .bindist.install.mark
 fi
+%endif
 
 PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 %endif
 
 %configure \
-	CONF_GCC_LINKER_OPTS_STAGE0="-fuse-ld=bfd" \
-	CONF_GCC_LINKER_OPTS_STAGE1="-fuse-ld=bfd" \
-	CONF_GCC_LINKER_OPTS_STAGE2="-fuse-ld=bfd" \
+%if %{with bootstrap}
+	CC_STAGE0="%{__cc}" \
+	GHC=$PWD/bindist/bin/ghc \
+%endif
 	--target=%{_target_platform} \
 	--prefix=%{_prefix} \
-	--with-gcc="%{__cc}" \
-	--with-ld=/usr/bin/ld.bfd \
-	--with-nm=/usr/bin/nm \
-%if %{with bootstrap}
-	GhcPkgCmd=$top/bindist/bin/ghc-pkg \
-%endif
-%if %{with bootstrap2}
-	--with-ghc=$top/bindist/bin/ghc \
-%endif
-%if %{with bootstrap1}
-	--with-hc=$PWD/bindist/bin/ghc \
-	--with-ghc=$PWD/bindist/ghc/dist-stage2/build/ghc/ghc \
-	--with-hc=$PWD/bindist/ghc/dist-stage2/build/ghc/ghc \
-%endif
+	%{?with_unregistered:--enable-unregisterised} \
+	%{nil}
 
 %{__make}
 
