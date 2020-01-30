@@ -35,6 +35,8 @@
 %define		gpv_time		1.4.0.1
 %define		gpv_unix		2.6.0.1
 
+%define		bootversion		8.4.4
+
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
@@ -45,10 +47,10 @@ Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
 # Source0-md5:	29f1cf9f42397f38bf6fe7de1c15a934
 %if %{with bootstrap}
-Source3:	https://downloads.haskell.org/~ghc/%{version}/%{name}-%{version}-i386-deb9-linux.tar.xz
-# Source3-md5:	fdd35ab48401842710dd4215929565f1
-Source4:	https://downloads.haskell.org/~ghc/%{version}/%{name}-%{version}-x86_64-deb9-linux.tar.xz
-# Source4-md5:	f2fa48668602663450c75235912faeb5
+Source3:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-i386-deb8-linux.tar.xz
+# Source3-md5:	95c8c98087e4d7d69c9b19ae1469e610
+Source4:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-x86_64-deb8-linux.tar.xz
+# Source4-md5:	9255215766052b968e432092464eb11e
 Source5:	http://ftp.ports.debian.org/debian-ports//pool-x32/main/g/ghc/ghc_8.8.1+dfsg1+is+8.6.5+dfsg1-2_x32.deb
 # Source5-md5:	8434820718903331406fa0c7f53feaa8
 %endif
@@ -229,7 +231,7 @@ Dokumentacja do GHC.
 %ifarch %{x8664}
 %{__tar} -xf %{SOURCE4}
 %endif
-mv %{name}-%{version} binsrc
+mv %{name}-%{bootversion} binsrc
 %endif
 
 # debian binaries for x32
