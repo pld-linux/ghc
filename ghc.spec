@@ -76,7 +76,7 @@ BuildRequires:	compat-ncurses5
 %endif
 %else
 BuildRequires:	alex >= 2.0
-BuildRequires:	ghc >= 6.8
+BuildRequires:	ghc >= 8.4
 BuildRequires:	happy >= 1.16
 %endif
 %if %{with doc}
