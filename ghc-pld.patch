@@ -18,14 +18,3 @@
              ;;
          *)
              AC_MSG_WARN([Unknown vendor [$]1])
---- ghc-7.2.1/driver/split/ghc-split.pl~	2011-08-07 19:10:05.000000000 +0200
-+++ ghc-7.2.1/driver/split/ghc-split.pl	2011-09-26 11:13:36.907176266 +0200
-@@ -225,7 +225,7 @@
-                             if $TargetPlatform =~ /-apple-darwin/m;
-     return(&process_asm_block_m68k($str))  if $TargetPlatform =~ /^m68k-/m;
-     return(&process_asm_block_sparc($str)) if $TargetPlatform =~ /^sparc-/m;
--    return(&process_asm_block_iX86($str))  if $TargetPlatform =~ /^i[34]86-/m;
-+    return(&process_asm_block_iX86($str))  if $TargetPlatform =~ /^i[3456]86-/m;
-     return(&process_asm_block_x86_64($str))  if $TargetPlatform =~ /^x86_64-/m;
-     return(&process_asm_block_alpha($str)) if $TargetPlatform =~ /^alpha-/m;
-     return(&process_asm_block_hppa($str))  if $TargetPlatform =~ /^hppa/m;
