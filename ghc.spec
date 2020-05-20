@@ -967,6 +967,9 @@ fi
 %dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/*.hi
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Platform
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Platform/*.hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Platform/*.dyn_hi
 
 %dir %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}
 %dir %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC
@@ -1015,6 +1018,9 @@ fi
 %dir %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi
 %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/*.hi
 %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/TH
+%{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/TH/*.hi
+%{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/TH/*.dyn_hi
 
 %dir %{_libdir}/ghc-%{version}/haskeline-*
 %dir %{_libdir}/ghc-%{version}/haskeline-*/System
@@ -1024,6 +1030,12 @@ fi
 %dir %{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline
 %{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/*.hi
 %{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Backend
+%{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Backend/*.hi
+%{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Backend/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Command/
+%{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Command//*.hi
+%{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Command//*.dyn_hi
 
 %dir %{_libdir}/ghc-%{version}/hpc-*
 %{_libdir}/ghc-%{version}/hpc-*/HShpc-%{gpv_hpc}.o
@@ -1124,6 +1136,29 @@ fi
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.hi
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.dyn_hi
 
+%dir %{_libdir}/ghc-%{version}/rts
+%{_libdir}/ghc-%{version}/rts/libCffi.a
+%{_libdir}/ghc-%{version}/rts/libCffi_debug.a
+%{_libdir}/ghc-%{version}/rts/libCffi_l.a
+%{_libdir}/ghc-%{version}/rts/libCffi_thr.a
+%{_libdir}/ghc-%{version}/rts/libCffi_thr_debug.a
+%{_libdir}/ghc-%{version}/rts/libCffi_thr_l.a
+%{_libdir}/ghc-%{version}/rts/libHSrts-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_debug-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_debug.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_l-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_l.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr_debug-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr_debug.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr_l-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr_l.a
+%{_libdir}/ghc-%{version}/rts/libffi.so
+%{_libdir}/ghc-%{version}/rts/libffi.so.7
+%{_libdir}/ghc-%{version}/rts/libffi.so.7.1.0
+
 %dir %{_libdir}/ghc-%{version}/stm-*
 %dir %{_libdir}/ghc-%{version}/stm-*/Control
 %dir %{_libdir}/ghc-%{version}/stm-*/Control/Concurrent
@@ -1194,6 +1229,8 @@ fi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Fusion/*.hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Fusion/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Lazy
+%{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Lazy/*.hi
+%{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Lazy/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Lazy/Encoding
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Lazy/Encoding/*.hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Lazy/Encoding/*.dyn_hi
@@ -1201,6 +1238,8 @@ fi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Unsafe/*.hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Unsafe/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/text-*/Data/Text/Lazy
+%{_libdir}/ghc-%{version}/text-*/Data/Text/Lazy/*.hi
+%{_libdir}/ghc-%{version}/text-*/Data/Text/Lazy/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/text-*/Data/Text/Lazy/Builder
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Lazy/Builder/*.hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Lazy/Builder/*.dyn_hi
@@ -1511,7 +1550,7 @@ fi
 %{_libdir}/ghc-%{version}/ghc-%{version}/SysTools/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/X86/*.p_hi
 
-%{_libdir}/ghc-%{version}/ghc-boot-%{version}/libHSghc-boot-%{version}-ghc%{version}.so
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/libHSghc-boot-%{version}_p.a
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/HSghc-boot-%{version}.p_o
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Platform/*.p_hi
@@ -1522,6 +1561,7 @@ fi
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/ForeignSrcLang/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/LanguageExtensions/*.p_hi
 
+%{_libdir}/ghc-%{version}/ghc-compact-*/libHSghc-compact-%{gpv_ghc_compact}_p.a
 %{_libdir}/ghc-%{version}/ghc-compact-*/HSghc-compact-%{gpv_ghc_compact}.p_o
 %{_libdir}/ghc-%{version}/ghc-compact-*/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-compact-*/GHC/Compact/*.p_hi
@@ -1533,6 +1573,7 @@ fi
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/InfoTable/*.p_hi
 
 %{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-%{gpv_ghc_prim}_p.a
+%{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-%{gpv_ghc_prim}.p_o
 %{_libdir}/ghc-%{version}/ghc-prim-*/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-prim-*/GHC/Prim/*.p_hi
 
@@ -1547,6 +1588,7 @@ fi
 %{_libdir}/ghc-%{version}/haskeline-*/System/Console/*.p_hi
 %{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/*.p_hi
 %{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Backend/*.p_hi
+%{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Backend/Posix/*.p_hi
 %{_libdir}/ghc-%{version}/haskeline-*/System/Console/Haskeline/Command/*.p_hi
 
 %{_libdir}/ghc-%{version}/hpc-*/libHShpc-%{gpv_hpc}_p.a
@@ -1560,9 +1602,13 @@ fi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/GMP/*.p_hi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms/*.p_hi
 
+%{_libdir}/ghc-%{version}/libiserv-%{version}/libHSlibiserv-%{version}_p.a
+%{_libdir}/ghc-%{version}/libiserv-%{version}/HSlibiserv-%{version}.p_o
 %{_libdir}/ghc-%{version}/libiserv-%{version}/*.p_hi
 %{_libdir}/ghc-%{version}/libiserv-%{version}/GHCi/*.p_hi
 
+%{_libdir}/ghc-%{version}/mtl-*/libHSmtl-%{gpv_mtl}_p.a
+%{_libdir}/ghc-%{version}/mtl-*/HSmtl-%{gpv_mtl}.p_o
 %{_libdir}/ghc-%{version}/mtl-*/Control/Monad/*.p_hi
 %{_libdir}/ghc-%{version}/mtl-*/Control/Monad/Cont/*.p_hi
 %{_libdir}/ghc-%{version}/mtl-*/Control/Monad/Error/*.p_hi
@@ -1571,6 +1617,8 @@ fi
 %{_libdir}/ghc-%{version}/mtl-*/Control/Monad/State/*.p_hi
 %{_libdir}/ghc-%{version}/mtl-*/Control/Monad/Writer/*.p_hi
 
+%{_libdir}/ghc-%{version}/parsec-*/libHSparsec-%{gpv_parsec}_p.a
+%{_libdir}/ghc-%{version}/parsec-*/HSparsec-%{gpv_parsec}.p_o
 %{_libdir}/ghc-%{version}/parsec-*/Text/*.p_hi
 %{_libdir}/ghc-%{version}/parsec-*/Text/Parsec/*.p_hi
 %{_libdir}/ghc-%{version}/parsec-*/Text/Parsec/ByteString/*.p_hi
@@ -1579,27 +1627,45 @@ fi
 %{_libdir}/ghc-%{version}/parsec-*/Text/ParserCombinators/Parsec/*.p_hi
 
 %{_libdir}/ghc-%{version}/pretty-*/libHSpretty-%{gpv_pretty}_p.a
+%{_libdir}/ghc-%{version}/pretty-*/HSpretty-%{gpv_pretty}.p_o
 %{_libdir}/ghc-%{version}/pretty-*/Text/*.p_hi
 %{_libdir}/ghc-%{version}/pretty-*/Text/PrettyPrint/*.p_hi
 %{_libdir}/ghc-%{version}/pretty-*/Text/PrettyPrint/Annotated/*.p_hi
 
 %{_libdir}/ghc-%{version}/process-*/libHSprocess-%{gpv_process}_p.a
+%{_libdir}/ghc-%{version}/process-*/HSprocess-%{gpv_process}.p_o
 %{_libdir}/ghc-%{version}/process-*/System/*.p_hi
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.p_hi
 
+%{_libdir}/ghc-%{version}/rts/libCffi_debug_p.a
+%{_libdir}/ghc-%{version}/rts/libCffi_p.a
+%{_libdir}/ghc-%{version}/rts/libCffi_thr_debug_p.a
+%{_libdir}/ghc-%{version}/rts/libCffi_thr_p.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_debug_p.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_p.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr_debug_p.a
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr_p.a
+
+%{_libdir}/ghc-%{version}/stm-*/libHSstm-%{gpv_stm}_p.a
+%{_libdir}/ghc-%{version}/stm-*/HSstm-%{gpv_stm}.p_o
 %{_libdir}/ghc-%{version}/stm-*/Control/Concurrent/*.p_hi
 %{_libdir}/ghc-%{version}/stm-*/Control/Concurrent/STM/*.p_hi
 %{_libdir}/ghc-%{version}/stm-*/Control/Monad/*.p_hi
 %{_libdir}/ghc-%{version}/stm-*/Control/Sequential/*.p_hi
 
 %{_libdir}/ghc-%{version}/template-haskell-*/libHStemplate-haskell-%{gpv_template_haskell}_p.a
+%{_libdir}/ghc-%{version}/template-haskell-*/HStemplate-haskell-%{gpv_template_haskell}.p_o
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/*.p_hi
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/*.p_hi
 %{_libdir}/ghc-%{version}/template-haskell-*/Language/Haskell/TH/Lib/*.p_hi
 
+%{_libdir}/ghc-%{version}/terminfo-*/libHSterminfo-%{gpv_terminfo}_p.a
+%{_libdir}/ghc-%{version}/terminfo-*/HSterminfo-%{gpv_terminfo}.p_o
 %{_libdir}/ghc-%{version}/terminfo-*/System/Console/*.p_hi
 %{_libdir}/ghc-%{version}/terminfo-*/System/Console/Terminfo/*.p_hi
 
+%{_libdir}/ghc-%{version}/text-*/libHStext-%{gpv_text}_p.a
+%{_libdir}/ghc-%{version}/text-*/HStext-%{gpv_text}.p_o
 %{_libdir}/ghc-%{version}/text-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/*.p_hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Encoding/*.p_hi
@@ -1610,11 +1676,14 @@ fi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Encoding/*.p_hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Encoding/Fusion/*.p_hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Fusion/*.p_hi
+%{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Lazy/*.p_hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Lazy/Encoding/*.p_hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Internal/Unsafe/*.p_hi
+%{_libdir}/ghc-%{version}/text-*/Data/Text/Lazy/*.p_hi
 %{_libdir}/ghc-%{version}/text-*/Data/Text/Lazy/Builder/*.p_hi
 
 %{_libdir}/ghc-%{version}/time-*/libHStime-%{gpv_time}_p.a
+%{_libdir}/ghc-%{version}/time-*/HStime-%{gpv_time}.p_o
 %{_libdir}/ghc-%{version}/time-*/Data/*.p_hi
 %{_libdir}/ghc-%{version}/time-*/Data/Time/*.p_hi
 %{_libdir}/ghc-%{version}/time-*/Data/Time/Calendar/*.p_hi
@@ -1625,6 +1694,8 @@ fi
 %{_libdir}/ghc-%{version}/time-*/Data/Time/Format/Parse/*.p_hi
 %{_libdir}/ghc-%{version}/time-*/Data/Time/LocalTime/Internal/*.p_hi
 
+%{_libdir}/ghc-%{version}/transformers-*/libHStransformers-%{gpv_transformers}_p.a
+%{_libdir}/ghc-%{version}/transformers-*/HStransformers-%{gpv_transformers}.p_o
 %{_libdir}/ghc-%{version}/transformers-*/Control/Applicative/*.p_hi
 %{_libdir}/ghc-%{version}/transformers-*/Control/Monad/*.p_hi
 %{_libdir}/ghc-%{version}/transformers-*/Control/Monad/Trans/*.p_hi
@@ -1634,6 +1705,7 @@ fi
 %{_libdir}/ghc-%{version}/transformers-*/Data/Functor/*.p_hi
 
 %{_libdir}/ghc-%{version}/unix-*/libHSunix-%{gpv_unix}_p.a
+%{_libdir}/ghc-%{version}/unix-*/HSunix-%{gpv_unix}.p_o
 %{_libdir}/ghc-%{version}/unix-*/System/*.p_hi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/*.p_hi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/ByteString/*.p_hi
@@ -1648,7 +1720,8 @@ fi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Temp/*.p_hi
 %{_libdir}/ghc-%{version}/unix-*/System/Posix/Terminal/*.p_hi
 
-#%{_libdir}/ghc-%{version}/xhtml-*/Text/libHSxhtml-%{gpv_xhtml}_p.a
+%{_libdir}/ghc-%{version}/xhtml-*/libHSxhtml-%{gpv_xhtml}_p.a
+%{_libdir}/ghc-%{version}/xhtml-*/HSxhtml-%{gpv_xhtml}.p_o
 %{_libdir}/ghc-%{version}/xhtml-*/Text/*.p_hi
 %{_libdir}/ghc-%{version}/xhtml-*/Text/XHtml/*.p_hi
 %{_libdir}/ghc-%{version}/xhtml-*/Text/XHtml/Frameset/*.p_hi
