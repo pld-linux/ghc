@@ -51,14 +51,12 @@ License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
 # Source0-md5:	1368854e72bc69d7ef2377cffcfbce3b
-%if %{with bootstrap}
 Source3:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-i386-deb9-linux.tar.xz
 # Source3-md5:	1bc84d8d51d8b0411a13172070295617
 Source4:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-x86_64-deb9-linux.tar.xz
 # Source4-md5:	8de779b73c1b2f1b7ab49030015fce3d
-Source5:	http://ftp.ports.debian.org/debian-ports/pool-x32/main/g/ghc/ghc_8.8.1+dfsg1+is+8.6.5+dfsg1-3_x32.deb
-# Source5-md5:	16b340ca39ad8fe05259ce8bf72dd1df
-%endif
+Source5:	http://ftp.ports.debian.org/debian-ports/pool-x32/main/g/ghc/ghc_8.8.3-1~exp2_x32.deb
+# Source5-md5:	b912b87c8d9450d140ae773083edecb0
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
 Patch2:		%{name}-winpaths.patch
@@ -106,6 +104,7 @@ BuildRequires:	texlive-xetex
 #BuildRequires:	tetex-latex-ltxcmds
 BuildRequires:	latexmk
 #For generating documentation in PDF: fop or xmltex
+BuildRequires:	sphinx-pdg-3
 %endif
 Provides:	ghc-array = %{gpv_array}
 Provides:	ghc-base = %{gpv_base}
@@ -356,6 +355,9 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 %if %{with bootstrap}
 	CC_STAGE0="%{__cc}" \
 	GHC=$PWD/bindist/bin/ghc \
+%endif
+%if %{with doc}
+	SPHINXBUILD=/usr/bin/sphinx-build-3 \
 %endif
 	--target=%{_target_platform} \
 	--prefix=%{_prefix} \
