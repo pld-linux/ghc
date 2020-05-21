@@ -103,7 +103,7 @@ BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-tex4ht
 BuildRequires:	texlive-tex-xkeyval
 BuildRequires:	texlive-xetex
-BuildRequires:	tetex-latex-ltxcmds
+#BuildRequires:	tetex-latex-ltxcmds
 BuildRequires:	latexmk
 #For generating documentation in PDF: fop or xmltex
 %endif
