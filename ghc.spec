@@ -5,9 +5,6 @@
 #
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
-# - check if gmp-multilib.patch patch in gmp.spec makes sense,
-#   it is the thing that blocks integer-gmp build on x32 here
-#
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
 %ifarch x32
