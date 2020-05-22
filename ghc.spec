@@ -5,9 +5,17 @@
 #
 # - http://hackage.haskell.org/trac/ghc/wiki/Building/Porting
 #
+# - check if gmp-multilib.patch patch in gmp.spec makes sense,
+#   it is the thing that blocks integer-gmp build on x32 here
+#
 # Conditional build:
 %bcond_with	bootstrap	# use foreign (non-rpm) ghc to bootstrap (extra 140MB to download)
-%bcond_with	unregistered	# non-registerised interpreter (use for build problems/new arches)
+%ifarch x32
+%bcond_without	unregisterised	# non-registerised interpreter (use for build problems/new arches)
+%else
+%bcond_with	unregisterised	# non-registerised interpreter (use for build problems/new arches)
+%endif
+%bcond_without	system_libffi	# use bundled or system provided libffi
 %bcond_without	doc		# don't build documentation (requires haddock)
 
 # included ghc package versions:
@@ -27,6 +35,7 @@
 %define		gpv_haskeline		0.8.0.0
 %define		gpv_hpc			0.6.1.0
 %define		gpv_integer_gmp		1.0.3.0
+%define		gpv_integer_simple	0.1.2.0
 %define		gpv_mtl			2.2.2
 %define		gpv_parsec		3.1.14.0
 %define		gpv_pretty		1.1.3.6
@@ -71,6 +80,7 @@ BuildRequires:	OpenGL-glut-devel
 BuildRequires:	binutils >= 4:2.30
 BuildRequires:	freealut-devel
 BuildRequires:	gmp-devel
+%{?with_system_libffi:BuildRequires:	libffi-devel}
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
 BuildRequires:	rpmbuild(macros) >= 1.607
@@ -121,7 +131,11 @@ Provides:	ghc-ghc_compact = %{gpv_ghc_compact}
 Provides:	ghc-ghc-prim = %{gpv_ghc_prim}
 Provides:	ghc-haskeline = %{gpv_haskeline}
 Provides:	ghc-hpc = %{gpv_hpc}
+%ifnarch x32
 Provides:	ghc-integer-gmp = %{gpv_integer_gmp}
+%else
+Provides:	ghc-integer-simple = %{gpv_integer_simple}
+%endif
 Provides:	ghc-mtl = %{gpv_mtl}
 Provides:	ghc-parsec = %{gpv_parsec}
 Provides:	ghc-pretty = %{gpv_pretty}
@@ -199,7 +213,11 @@ Provides:	ghc-ghc_compact-prof = %{gpv_ghc_compact}
 Provides:	ghc-ghc-prim-prof = %{gpv_ghc_prim}
 Provides:	ghc-haskeline-prof = %{gpv_haskeline}
 Provides:	ghc-hpc-prof = %{gpv_hpc}
+%ifnarch x32
 Provides:	ghc-integer-gmp-prof = %{gpv_integer_gmp}
+%else
+Provides:	ghc-integer-simple-prof = %{gpv_integer_simple}
+%endif
 Provides:	ghc-mtl-prof = %{gpv_mtl}
 Provides:	ghc-parsec-prof = %{gpv_parsec}
 Provides:	ghc-pretty-prof = %{gpv_pretty}
@@ -307,7 +325,7 @@ BUILD_SPHINX_PDF    = NO
 XSLTPROC_OPTS       += --nonet
 EOF
 
-%if %{with unregistered}
+%if %{with unregisterised}
 # An unregisterised build is one that compiles via vanilla C only
 # http://hackage.haskell.org/trac/ghc/wiki/Building/Unregisterised
 cat <<'EOF' >> mk/build.mk
@@ -315,6 +333,14 @@ GhcUnregisterised=YES
 GhcWithNativeCodeGen=NO
 SplitObjs=NO
 EOF
+
+%ifarch %{ix86} x32
+# Virtual memory exhausted when trying to build unregisterised compiler on
+# 32-bit targets. Disable optimizations for compiler/GHC/Hs/Instances.hs
+# See https://bugs.debian.org/933968
+# See https://gitlab.haskell.org/ghc/ghc/issues/17048
+echo "compiler/GHC/Hs/Instances_HC_OPTS += -O0" >> mk/build.mk
+%endif
 %endif
 
 %ifarch x32
@@ -362,7 +388,8 @@ PATH=$top/bindist/bin:$PATH:%{_prefix}/local/bin
 	--target=%{_target_platform} \
 	--prefix=%{_prefix} \
 	--disable-ld-override \
-	%{?with_unregistered:--enable-unregisterised} \
+	%{?with_system_libffi:--with-system-libffi} \
+	%{?with_unregisterised:--enable-unregisterised} \
 	%{nil}
 
 %{__make}
@@ -461,7 +488,11 @@ fi
 %{_libdir}/ghc-%{version}/package.conf.d/ghci-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/haskeline-%{gpv_haskeline}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/hpc-%{gpv_hpc}.conf
+%ifnarch x32
 %{_libdir}/ghc-%{version}/package.conf.d/integer-gmp-%{gpv_integer_gmp}.conf
+%else
+%{_libdir}/ghc-%{version}/package.conf.d/integer-simple-%{gpv_integer_simple}.conf
+%endif
 %{_libdir}/ghc-%{version}/package.conf.d/libiserv-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/mtl-%{gpv_mtl}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/package.cache.lock
@@ -1100,6 +1131,7 @@ fi
 %{_libdir}/ghc-%{version}/hpc-*/Trace/Hpc/*.hi
 %{_libdir}/ghc-%{version}/hpc-*/Trace/Hpc/*.dyn_hi
 
+%ifnarch x32
 %dir %{_libdir}/ghc-%{version}/integer-gmp-*
 %{_libdir}/ghc-%{version}/integer-gmp-*/HSinteger-gmp-%{gpv_integer_gmp}.o
 %{_libdir}/ghc-%{version}/integer-gmp-*/libHSinteger-gmp-%{gpv_integer_gmp}.a
@@ -1117,6 +1149,24 @@ fi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms/*.hi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms/*.dyn_hi
 %{_libdir}/ghc-%{version}/integer-gmp-*/include
+%else
+%dir %{_libdir}/ghc-%{version}/integer-simple-*
+%{_libdir}/ghc-%{version}/integer-simple-*/HSinteger-simple-%{gpv_integer_simple}.o
+%{_libdir}/ghc-%{version}/integer-simple-*/libHSinteger-simple-%{gpv_integer_simple}-ghc*.so
+%{_libdir}/ghc-%{version}/integer-simple-*/libHSinteger-simple-%{gpv_integer_simple}.a
+%dir %{_libdir}/ghc-%{version}/integer-simple-*/GHC
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/*.hi
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/*.hi
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Logarithms
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Logarithms/*.hi
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Logarithms/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Simple
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Simple/*.hi
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Simple/*.dyn_hi
+%endif
 
 %dir %{_libdir}/ghc-%{version}/libiserv-%{version}
 %{_libdir}/ghc-%{version}/libiserv-%{version}/HSlibiserv-%{version}.o
@@ -1205,12 +1255,17 @@ fi
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.dyn_hi
 
 %dir %{_libdir}/ghc-%{version}/rts
+%if %{without system_libffi}
 %{_libdir}/ghc-%{version}/rts/libCffi.a
 %{_libdir}/ghc-%{version}/rts/libCffi_debug.a
 %{_libdir}/ghc-%{version}/rts/libCffi_l.a
 %{_libdir}/ghc-%{version}/rts/libCffi_thr.a
 %{_libdir}/ghc-%{version}/rts/libCffi_thr_debug.a
 %{_libdir}/ghc-%{version}/rts/libCffi_thr_l.a
+%{_libdir}/ghc-%{version}/rts/libffi.so
+%{_libdir}/ghc-%{version}/rts/libffi.so.7
+%{_libdir}/ghc-%{version}/rts/libffi.so.7.1.0
+%endif
 %{_libdir}/ghc-%{version}/rts/libHSrts-ghc8.10.1.so
 %{_libdir}/ghc-%{version}/rts/libHSrts.a
 %{_libdir}/ghc-%{version}/rts/libHSrts_debug-ghc8.10.1.so
@@ -1223,9 +1278,6 @@ fi
 %{_libdir}/ghc-%{version}/rts/libHSrts_thr_debug.a
 %{_libdir}/ghc-%{version}/rts/libHSrts_thr_l-ghc8.10.1.so
 %{_libdir}/ghc-%{version}/rts/libHSrts_thr_l.a
-%{_libdir}/ghc-%{version}/rts/libffi.so
-%{_libdir}/ghc-%{version}/rts/libffi.so.7
-%{_libdir}/ghc-%{version}/rts/libffi.so.7.1.0
 
 %dir %{_libdir}/ghc-%{version}/stm-*
 %{_libdir}/ghc-%{version}/stm-*/HSstm-%{gpv_stm}.o
@@ -1681,12 +1733,21 @@ fi
 %{_libdir}/ghc-%{version}/hpc-*/HShpc-%{gpv_hpc}.p_o
 %{_libdir}/ghc-%{version}/hpc-*/Trace/Hpc/*.p_hi
 
+%ifnarch x32
 %{_libdir}/ghc-%{version}/integer-gmp-*/libHSinteger-gmp-%{gpv_integer_gmp}_p.a
 %{_libdir}/ghc-%{version}/integer-gmp-*/HSinteger-gmp-%{gpv_integer_gmp}.p_o
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/*.p_hi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/GMP/*.p_hi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms/*.p_hi
+%else
+%{_libdir}/ghc-%{version}/integer-simple-*/HSinteger-simple-%{gpv_integer_simple}.p_o
+%{_libdir}/ghc-%{version}/integer-simple-*/libHSinteger-simple-%{gpv_integer_simple}_p.a
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/*.p_hi
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/*.p_hi
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Logarithms/*.p_hi
+%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Simple/*.p_hi
+%endif
 
 %{_libdir}/ghc-%{version}/libiserv-%{version}/libHSlibiserv-%{version}_p.a
 %{_libdir}/ghc-%{version}/libiserv-%{version}/HSlibiserv-%{version}.p_o
@@ -1723,10 +1784,12 @@ fi
 %{_libdir}/ghc-%{version}/process-*/System/*.p_hi
 %{_libdir}/ghc-%{version}/process-*/System/Process/*.p_hi
 
+%if %{without system_libffi}
 %{_libdir}/ghc-%{version}/rts/libCffi_debug_p.a
 %{_libdir}/ghc-%{version}/rts/libCffi_p.a
 %{_libdir}/ghc-%{version}/rts/libCffi_thr_debug_p.a
 %{_libdir}/ghc-%{version}/rts/libCffi_thr_p.a
+%endif
 %{_libdir}/ghc-%{version}/rts/libHSrts_debug_p.a
 %{_libdir}/ghc-%{version}/rts/libHSrts_p.a
 %{_libdir}/ghc-%{version}/rts/libHSrts_thr_debug_p.a
