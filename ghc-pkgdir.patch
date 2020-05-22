@@ -4,17 +4,31 @@
  -- users to be able to configure @--libdir=\/usr\/lib64@ for example but
  -- because by default we want to support installing multiple versions of
  -- packages and building the same package for multiple compilers we append the
---- libsubdir to get: @\/usr\/lib64\/$pkgid\/$compiler@.
-+-- libsubdir to get: @\/usr\/lib64\/$compiler\/$pkgid@.
+--- libsubdir to get: @\/usr\/lib64\/$libname\/$compiler@.
++-- libsubdir to get: @\/usr\/lib64\/$compiler\/$libname@.
  --
  -- An additional complication is the need to support relocatable packages on
  -- systems which support such things, like Windows.
-@@ -236,7 +236,7 @@
-            JHC    -> "$compiler"
-            LHC    -> "$compiler"
+@@ -204,11 +204,11 @@
+       libdir       = installLibDir,
+       libsubdir    = case comp of
             UHC    -> "$pkgid"
--           _other -> "$pkgid" </> "$compiler",
+-           _other -> "$abi" </> "$libname",
 +           _other -> "$compiler" </> "$pkgid",
-       dynlibdir    = "$libdir",
+       dynlibdir    = "$libdir" </> case comp of
+            UHC    -> "$pkgid"
+            _other -> "$abi",
+-      libexecsubdir= "$abi" </> "$pkgid",
++      libexecsubdir= "$pkgid",
+       flibdir      = "$libdir",
        libexecdir   = case buildOS of
-         Windows   -> "$prefix" </> "$pkgid"
+         Windows   -> "$prefix" </> "$libname"
+@@ -217,7 +217,7 @@
+       datadir      = case buildOS of
+         Windows   -> "$prefix"
+         _other    -> "$prefix" </> "share",
+-      datasubdir   = "$abi" </> "$pkgid",
++      datasubdir   = "$pkgid",
+       docdir       = "$datadir" </> "doc" </> "$abi" </> "$pkgid",
+       mandir       = "$datadir" </> "man",
+       htmldir      = "$docdir"  </> "html",
