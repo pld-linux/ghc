@@ -52,7 +52,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	8.10.1
-Release:	1
+Release:	2
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
@@ -65,7 +65,6 @@ Source5:	http://ftp.ports.debian.org/debian-ports/pool-x32/main/g/ghc/ghc_8.8.3-
 # Source5-md5:	b912b87c8d9450d140ae773083edecb0
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
-Patch2:		%{name}-winpaths.patch
 Patch3:		build.patch
 Patch4:		buildpath-abi-stability.patch
 Patch5:		x32-use-native-x86_64-insn.patch
@@ -294,7 +293,6 @@ cd ..
 
 %patch0 -p1
 %patch1 -p1
-#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1

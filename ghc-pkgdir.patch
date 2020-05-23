@@ -1,6 +1,6 @@
---- ghc-6.12.3/libraries/Cabal/Cabal/Distribution/Simple/InstallDirs.hs~	2010-06-09 20:10:19.000000000 +0200
-+++ ghc-6.12.3/libraries/Cabal/Cabal/Distribution/Simple/InstallDirs.hs	2010-08-26 21:28:52.969002660 +0200
-@@ -205,7 +205,7 @@
+--- ghc-8.10.1/libraries/Cabal/Cabal/Distribution/Simple/InstallDirs.hs.orig	2019-12-30 03:32:20.000000000 +0100
++++ ghc-8.10.1/libraries/Cabal/Cabal/Distribution/Simple/InstallDirs.hs	2020-05-23 10:10:45.902028639 +0200
+@@ -161,7 +161,7 @@
  -- users to be able to configure @--libdir=\/usr\/lib64@ for example but
  -- because by default we want to support installing multiple versions of
  -- packages and building the same package for multiple compilers we append the
@@ -17,18 +17,21 @@
 +           _other -> "$compiler" </> "$pkgid",
        dynlibdir    = "$libdir" </> case comp of
             UHC    -> "$pkgid"
-            _other -> "$abi",
+-           _other -> "$abi",
 -      libexecsubdir= "$abi" </> "$pkgid",
++           _other -> "$compiler" </> "$pkgid",
 +      libexecsubdir= "$pkgid",
        flibdir      = "$libdir",
        libexecdir   = case buildOS of
          Windows   -> "$prefix" </> "$libname"
-@@ -217,7 +217,7 @@
+@@ -217,8 +217,8 @@
        datadir      = case buildOS of
          Windows   -> "$prefix"
          _other    -> "$prefix" </> "share",
 -      datasubdir   = "$abi" </> "$pkgid",
+-      docdir       = "$datadir" </> "doc" </> "$abi" </> "$pkgid",
 +      datasubdir   = "$pkgid",
-       docdir       = "$datadir" </> "doc" </> "$abi" </> "$pkgid",
++      docdir       = "$datadir" </> "doc" </> "$pkgid",
        mandir       = "$datadir" </> "man",
        htmldir      = "$docdir"  </> "html",
+       haddockdir   = "$htmldir",
