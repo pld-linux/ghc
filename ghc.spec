@@ -57,12 +57,14 @@ License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
 # Source0-md5:	1368854e72bc69d7ef2377cffcfbce3b
+%if %{with bootstrap}
 Source3:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-i386-deb9-linux.tar.xz
 # Source3-md5:	1bc84d8d51d8b0411a13172070295617
 Source4:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-x86_64-deb9-linux.tar.xz
 # Source4-md5:	8de779b73c1b2f1b7ab49030015fce3d
 Source5:	http://ftp.ports.debian.org/debian-ports/pool-x32/main/g/ghc/ghc_8.8.3-1~exp2_x32.deb
 # Source5-md5:	b912b87c8d9450d140ae773083edecb0
+%endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
 Patch3:		build.patch
