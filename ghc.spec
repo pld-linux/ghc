@@ -27,8 +27,8 @@
 %define		gpv_directory		1.3.6.0
 %define		gpv_exceptions		0.10.4
 %define		gpv_filepath		1.4.2.1
-%define		gpv_compact		0.1.0.0
-%define		gpv_prim		0.6.1
+%define		gpv_ghc_compact		0.1.0.0
+%define		gpv_ghc_prim		0.6.1
 %define		gpv_haskeline		0.8.0.0
 %define		gpv_hpc			0.6.1.0
 %define		gpv_integer_gmp		1.0.3.0
@@ -52,7 +52,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	8.10.1
-Release:	4
+Release:	3
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
@@ -125,8 +125,8 @@ Provides:	ghc-deepseq = %{gpv_deepseq}
 Provides:	ghc-directory = %{gpv_directory}
 Provides:	ghc-exceptions = %{gpv_exceptions}
 Provides:	ghc-filepath = %{gpv_filepath}
-Provides:	ghc-compact = %{gpv_compact}
-Provides:	ghc-prim = %{gpv_prim}
+Provides:	ghc-ghc_compact = %{gpv_ghc_compact}
+Provides:	ghc-ghc-prim = %{gpv_ghc_prim}
 Provides:	ghc-haskeline = %{gpv_haskeline}
 Provides:	ghc-hpc = %{gpv_hpc}
 %ifnarch x32
@@ -207,8 +207,8 @@ Provides:	ghc-deepseq-prof = %{gpv_deepseq}
 Provides:	ghc-directory-prof = %{gpv_directory}
 Provides:	ghc-exceptions-prof = %{gpv_exceptions}
 Provides:	ghc-filepath-prof = %{gpv_filepath}
-Provides:	ghc-compact-prof = %{gpv_compact}
-Provides:	ghc-prim-prof = %{gpv_prim}
+Provides:	ghc-ghc_compact-prof = %{gpv_ghc_compact}
+Provides:	ghc-ghc-prim-prof = %{gpv_ghc_prim}
 Provides:	ghc-haskeline-prof = %{gpv_haskeline}
 Provides:	ghc-hpc-prof = %{gpv_hpc}
 %ifnarch x32
@@ -479,9 +479,9 @@ fi
 %{_libdir}/ghc-%{version}/package.conf.d/ghc-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/ghc-boot-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/ghc-boot-th-%{version}.conf
-%{_libdir}/ghc-%{version}/package.conf.d/ghc-compact-%{gpv_compact}.conf
+%{_libdir}/ghc-%{version}/package.conf.d/ghc-compact-%{gpv_ghc_compact}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/ghc-heap-%{version}.conf
-%{_libdir}/ghc-%{version}/package.conf.d/ghc-prim-%{gpv_prim}.conf
+%{_libdir}/ghc-%{version}/package.conf.d/ghc-prim-%{gpv_ghc_prim}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/ghci-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/haskeline-%{gpv_haskeline}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/hpc-%{gpv_hpc}.conf
@@ -1049,9 +1049,9 @@ fi
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/LanguageExtensions/*.dyn_hi
 
 %dir %{_libdir}/ghc-%{version}/ghc-compact-*
-%{_libdir}/ghc-%{version}/ghc-compact-*/HSghc-compact-%{gpv_compact}.o
-%{_libdir}/ghc-%{version}/ghc-compact-*/libHSghc-compact-%{gpv_compact}.a
-%{_libdir}/ghc-%{version}/ghc-compact-*/libHSghc-compact-%{gpv_compact}-ghc*.so
+%{_libdir}/ghc-%{version}/ghc-compact-*/HSghc-compact-%{gpv_ghc_compact}.o
+%{_libdir}/ghc-%{version}/ghc-compact-*/libHSghc-compact-%{gpv_ghc_compact}.a
+%{_libdir}/ghc-%{version}/ghc-compact-*/libHSghc-compact-%{gpv_ghc_compact}-ghc*.so
 %dir %{_libdir}/ghc-%{version}/ghc-compact-*/GHC
 %{_libdir}/ghc-%{version}/ghc-compact-*/GHC/*.hi
 %{_libdir}/ghc-%{version}/ghc-compact-*/GHC/*.dyn_hi
@@ -1075,9 +1075,9 @@ fi
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/InfoTable/*.dyn_hi
 
 %dir %{_libdir}/ghc-%{version}/ghc-prim-*
-%{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-%{gpv_prim}.o
-%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-%{gpv_prim}.a
-%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-%{gpv_prim}-ghc*.so
+%{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-%{gpv_ghc_prim}.o
+%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-%{gpv_ghc_prim}.a
+%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-%{gpv_ghc_prim}-ghc*.so
 %dir %{_libdir}/ghc-%{version}/ghc-prim-*/GHC
 %{_libdir}/ghc-%{version}/ghc-prim-*/GHC/*.hi
 %{_libdir}/ghc-%{version}/ghc-prim-*/GHC/*.dyn_hi
@@ -1696,8 +1696,8 @@ fi
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/ForeignSrcLang/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/LanguageExtensions/*.p_hi
 
-%{_libdir}/ghc-%{version}/ghc-compact-*/libHSghc-compact-%{gpv_compact}_p.a
-%{_libdir}/ghc-%{version}/ghc-compact-*/HSghc-compact-%{gpv_compact}.p_o
+%{_libdir}/ghc-%{version}/ghc-compact-*/libHSghc-compact-%{gpv_ghc_compact}_p.a
+%{_libdir}/ghc-%{version}/ghc-compact-*/HSghc-compact-%{gpv_ghc_compact}.p_o
 %{_libdir}/ghc-%{version}/ghc-compact-*/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-compact-*/GHC/Compact/*.p_hi
 
@@ -1707,8 +1707,8 @@ fi
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/InfoTable/*.p_hi
 
-%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-%{gpv_prim}_p.a
-%{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-%{gpv_prim}.p_o
+%{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-%{gpv_ghc_prim}_p.a
+%{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-%{gpv_ghc_prim}.p_o
 %{_libdir}/ghc-%{version}/ghc-prim-*/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-prim-*/GHC/Prim/*.p_hi
 
