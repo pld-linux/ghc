@@ -81,7 +81,7 @@ BuildRequires:	gmp-devel
 %{?with_system_libffi:BuildRequires:	libffi-devel}
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
-BuildRequires:	rpmbuild(macros) >= 1.607
+BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sed >= 4.0
 %if %{with bootstrap}
 %ifarch %{x8664} %{ix86}
@@ -242,9 +242,7 @@ potrzebujemy systemu profilującego z GHC.
 Summary:	Documentation for GHC
 Summary(pl.UTF-8):	Dokumentacja do GHC
 Group:		Documentation
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description doc
 Documentation for GHC.
@@ -264,7 +262,7 @@ Dokumentacja do GHC.
 %ifarch %{x8664}
 %{__tar} -xf %{SOURCE4}
 %endif
-mv %{name}-%{bootversion} binsrc
+%{__mv} %{name}-%{bootversion} binsrc
 %endif
 
 # debian binaries for x32
@@ -399,7 +397,7 @@ rm -rf docs-root
 	DESTDIR=$RPM_BUILD_ROOT
 
 %if %{with doc}
-mv -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} docs-root
+%{__mv} $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} docs-root
 
 # fix paths to docs in package list
 sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf.d/*.conf
