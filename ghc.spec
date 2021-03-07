@@ -242,7 +242,7 @@ potrzebujemy systemu profilującego z GHC.
 Summary:	Documentation for GHC
 Summary(pl.UTF-8):	Dokumentacja do GHC
 Group:		Documentation
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description doc
 Documentation for GHC.
