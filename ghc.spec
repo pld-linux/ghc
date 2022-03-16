@@ -16,31 +16,31 @@
 %bcond_without	doc		# don't build documentation (requires haddock)
 
 # included ghc package versions:
-%define		gpv_Cabal		3.2.0.0
+%define		gpv_Cabal		3.2.1.0
 %define		gpv_array		0.5.4.0
-%define		gpv_base		4.14.0.0
+%define		gpv_base		4.14.3.0
 %define		gpv_bin_package_db	0.0.0.0
 %define		gpv_binary		0.8.8.0
-%define		gpv_bytestring		0.10.10.0
-%define		gpv_containers		0.6.2.1
+%define		gpv_bytestring		0.10.12.0
+%define		gpv_containers		0.6.5.1
 %define		gpv_deepseq		1.4.4.0
 %define		gpv_directory		1.3.6.0
 %define		gpv_exceptions		0.10.4
 %define		gpv_filepath		1.4.2.1
 %define		gpv_ghc_compact		0.1.0.0
 %define		gpv_ghc_prim		0.6.1
-%define		gpv_haskeline		0.8.0.0
+%define		gpv_haskeline		0.8.2
 %define		gpv_hpc			0.6.1.0
 %define		gpv_integer_gmp		1.0.3.0
 %define		gpv_integer_simple	0.1.2.0
 %define		gpv_mtl			2.2.2
 %define		gpv_parsec		3.1.14.0
 %define		gpv_pretty		1.1.3.6
-%define		gpv_process		1.6.8.2
-%define		gpv_stm			2.5.0.0
+%define		gpv_process		1.6.13.2
+%define		gpv_stm			2.5.0.1
 %define		gpv_template_haskell	2.16.0.0
 %define		gpv_terminfo		0.4.1.4
-%define		gpv_text		1.2.3.2
+%define		gpv_text		1.2.4.1
 %define		gpv_time		1.9.3
 %define		gpv_transformers	0.5.6.2
 %define		gpv_unix		2.7.2.2
@@ -51,12 +51,12 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	8.10.1
-Release:	4
+Version:	8.10.7
+Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
-# Source0-md5:	1368854e72bc69d7ef2377cffcfbce3b
+# Source0-md5:	d618250bf956bb6ea2628f7ec97c6ed4
 %if %{with bootstrap}
 Source3:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-i386-deb9-linux.tar.xz
 # Source3-md5:	1bc84d8d51d8b0411a13172070295617
@@ -1261,17 +1261,17 @@ fi
 %{_libdir}/ghc-%{version}/rts/libffi.so.7
 %{_libdir}/ghc-%{version}/rts/libffi.so.7.1.0
 %endif
-%{_libdir}/ghc-%{version}/rts/libHSrts-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts-ghc%{version}.so
 %{_libdir}/ghc-%{version}/rts/libHSrts.a
-%{_libdir}/ghc-%{version}/rts/libHSrts_debug-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_debug-ghc%{version}.so
 %{_libdir}/ghc-%{version}/rts/libHSrts_debug.a
-%{_libdir}/ghc-%{version}/rts/libHSrts_l-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_l-ghc%{version}.so
 %{_libdir}/ghc-%{version}/rts/libHSrts_l.a
-%{_libdir}/ghc-%{version}/rts/libHSrts_thr-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr-ghc%{version}.so
 %{_libdir}/ghc-%{version}/rts/libHSrts_thr.a
-%{_libdir}/ghc-%{version}/rts/libHSrts_thr_debug-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr_debug-ghc%{version}.so
 %{_libdir}/ghc-%{version}/rts/libHSrts_thr_debug.a
-%{_libdir}/ghc-%{version}/rts/libHSrts_thr_l-ghc8.10.1.so
+%{_libdir}/ghc-%{version}/rts/libHSrts_thr_l-ghc%{version}.so
 %{_libdir}/ghc-%{version}/rts/libHSrts_thr_l.a
 
 %dir %{_libdir}/ghc-%{version}/stm-*
