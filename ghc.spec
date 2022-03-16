@@ -79,7 +79,7 @@ BuildRequires:	binutils >= 4:2.30
 BuildRequires:	freealut-devel
 BuildRequires:	gmp-devel
 %{?with_system_libffi:BuildRequires:	libffi-devel}
-BuildRequires:	ncurses-devel
+BuildRequires:	ncurses-devel >= 6.3.20211120-2
 BuildRequires:	readline-devel
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.752
@@ -285,10 +285,6 @@ sed -i -e 's#x86_64-linux-gnux32#%{_target_base_arch}-%{_target_vendor}-%{_targe
 # make it relative
 ln -sf ../../../var/lib/ghc/package.conf.d usr/lib/ghc/package.conf.d
 
-# debian uses separate libtinfo, workaround
-ln -s %{_libdir}/libncurses.so.6 usr/lib/libtinfo.so.6
-LD_LIBRARY_PATH=$(pwd)/usr/lib; export LD_LIBRARY_PATH
-
 bin/ghc-pkg recache --global
 cd ..
 %endif
@@ -343,9 +339,6 @@ echo "compiler/GHC/Hs/Instances_HC_OPTS += -O0" >> mk/build.mk
 
 %ifarch x32
 echo "INTEGER_LIBRARY = integer-simple" >> mk/build.mk
-
-# debian uses separate libtinfo, workaround
-LD_LIBRARY_PATH=$(pwd)/bindist/usr/lib; export LD_LIBRARY_PATH
 %endif
 
 top=$(pwd)
