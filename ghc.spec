@@ -55,7 +55,7 @@ Version:	8.10.7
 Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
-Source0:	http://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
+Source0:	https://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
 # Source0-md5:	d618250bf956bb6ea2628f7ec97c6ed4
 %if %{with bootstrap}
 Source3:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-i386-deb9-linux.tar.xz
