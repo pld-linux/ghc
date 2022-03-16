@@ -81,6 +81,7 @@ BuildRequires:	gmp-devel
 %{?with_system_libffi:BuildRequires:	libffi-devel}
 BuildRequires:	ncurses-devel
 BuildRequires:	readline-devel
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sed >= 4.0
 %if %{with bootstrap}
