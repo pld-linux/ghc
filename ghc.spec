@@ -84,6 +84,8 @@ BuildRequires:	readline-devel
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	sed >= 4.0
+BuildRequires:	tar >= 1:1.22
+BuildRequires:	xz
 %if %{with bootstrap}
 %ifarch %{x8664} %{ix86}
 BuildRequires:	compat-ncurses5
