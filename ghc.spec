@@ -86,6 +86,7 @@ BuildRequires:	freealut-devel
 BuildRequires:	gmp-devel
 %{?with_system_libffi:BuildRequires:	libffi-devel}
 BuildRequires:	ncurses-devel >= 6.3.20211120-2
+BuildRequires:	numactl-devel
 BuildRequires:	readline-devel
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.752
@@ -99,6 +100,7 @@ BuildRequires:	compat-ncurses5
 %if %{without unregisterised} && %{without ncg}
 BuildRequires:	llvm >= 9
 %endif
+BuildRequires:	numactl-libs
 %else
 BuildRequires:	alex >= 2.0
 BuildRequires:	ghc >= 8.6
