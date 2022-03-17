@@ -117,6 +117,7 @@ BuildRequires:	latexmk
 #For generating documentation in PDF: fop or xmltex
 BuildRequires:	sphinx-pdg-3
 %endif
+%{?with_unregisterised:Requires:	gcc}
 Provides:	ghc-array = %{gpv_array}
 Provides:	ghc-base = %{gpv_base}
 Provides:	ghc-binary = %{gpv_binary}
