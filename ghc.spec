@@ -48,6 +48,11 @@
 
 %define		bootversion		8.6.5
 
+# native code generator (-fasm) support
+%ifarch %{ix86} %{x8664} ppc ppc64 ppc64le sparc
+%define		with_ncg	1
+%endif
+
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
@@ -75,6 +80,7 @@ BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
+BuildRequires:	bash
 BuildRequires:	binutils >= 4:2.30
 BuildRequires:	freealut-devel
 BuildRequires:	gmp-devel
@@ -89,6 +95,9 @@ BuildRequires:	xz
 %if %{with bootstrap}
 %ifarch %{x8664} %{ix86}
 BuildRequires:	compat-ncurses5
+%endif
+%if %{without unregisterised} && %{without ncg}
+BuildRequires:	llvm >= 9
 %endif
 %else
 BuildRequires:	alex >= 2.0
@@ -117,7 +126,14 @@ BuildRequires:	latexmk
 #For generating documentation in PDF: fop or xmltex
 BuildRequires:	sphinx-pdg-3
 %endif
-%{?with_unregisterised:Requires:	gcc}
+%if %{with unregisterised}
+Requires:	gcc
+%else
+%if %{without ncg}
+# targets without ncg use llvm backend by default which requires llc/opt
+Requires:	llvm >= 9
+%endif
+%endif
 Provides:	ghc-array = %{gpv_array}
 Provides:	ghc-base = %{gpv_base}
 Provides:	ghc-binary = %{gpv_binary}
@@ -151,6 +167,9 @@ Provides:	ghc-transformers = %{gpv_transformers}
 Provides:	ghc-unix = %{gpv_unix}
 Provides:	ghc-xhtml = %{gpv_xhtml}
 Suggests:	ghc-haskell-platform
+%if %{without unregisterised} && %{with ncg}
+Suggests:	llvm >= 9
+%endif
 Provides:	haddock
 Obsoletes:	haddock
 ExclusiveArch:	%{ix86} %{x8664} x32
@@ -298,6 +317,8 @@ cd ..
 %patch5 -p1
 
 %build
+%{__bash} ./utils/llvm-targets/gen-data-layout.sh > llvm-targets
+
 %{__autoconf}
 cd libraries/terminfo
 %{__autoconf}
