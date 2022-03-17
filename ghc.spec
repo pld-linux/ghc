@@ -46,12 +46,15 @@
 %define		gpv_unix		2.7.2.2
 %define		gpv_xhtml		3000.2.2.1
 
-%define		bootversion		8.6.5
+%define		bootversion		8.10.7
 
 # native code generator (-fasm) support
 %ifarch %{ix86} %{x8664} ppc ppc64 ppc64le sparc
 %define		with_ncg	1
 %endif
+
+# archs with upstream support for which bootstrap binaries are provided
+%define		official_archs		%{ix86} %{x8664} aarch64
 
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
@@ -64,11 +67,13 @@ Source0:	https://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
 # Source0-md5:	d618250bf956bb6ea2628f7ec97c6ed4
 %if %{with bootstrap}
 Source3:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-i386-deb9-linux.tar.xz
-# Source3-md5:	1bc84d8d51d8b0411a13172070295617
+# Source3-md5:	ed69fd3ed46efd9dcd954e54166712b5
 Source4:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-x86_64-deb9-linux.tar.xz
-# Source4-md5:	8de779b73c1b2f1b7ab49030015fce3d
+# Source4-md5:	e4905d2c51a144479c264d67108297fe
 Source5:	http://ftp.ports.debian.org/debian-ports/pool-x32/main/g/ghc/ghc_8.8.3-1~exp2_x32.deb
 # Source5-md5:	b912b87c8d9450d140ae773083edecb0
+Source6:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-aarch64-deb10-linux.tar.lz
+# Source6-md5:	9ffb05a373de6b98daaab2176f208f31
 %endif
 Patch0:		%{name}-pld.patch
 Patch1:		%{name}-pkgdir.patch
@@ -85,6 +90,7 @@ BuildRequires:	binutils >= 4:2.30
 BuildRequires:	freealut-devel
 BuildRequires:	gmp-devel
 %{?with_system_libffi:BuildRequires:	libffi-devel}
+BuildRequires:	lzip
 BuildRequires:	ncurses-devel >= 6.3.20211120-2
 BuildRequires:	numactl-devel
 BuildRequires:	readline-devel
@@ -94,7 +100,7 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 %if %{with bootstrap}
-%ifarch %{x8664} %{ix86}
+%ifarch %{official_archs}
 BuildRequires:	compat-ncurses5
 %endif
 %if %{without unregisterised} && %{without ncg}
@@ -174,7 +180,7 @@ Suggests:	llvm >= 9
 %endif
 Provides:	haddock
 Obsoletes:	haddock
-ExclusiveArch:	%{ix86} %{x8664} x32
+ExclusiveArch:	%{official_archs} x32
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # There is nothing that may or should be compressed
@@ -280,12 +286,15 @@ Dokumentacja do GHC.
 %if %{with bootstrap}
 
 # official binaries
-%ifarch %{ix86} %{x8664}
+%ifarch %{official_archs}
 %ifarch %{ix86}
 %{__tar} -xf %{SOURCE3}
 %endif
 %ifarch %{x8664}
 %{__tar} -xf %{SOURCE4}
+%endif
+%ifarch aarch64
+%{__tar} -xf %{SOURCE6}
 %endif
 %{__mv} %{name}-%{bootversion} binsrc
 %endif
@@ -372,7 +381,7 @@ top=$(pwd)
 echo "libraries/haskeline_CONFIGURE_OPTS += --flag=-terminfo" >> mk/build.mk
 echo "utils/ghc-pkg_HC_OPTS += -DBOOTSTRAPPING" >> mk/build.mk
 
-%ifarch %{ix86} %{x8664}
+%ifarch %{official_archs}
 # we need to first install the tarball somewhere, as seems the programs don't
 # work out of the path otherwise
 if [ ! -f .bindist.install.mark ]; then
