@@ -334,7 +334,7 @@ cat <<'EOF' > mk/build.mk
 #GhcLibHcOpts     += -O -dcore-lint -keep-hc-files
 #SplitObjs        += NO
 PlatformSupportsSharedLibs = YES
-HADDOCK_DOCS        = %{!?with_doc:NO}%{?with_doc:YES}
+HADDOCK_DOCS        = YES
 LATEX_DOCS          = %{!?with_doc:NO}%{?with_doc:YES}
 BUILD_DOCBOOK_HTMLS = %{!?with_doc:NO}%{?with_doc:YES}
 BUILD_DOCBOOK_PDFS  = %{!?with_doc:NO}%{?with_doc:YES}
@@ -421,6 +421,8 @@ rm -rf docs-root
 
 # fix paths to docs in package list
 sed -i -e 's|%{_datadir}/doc/%{name}|%{_docdir}/%{name}-%{version}|g' $RPM_BUILD_ROOT%{_libdir}/%{name}-%{version}/package.conf.d/*.conf
+%else
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 %endif
 
 %clean
@@ -443,10 +445,8 @@ fi
 %attr(755,root,root) %{_bindir}/ghc-pkg-%{version}
 %attr(755,root,root) %{_bindir}/ghci
 %attr(755,root,root) %{_bindir}/ghci-%{version}
-%if %{with doc}
 %attr(755,root,root) %{_bindir}/haddock
 %attr(755,root,root) %{_bindir}/haddock-ghc-%{version}
-%endif
 %attr(755,root,root) %{_bindir}/hp2ps
 %attr(755,root,root) %{_bindir}/hpc
 %attr(755,root,root) %{_bindir}/hsc2hs
@@ -460,10 +460,8 @@ fi
 %attr(755,root,root) %{_libdir}/ghc-%{version}/bin/ghc-iserv-dyn
 %attr(755,root,root) %{_libdir}/ghc-%{version}/bin/ghc-iserv-prof
 %attr(755,root,root) %{_libdir}/ghc-%{version}/bin/ghc-pkg
-%if %{with doc}
 %attr(755,root,root) %{_libdir}/ghc-%{version}/bin/haddock
 %attr(755,root,root) %{_libdir}/ghc-%{version}/bin/hp2ps
-%endif
 %attr(755,root,root) %{_libdir}/ghc-%{version}/bin/hpc
 %attr(755,root,root) %{_libdir}/ghc-%{version}/bin/hsc2hs
 %attr(755,root,root) %{_libdir}/ghc-%{version}/bin/runghc
@@ -475,12 +473,10 @@ fi
 %{_libdir}/ghc-%{version}/llvm-passes
 %{_libdir}/ghc-%{version}/llvm-targets
 %{_libdir}/ghc-%{version}/platformConstants
-%if %{with doc}
 %{_libdir}/ghc-%{version}/html
 %dir %{_libdir}/ghc-%{version}/latex
 %{_libdir}/ghc-%{version}/latex/haddock.sty
-%{_mandir}/man1/ghc.1*
-%endif
+%{?with_doc:%{_mandir}/man1/ghc.1*}
 %dir %{_libdir}/ghc-%{version}/package.conf.d
 %ghost %{_libdir}/ghc-%{version}/package.conf.d/package.cache
 
