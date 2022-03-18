@@ -135,10 +135,14 @@ BuildRequires:	latexmk
 BuildRequires:	sphinx-pdg-3
 %endif
 Requires:	gcc
+Requires:	glibc-headers
+Requires:	gmp-devel
+%{?with_system_libffi:BuildRequires:	libffi-devel}
 %if %{without unregisterised} && %{without ncg}
 # targets without ncg use llvm backend by default which requires llc/opt
 Requires:	llvm >= 9
 %endif
+Requires:	numactl-devel
 Provides:	ghc-array = %{gpv_array}
 Provides:	ghc-base = %{gpv_base}
 Provides:	ghc-binary = %{gpv_binary}
