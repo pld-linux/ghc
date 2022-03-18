@@ -95,7 +95,7 @@ BuildRequires:	ncurses-devel >= 6.3.20211120-2
 BuildRequires:	numactl-devel
 BuildRequires:	readline-devel
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.752
+BuildRequires:	rpmbuild(macros) >= 2.005
 BuildRequires:	sed >= 4.0
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
@@ -185,6 +185,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # There is nothing that may or should be compressed
 %define		_noautocompressdoc	*
+
+%define		_debugsource_packages	0
 
 %description
 Haskell is the standard lazy purely functional programming language.
