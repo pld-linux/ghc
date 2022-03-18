@@ -134,13 +134,10 @@ BuildRequires:	latexmk
 #For generating documentation in PDF: fop or xmltex
 BuildRequires:	sphinx-pdg-3
 %endif
-%if %{with unregisterised}
 Requires:	gcc
-%else
-%if %{without ncg}
+%if %{without unregisterised} && %{without ncg}
 # targets without ncg use llvm backend by default which requires llc/opt
 Requires:	llvm >= 9
-%endif
 %endif
 Provides:	ghc-array = %{gpv_array}
 Provides:	ghc-base = %{gpv_base}
