@@ -60,7 +60,7 @@ Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
 Version:	8.10.7
-Release:	1
+Release:	2
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	https://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
