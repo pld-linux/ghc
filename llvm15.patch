@@ -1,0 +1,11 @@
+--- ghc-8.10.7/llvm-passes.orig	2021-06-21 08:54:36.000000000 +0200
++++ ghc-8.10.7/llvm-passes	2023-02-15 11:44:08.415463266 +0100
+@@ -1,5 +1,5 @@
+ [
+-(0, "-mem2reg -globalopt"),
+-(1, "-O1 -globalopt"),
+-(2, "-O2")
++(0, "-enable-new-pm=0 -mem2reg -globalopt"),
++(1, "-enable-new-pm=0 -O1 -globalopt"),
++(2, "-enable-new-pm=0 -O2")
+ ]

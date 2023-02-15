@@ -80,6 +80,7 @@ Patch1:		%{name}-pkgdir.patch
 Patch3:		build.patch
 Patch4:		buildpath-abi-stability.patch
 Patch5:		x32-use-native-x86_64-insn.patch
+Patch6:		llvm15.patch
 URL:		http://haskell.org/ghc/
 BuildRequires:	OpenAL-devel
 BuildRequires:	OpenGL-GLU-devel
@@ -329,6 +330,7 @@ cd ..
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
 %{__bash} ./utils/llvm-targets/gen-data-layout.sh > llvm-targets
