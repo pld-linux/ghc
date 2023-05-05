@@ -88,6 +88,7 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-glut-devel
 BuildRequires:	bash
 BuildRequires:	binutils >= 4:2.30
+BuildRequires:	clang
 BuildRequires:	freealut-devel
 BuildRequires:	gmp-devel
 %{?with_system_libffi:BuildRequires:	libffi-devel}
