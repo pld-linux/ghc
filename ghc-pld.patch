@@ -1,6 +1,6 @@
---- ghc-7.6.1/aclocal.m4.orig	2012-09-04 19:10:14.000000000 +0200
-+++ ghc-7.6.1/aclocal.m4	2012-09-27 19:18:53.993056656 +0200
-@@ -154,7 +154,7 @@
+--- ghc-9.6.1/m4/fptools_set_haskell_platform_vars.m4.orig	2023-03-11 06:42:58.000000000 +0100
++++ ghc-9.6.1/m4/fptools_set_haskell_platform_vars.m4	2023-05-05 13:10:17.735877257 +0200
+@@ -5,7 +5,7 @@
  [
      checkArch() {
          case [$]1 in
@@ -9,7 +9,7 @@
              test -z "[$]2" || eval "[$]2=ArchX86"
              ;;
          x86_64|amd64)
-@@ -229,7 +229,7 @@ AC_DEFUN([FPTOOLS_SET_HASKELL_PLATFORM_V
+@@ -63,7 +63,7 @@
  
      checkVendor() {
          case [$]1 in
@@ -18,9 +18,9 @@
              ;;
          *)
              AC_MSG_WARN([Unknown vendor [$]1])
---- ghc-8.10.7/utils/llvm-targets/gen-data-layout.sh.orig	2021-06-21 08:54:36.000000000 +0200
-+++ ghc-8.10.7/utils/llvm-targets/gen-data-layout.sh	2022-03-17 13:21:10.641498496 +0100
-@@ -54,13 +54,16 @@
+--- ghc-9.6.1/utils/llvm-targets/gen-data-layout.sh.orig	2023-05-05 13:06:25.867871856 +0200
++++ ghc-9.6.1/utils/llvm-targets/gen-data-layout.sh	2023-05-05 13:10:09.979397765 +0200
+@@ -55,6 +55,7 @@
      "aarch64-unknown-linux-gnu"
      "aarch64-unknown-linux-musl"
      "aarch64-unknown-linux"
@@ -28,7 +28,10 @@
      # Linux x86
      "i386-unknown-linux-gnu"
      "i386-unknown-linux-musl"
-     "i386-unknown-linux"
+@@ -65,9 +66,11 @@
+     "i686-unknown-linux-gnu"
+     "i686-unknown-linux-musl"
+     "i686-unknown-linux"
 +    "i686-pld-linux"
      "x86_64-unknown-linux-gnu"
      "x86_64-unknown-linux-musl"

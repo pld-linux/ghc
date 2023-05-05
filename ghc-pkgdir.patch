@@ -1,5 +1,5 @@
---- ghc-8.10.1/libraries/Cabal/Cabal/Distribution/Simple/InstallDirs.hs.orig	2019-12-30 03:32:20.000000000 +0100
-+++ ghc-8.10.1/libraries/Cabal/Cabal/Distribution/Simple/InstallDirs.hs	2020-05-23 10:10:45.902028639 +0200
+--- ghc-9.6.1/libraries/Cabal/Cabal/src/Distribution/Simple/InstallDirs.hs.orig	2023-03-11 06:43:45.000000000 +0100
++++ ghc-9.6.1/libraries/Cabal/Cabal/src/Distribution/Simple/InstallDirs.hs	2023-05-05 13:22:41.365156551 +0200
 @@ -161,7 +161,7 @@
  -- users to be able to configure @--libdir=\/usr\/lib64@ for example but
  -- because by default we want to support installing multiple versions of

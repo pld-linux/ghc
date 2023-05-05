@@ -16,32 +16,32 @@
 %bcond_without	doc		# don't build documentation (requires haddock)
 
 # included ghc package versions:
-%define		gpv_Cabal		3.2.1.0
+%define		gpv_Cabal		3.6.3.0
 %define		gpv_array		0.5.4.0
-%define		gpv_base		4.14.3.0
+%define		gpv_base		4.16.4.0
 %define		gpv_bin_package_db	0.0.0.0
-%define		gpv_binary		0.8.8.0
-%define		gpv_bytestring		0.10.12.0
+%define		gpv_binary		0.8.9.0
+%define		gpv_bytestring		0.11.4.0
 %define		gpv_containers		0.6.5.1
-%define		gpv_deepseq		1.4.4.0
-%define		gpv_directory		1.3.6.0
+%define		gpv_deepseq		1.4.6.1
+%define		gpv_directory		1.3.6.2
 %define		gpv_exceptions		0.10.4
-%define		gpv_filepath		1.4.2.1
+%define		gpv_filepath		1.4.2.2
+%define		gpv_ghc_bignum		1.2
 %define		gpv_ghc_compact		0.1.0.0
-%define		gpv_ghc_prim		0.6.1
+%define		gpv_ghc_prim		0.8.0
 %define		gpv_haskeline		0.8.2
 %define		gpv_hpc			0.6.1.0
-%define		gpv_integer_gmp		1.0.3.0
-%define		gpv_integer_simple	0.1.2.0
+%define		gpv_integer_gmp		1.1
 %define		gpv_mtl			2.2.2
-%define		gpv_parsec		3.1.14.0
+%define		gpv_parsec		3.1.15.0
 %define		gpv_pretty		1.1.3.6
-%define		gpv_process		1.6.13.2
-%define		gpv_stm			2.5.0.1
-%define		gpv_template_haskell	2.16.0.0
-%define		gpv_terminfo		0.4.1.4
-%define		gpv_text		1.2.4.1
-%define		gpv_time		1.9.3
+%define		gpv_process		1.6.16.0
+%define		gpv_stm			2.5.0.2
+%define		gpv_template_haskell	2.18.0.0
+%define		gpv_terminfo		0.4.1.5
+%define		gpv_text		1.2.5.0
+%define		gpv_time		1.11.1.1
 %define		gpv_transformers	0.5.6.2
 %define		gpv_unix		2.7.2.2
 %define		gpv_xhtml		3000.2.2.1
@@ -49,7 +49,7 @@
 %define		bootversion		8.10.7
 
 # native code generator (-fasm) support
-%ifarch %{ix86} %{x8664} ppc ppc64 ppc64le sparc
+%ifarch %{ix86} %{x8664} aarch64 ppc ppc64 ppc64le sparc
 %define		with_ncg	1
 %endif
 
@@ -59,12 +59,12 @@
 Summary:	Glasgow Haskell Compilation system
 Summary(pl.UTF-8):	System kompilacji Glasgow Haskell
 Name:		ghc
-Version:	8.10.7
-Release:	2
+Version:	9.2.7
+Release:	1
 License:	BSD-like w/o adv. clause
 Group:		Development/Languages
 Source0:	https://haskell.org/ghc/dist/%{version}/%{name}-%{version}-src.tar.xz
-# Source0-md5:	d618250bf956bb6ea2628f7ec97c6ed4
+# Source0-md5:	56b92670fa17c0c8a034e85782937d59
 %if %{with bootstrap}
 Source3:	https://downloads.haskell.org/~ghc/%{bootversion}/%{name}-%{bootversion}-i386-deb9-linux.tar.xz
 # Source3-md5:	ed69fd3ed46efd9dcd954e54166712b5
@@ -156,15 +156,12 @@ Provides:	ghc-deepseq = %{gpv_deepseq}
 Provides:	ghc-directory = %{gpv_directory}
 Provides:	ghc-exceptions = %{gpv_exceptions}
 Provides:	ghc-filepath = %{gpv_filepath}
+Provides:	ghc-ghc-bignum = %{gpv_ghc_bignum}
 Provides:	ghc-ghc-compact = %{gpv_ghc_compact}
 Provides:	ghc-ghc-prim = %{gpv_ghc_prim}
 Provides:	ghc-haskeline = %{gpv_haskeline}
 Provides:	ghc-hpc = %{gpv_hpc}
-%ifnarch x32
 Provides:	ghc-integer-gmp = %{gpv_integer_gmp}
-%else
-Provides:	ghc-integer-simple = %{gpv_integer_simple}
-%endif
 Provides:	ghc-mtl = %{gpv_mtl}
 Provides:	ghc-parsec = %{gpv_parsec}
 Provides:	ghc-pretty = %{gpv_pretty}
@@ -243,15 +240,12 @@ Provides:	ghc-deepseq-prof = %{gpv_deepseq}
 Provides:	ghc-directory-prof = %{gpv_directory}
 Provides:	ghc-exceptions-prof = %{gpv_exceptions}
 Provides:	ghc-filepath-prof = %{gpv_filepath}
+Provides:	ghc-ghc-bignum-prof = %{gpv_ghc_bignum}
 Provides:	ghc-ghc-compact-prof = %{gpv_ghc_compact}
 Provides:	ghc-ghc-prim-prof = %{gpv_ghc_prim}
 Provides:	ghc-haskeline-prof = %{gpv_haskeline}
 Provides:	ghc-hpc-prof = %{gpv_hpc}
-%ifnarch x32
 Provides:	ghc-integer-gmp-prof = %{gpv_integer_gmp}
-%else
-Provides:	ghc-integer-simple-prof = %{gpv_integer_simple}
-%endif
 Provides:	ghc-mtl-prof = %{gpv_mtl}
 Provides:	ghc-parsec-prof = %{gpv_parsec}
 Provides:	ghc-pretty-prof = %{gpv_pretty}
@@ -334,6 +328,7 @@ cd ..
 %patch6 -p1
 
 %build
+LC_ALL=C.UTF-8; export LC_ALL
 %{__bash} ./utils/llvm-targets/gen-data-layout.sh > llvm-targets
 
 %{__autoconf}
@@ -374,10 +369,6 @@ EOF
 # See https://gitlab.haskell.org/ghc/ghc/issues/17048
 echo "compiler/GHC/Hs/Instances_HC_OPTS += -O0" >> mk/build.mk
 %endif
-%endif
-
-%ifarch x32
-echo "INTEGER_LIBRARY = integer-simple" >> mk/build.mk
 %endif
 
 top=$(pwd)
@@ -487,7 +478,6 @@ fi
 %{_libdir}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/llvm-passes
 %{_libdir}/ghc-%{version}/llvm-targets
-%{_libdir}/ghc-%{version}/platformConstants
 %{_libdir}/ghc-%{version}/html
 %dir %{_libdir}/ghc-%{version}/latex
 %{_libdir}/ghc-%{version}/latex/haddock.sty
@@ -506,6 +496,7 @@ fi
 %{_libdir}/ghc-%{version}/package.conf.d/exceptions-%{gpv_exceptions}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/filepath-%{gpv_filepath}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/ghc-%{version}.conf
+%{_libdir}/ghc-%{version}/package.conf.d/ghc-bignum-%{gpv_ghc_bignum}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/ghc-boot-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/ghc-boot-th-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/ghc-compact-%{gpv_ghc_compact}.conf
@@ -514,11 +505,7 @@ fi
 %{_libdir}/ghc-%{version}/package.conf.d/ghci-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/haskeline-%{gpv_haskeline}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/hpc-%{gpv_hpc}.conf
-%ifnarch x32
 %{_libdir}/ghc-%{version}/package.conf.d/integer-gmp-%{gpv_integer_gmp}.conf
-%else
-%{_libdir}/ghc-%{version}/package.conf.d/integer-simple-%{gpv_integer_simple}.conf
-%endif
 %{_libdir}/ghc-%{version}/package.conf.d/libiserv-%{version}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/mtl-%{gpv_mtl}.conf
 %{_libdir}/ghc-%{version}/package.conf.d/package.cache.lock
@@ -577,6 +564,12 @@ fi
 %dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/*.hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/Macros
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/Macros/*.dyn_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/Macros/*.hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/PathsModule
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/PathsModule/*.dyn_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/PathsModule/*.hi
 %dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC/*.hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC/*.dyn_hi
@@ -637,6 +630,9 @@ fi
 %dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/TestSuite
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/TestSuite/*.hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/TestSuite/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/VersionInterval
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/VersionInterval/*.dyn_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/VersionInterval/*.hi
 %dir %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/VersionRange
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/VersionRange/*.hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/VersionRange/*.dyn_hi
@@ -753,6 +749,9 @@ fi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC/Event
 %{_libdir}/ghc-%{version}/base-*/GHC/Event/*.hi
 %{_libdir}/ghc-%{version}/base-*/GHC/Event/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/base-*/GHC/Event/Internal
+%{_libdir}/ghc-%{version}/base-*/GHC/Event/Internal/*.dyn_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/Event/Internal/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC/Exception
 %{_libdir}/ghc-%{version}/base-*/GHC/Exception/*.hi
 %{_libdir}/ghc-%{version}/base-*/GHC/Exception/*.dyn_hi
@@ -774,6 +773,9 @@ fi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle
 %{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle/*.hi
 %{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/base-*/GHC/Integer
+%{_libdir}/ghc-%{version}/base-*/GHC/Integer/*.dyn_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/Integer/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC/RTS
 %{_libdir}/ghc-%{version}/base-*/GHC/RTS/*.hi
 %{_libdir}/ghc-%{version}/base-*/GHC/RTS/*.dyn_hi
@@ -783,6 +785,12 @@ fi
 %dir %{_libdir}/ghc-%{version}/base-*/GHC/StaticPtr
 %{_libdir}/ghc-%{version}/base-*/GHC/StaticPtr/*.hi
 %{_libdir}/ghc-%{version}/base-*/GHC/StaticPtr/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/base-*/GHC/TypeLits
+%{_libdir}/ghc-%{version}/base-*/GHC/TypeLits/*.dyn_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/TypeLits/*.hi
+%dir %{_libdir}/ghc-%{version}/base-*/GHC/TypeNats
+%{_libdir}/ghc-%{version}/base-*/GHC/TypeNats/*.dyn_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/TypeNats/*.hi
 %dir %{_libdir}/ghc-%{version}/base-*/System
 %{_libdir}/ghc-%{version}/base-*/System/*.hi
 %{_libdir}/ghc-%{version}/base-*/System/*.dyn_hi
@@ -866,12 +874,18 @@ fi
 %dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/Prim/Internal
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/Prim/Internal/*.hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/Prim/Internal/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/RealFloat
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/RealFloat/*.dyn_hi
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/RealFloat/*.hi
+%dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Internal
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Internal/*.dyn_hi
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Internal/*.hi
 %dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/*.hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder
-%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/*.hi
-%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Internal
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Internal/*.dyn_hi
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Internal/*.hi
 %dir %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Short
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Short/*.hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Short/*.dyn_hi
@@ -982,75 +996,300 @@ fi
 %{_libdir}/ghc-%{version}/ghc-%{version}/include
 %{_libdir}/ghc-%{version}/ghc-%{version}/*.hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Dwarf
-%{_libdir}/ghc-%{version}/ghc-%{version}/Dwarf/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/Dwarf/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/*.hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/Names
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/Names/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/Names/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/Types
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/Types/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/Types/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/ByteCode
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/ByteCode/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/ByteCode/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Dataflow
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Dataflow/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Dataflow/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Info
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Info/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Info/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Parser
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Parser/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Parser/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Ppr
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Ppr/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Ppr/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Switch
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Switch/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Switch/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/AArch64
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/AArch64/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/AArch64/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/CFG
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/CFG/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/CFG/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Dwarf
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Dwarf/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Dwarf/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/PPC
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/PPC/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/PPC/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/Graph
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/Graph/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/Graph/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/Linear
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/Linear/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/Linear/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/SPARC
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/SPARC/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/SPARC/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/SPARC/CodeGen
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/SPARC/CodeGen/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/SPARC/CodeGen/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/X86
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/X86/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/X86/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToLlvm
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToLlvm/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToLlvm/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Hs
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Hs/*.hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Hs/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/*.hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/PmCheck
-%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/PmCheck/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/PmCheck/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Foreign
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Foreign/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Foreign/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Match
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Match/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Match/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Pmc
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Pmc/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Pmc/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Llvm
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Llvm/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Llvm/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Platform
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Platform/*.hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Platform/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/StgToCmm
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/StgToCmm/*.hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/StgToCmm/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Hoopl
-%{_libdir}/ghc-%{version}/ghc-%{version}/Hoopl/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/Hoopl/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Llvm
-%{_libdir}/ghc-%{version}/ghc-%{version}/Llvm/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/Llvm/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen
-%{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/PPC
-%{_libdir}/ghc-%{version}/ghc-%{version}/PPC/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/PPC/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/SPARC
-%{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/CodeGen
-%{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/CodeGen/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/CodeGen/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/X86
-%{_libdir}/ghc-%{version}/ghc-%{version}/X86/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/X86/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Graph
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Graph/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Graph/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/PPC
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/PPC/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/PPC/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/SPARC
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/SPARC/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/SPARC/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86_64
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86_64/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86_64/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/StgLiftLams
-%{_libdir}/ghc-%{version}/ghc-%{version}/StgLiftLams/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/StgLiftLams/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/ghc-%{version}/SysTools
-%{_libdir}/ghc-%{version}/ghc-%{version}/SysTools/*.hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/SysTools/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/SysTools
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/SysTools/*.hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/SysTools/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Coercion
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Coercion/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Coercion/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Map
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Map/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Map/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/Simplify
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/Simplify/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/Simplify/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/WorkWrap
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/WorkWrap/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/WorkWrap/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/TyCo
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/TyCo/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/TyCo/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/TyCon
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/TyCon/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/TyCon/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Unfold
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Unfold/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Unfold/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CoreToStg
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CoreToStg/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CoreToStg/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/FastString
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/FastString/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/FastString/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/Graph
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/Graph/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/Graph/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/List
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/List/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/List/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Backpack
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Backpack/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Backpack/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Env
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Env/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Env/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Pipeline
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Pipeline/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Pipeline/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Pmc/Solver
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Pmc/Solver/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Pmc/Solver/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Ext
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Ext/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Ext/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Recomp
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Recomp/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Recomp/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Tidy
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Tidy/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Tidy/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Linker
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Linker/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Linker/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/Errors
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/Errors/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/Errors/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/PostProcess
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/PostProcess/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/PostProcess/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Platform/Reg
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Platform/Reg/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Platform/Reg/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Rename
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Rename/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Rename/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Eval
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Eval/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Eval/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Heap
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Heap/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Heap/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Interpreter
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Interpreter/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Interpreter/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Settings
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Settings/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Settings/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Stg
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Stg/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Stg/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Stg/Lift
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Stg/Lift/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Stg/Lift/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Deriv
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Deriv/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Deriv/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Errors
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Errors/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Errors/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Errors/Hole
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Errors/Hole/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Errors/Hole/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Gen
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Gen/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Gen/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Instance
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Instance/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Instance/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Solver
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Solver/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Solver/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/TyCl
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/TyCl/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/TyCl/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Types
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Types/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Types/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Utils
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Utils/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Utils/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/CostCentre
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/CostCentre/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/CostCentre/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Fixity
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Fixity/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Fixity/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Id
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Id/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Id/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Name
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Name/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Name/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/TyThing
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/TyThing/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/TyThing/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Unique
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Unique/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Unique/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Var
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Var/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Var/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Finder
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Finder/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Finder/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Home
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Home/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Home/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Module
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Module/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Module/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Binary
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Binary/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Binary/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/IO
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/IO/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/IO/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Monad
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Monad/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Monad/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Panic
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Panic/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Panic/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Ppr
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Ppr/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Ppr/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Language/Haskell
+%{_libdir}/ghc-%{version}/ghc-%{version}/Language/Haskell/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Language/Haskell/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-%{version}/Language/Haskell/Syntax
+%{_libdir}/ghc-%{version}/ghc-%{version}/Language/Haskell/Syntax/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Language/Haskell/Syntax/*.hi
 
 %dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/HSghc-boot-%{version}.o
@@ -1059,9 +1298,21 @@ fi
 %dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/*.hi
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Data
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Data/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Data/*.hi
 %dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Platform
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Platform/*.hi
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Platform/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Settings
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Settings/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Settings/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Unit
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Unit/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Unit/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Utils
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Utils/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Utils/*.hi
 
 %dir %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/HSghc-boot-th-%{version}.o
@@ -1076,6 +1327,19 @@ fi
 %dir %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/LanguageExtensions
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/LanguageExtensions/*.hi
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/LanguageExtensions/*.dyn_hi
+
+%dir %{_libdir}/ghc-%{version}/ghc-bignum-*
+%{_libdir}/ghc-%{version}/ghc-bignum-*/HSghc-bignum-%{gpv_ghc_bignum}.o
+%{_libdir}/ghc-%{version}/ghc-bignum-*/libHSghc-bignum-%{gpv_ghc_bignum}.a
+%{_libdir}/ghc-%{version}/ghc-bignum-*/libHSghc-bignum-%{gpv_ghc_bignum}-ghc*.so
+%{_libdir}/ghc-%{version}/ghc-bignum-*/include
+%dir %{_libdir}/ghc-%{version}/ghc-bignum-*/GHC
+%dir %{_libdir}/ghc-%{version}/ghc-bignum-*/GHC/Num
+%{_libdir}/ghc-%{version}/ghc-bignum-*/GHC/Num/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-bignum-*/GHC/Num/*.hi
+%dir %{_libdir}/ghc-%{version}/ghc-bignum-*/GHC/Num/Backend
+%{_libdir}/ghc-%{version}/ghc-bignum-*/GHC/Num/Backend/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-bignum-*/GHC/Num/Backend/*.hi
 
 %dir %{_libdir}/ghc-%{version}/ghc-compact-*
 %{_libdir}/ghc-%{version}/ghc-compact-*/HSghc-compact-%{gpv_ghc_compact}.o
@@ -1102,6 +1366,9 @@ fi
 %dir %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/InfoTable
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/InfoTable/*.hi
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/InfoTable/*.dyn_hi
+%dir %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/ProfInfo
+%{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/ProfInfo/*.dyn_hi
+%{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/ProfInfo/*.hi
 
 %dir %{_libdir}/ghc-%{version}/ghc-prim-*
 %{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-%{gpv_ghc_prim}.o
@@ -1118,8 +1385,6 @@ fi
 %{_libdir}/ghc-%{version}/ghci-%{version}/HSghci-%{version}.o
 %{_libdir}/ghc-%{version}/ghci-%{version}/libHSghci-%{version}.a
 %{_libdir}/ghc-%{version}/ghci-%{version}/libHSghci-%{version}-ghc*.so
-%{_libdir}/ghc-%{version}/ghci-%{version}/*.hi
-%{_libdir}/ghc-%{version}/ghci-%{version}/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi
 %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/*.hi
 %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/*.dyn_hi
@@ -1157,42 +1422,15 @@ fi
 %{_libdir}/ghc-%{version}/hpc-*/Trace/Hpc/*.hi
 %{_libdir}/ghc-%{version}/hpc-*/Trace/Hpc/*.dyn_hi
 
-%ifnarch x32
 %dir %{_libdir}/ghc-%{version}/integer-gmp-*
 %{_libdir}/ghc-%{version}/integer-gmp-*/HSinteger-gmp-%{gpv_integer_gmp}.o
 %{_libdir}/ghc-%{version}/integer-gmp-*/libHSinteger-gmp-%{gpv_integer_gmp}.a
 %{_libdir}/ghc-%{version}/integer-gmp-*/libHSinteger-gmp-%{gpv_integer_gmp}-ghc*.so
 %dir %{_libdir}/ghc-%{version}/integer-gmp-*/GHC
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/*.hi
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/*.hi
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/*.dyn_hi
 %dir %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/GMP
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/GMP/*.hi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/GMP/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms/*.hi
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms/*.dyn_hi
-%{_libdir}/ghc-%{version}/integer-gmp-*/include
-%else
-%dir %{_libdir}/ghc-%{version}/integer-simple-*
-%{_libdir}/ghc-%{version}/integer-simple-*/HSinteger-simple-%{gpv_integer_simple}.o
-%{_libdir}/ghc-%{version}/integer-simple-*/libHSinteger-simple-%{gpv_integer_simple}-ghc*.so
-%{_libdir}/ghc-%{version}/integer-simple-*/libHSinteger-simple-%{gpv_integer_simple}.a
-%dir %{_libdir}/ghc-%{version}/integer-simple-*/GHC
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/*.hi
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/*.hi
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Logarithms
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Logarithms/*.hi
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Logarithms/*.dyn_hi
-%dir %{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Simple
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Simple/*.hi
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Simple/*.dyn_hi
-%endif
 
 %dir %{_libdir}/ghc-%{version}/libiserv-%{version}
 %{_libdir}/ghc-%{version}/libiserv-%{version}/HSlibiserv-%{version}.o
@@ -1544,6 +1782,8 @@ fi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/SPDX/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/Macros/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/Build/PathsModule/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/InstallDirs/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Simple/PreProcess/*.p_hi
@@ -1564,6 +1804,7 @@ fi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/SetupBuildInfo/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/SourceRepo/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/TestSuite/*.p_hi
+%{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/VersionInterval/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Types/VersionRange/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Utils/*.p_hi
 %{_libdir}/ghc-%{version}/Cabal-*/Distribution/Verbosity/*.p_hi
@@ -1603,18 +1844,22 @@ fi
 %{_libdir}/ghc-%{version}/base-*/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/Conc/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/Event/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/Event/Internal/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/Exception/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/ExecutionStack/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/Fingerprint/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/Float/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/GHCi/*.p_hi
-%{_libdir}/ghc-%{version}/base-*/GHC/IO/Encoding/*.p_hi
-%{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle/Lock/*.p_hi
-%{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/IO/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/IO/Encoding/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/IO/Handle/Lock/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/Integer/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/RTS/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/Stack/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/GHC/StaticPtr/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/TypeLits/*.p_hi
+%{_libdir}/ghc-%{version}/base-*/GHC/TypeNats/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/Numeric/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/System/*.p_hi
 %{_libdir}/ghc-%{version}/base-*/System/Console/*.p_hi
@@ -1645,8 +1890,10 @@ fi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/Prim/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/Prim/Internal/*.p_hi
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Builder/RealFloat/*.p_hi
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Internal/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/*.p_hi
-%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Builder/*.p_hi
+%{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Lazy/Internal/*.p_hi
 %{_libdir}/ghc-%{version}/bytestring-*/Data/ByteString/Short/*.p_hi
 
 %{_libdir}/ghc-%{version}/containers-*/libHScontainers-%{gpv_containers}_p.a
@@ -1690,40 +1937,124 @@ fi
 
 %{_libdir}/ghc-%{version}/ghc-%{version}/libHSghc-%{version}_p.a
 %{_libdir}/ghc-%{version}/ghc-%{version}/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/Dwarf/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/Names/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Builtin/Types/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/ByteCode/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Dataflow/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Info/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Parser/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Ppr/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Cmm/Switch/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/AArch64/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/CFG/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Dwarf/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/PPC/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/Graph/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/Reg/Linear/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/SPARC/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/SPARC/CodeGen/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToAsm/X86/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CmmToLlvm/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Coercion/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Map/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/Simplify/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Opt/WorkWrap/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/TyCo/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/TyCon/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Core/Unfold/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/CoreToStg/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/FastString/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/Graph/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Data/List/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Backpack/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Env/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Driver/Pipeline/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Hs/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/PmCheck/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Foreign/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Match/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Pmc/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/HsToCore/Pmc/Solver/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Ext/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Recomp/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Iface/Tidy/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Linker/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Llvm/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/Errors/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Parser/PostProcess/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Platform/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Platform/Reg/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Rename/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Eval/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Heap/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Runtime/Interpreter/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Settings/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Stg/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Stg/Lift/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-%{version}/GHC/StgToCmm/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/Hoopl/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/Llvm/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/LlvmCodeGen/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/PPC/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Graph/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/PPC/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/SPARC/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/RegAlloc/Linear/X86_64/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/SPARC/CodeGen/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/StgLiftLams/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/SysTools/*.p_hi
-%{_libdir}/ghc-%{version}/ghc-%{version}/X86/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/SysTools/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Deriv/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Errors/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Errors/Hole/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Gen/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Instance/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Solver/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/TyCl/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Types/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Tc/Utils/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/CostCentre/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Fixity/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Id/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Name/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/TyThing/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Unique/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Types/Var/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Finder/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Home/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Unit/Module/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Binary/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/IO/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Monad/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Panic/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/GHC/Utils/Ppr/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Language/Haskell/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-%{version}/Language/Haskell/Syntax/*.p_hi
 
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/libHSghc-boot-%{version}_p.a
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/HSghc-boot-%{version}.p_o
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Data/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Platform/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Settings/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Unit/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-boot-%{version}/GHC/Utils/*.p_hi
 
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/libHSghc-boot-th-%{version}_p.a
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/HSghc-boot-th-%{version}.p_o
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/ForeignSrcLang/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-boot-th-%{version}/GHC/LanguageExtensions/*.p_hi
+
+%{_libdir}/ghc-%{version}/ghc-bignum-*/libHSghc-bignum-%{gpv_ghc_bignum}_p.a
+%{_libdir}/ghc-%{version}/ghc-bignum-*/HSghc-bignum-%{gpv_ghc_bignum}.p_o
+%{_libdir}/ghc-%{version}/ghc-bignum-*/GHC/Num/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-bignum-*/GHC/Num/Backend/*.p_hi
 
 %{_libdir}/ghc-%{version}/ghc-compact-*/libHSghc-compact-%{gpv_ghc_compact}_p.a
 %{_libdir}/ghc-%{version}/ghc-compact-*/HSghc-compact-%{gpv_ghc_compact}.p_o
@@ -1735,6 +2066,7 @@ fi
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/*.p_hi
 %{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/InfoTable/*.p_hi
+%{_libdir}/ghc-%{version}/ghc-heap-%{version}/GHC/Exts/Heap/ProfInfo/*.p_hi
 
 %{_libdir}/ghc-%{version}/ghc-prim-*/libHSghc-prim-%{gpv_ghc_prim}_p.a
 %{_libdir}/ghc-%{version}/ghc-prim-*/HSghc-prim-%{gpv_ghc_prim}.p_o
@@ -1743,7 +2075,6 @@ fi
 
 %{_libdir}/ghc-%{version}/ghci-%{version}/libHSghci-%{version}_p.a
 %{_libdir}/ghc-%{version}/ghci-%{version}/HSghci-%{version}.p_o
-%{_libdir}/ghc-%{version}/ghci-%{version}/*.p_hi
 %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/*.p_hi
 %{_libdir}/ghc-%{version}/ghci-%{version}/GHCi/TH/*.p_hi
 
@@ -1759,21 +2090,9 @@ fi
 %{_libdir}/ghc-%{version}/hpc-*/HShpc-%{gpv_hpc}.p_o
 %{_libdir}/ghc-%{version}/hpc-*/Trace/Hpc/*.p_hi
 
-%ifnarch x32
 %{_libdir}/ghc-%{version}/integer-gmp-*/libHSinteger-gmp-%{gpv_integer_gmp}_p.a
 %{_libdir}/ghc-%{version}/integer-gmp-*/HSinteger-gmp-%{gpv_integer_gmp}.p_o
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/*.p_hi
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/*.p_hi
 %{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/GMP/*.p_hi
-%{_libdir}/ghc-%{version}/integer-gmp-*/GHC/Integer/Logarithms/*.p_hi
-%else
-%{_libdir}/ghc-%{version}/integer-simple-*/HSinteger-simple-%{gpv_integer_simple}.p_o
-%{_libdir}/ghc-%{version}/integer-simple-*/libHSinteger-simple-%{gpv_integer_simple}_p.a
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/*.p_hi
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/*.p_hi
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Logarithms/*.p_hi
-%{_libdir}/ghc-%{version}/integer-simple-*/GHC/Integer/Simple/*.p_hi
-%endif
 
 %{_libdir}/ghc-%{version}/libiserv-%{version}/libHSlibiserv-%{version}_p.a
 %{_libdir}/ghc-%{version}/libiserv-%{version}/HSlibiserv-%{version}.p_o
